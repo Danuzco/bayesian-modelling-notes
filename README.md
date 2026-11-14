@@ -7,6 +7,7 @@
 
 by [**Daniel Uzcategui**](https://doctoradoia.cl/cuerpo-academico/daniel-uzcategui/), PhD in Physics
 
+[![Status: in progress](https://img.shields.io/badge/status-course_in_progress-e8a33d)](#about)
 [![Lectures](https://img.shields.io/badge/lectures-10-2b6cb0)](#course-map)
 [![Pages](https://img.shields.io/badge/handwritten_pages-280-805ad5)](#course-map)
 [![Notebooks](https://img.shields.io/badge/notebooks-8-f37626?logo=jupyter&logoColor=white)](#code)
@@ -22,6 +23,10 @@ by [**Daniel Uzcategui**](https://doctoradoia.cl/cuerpo-academico/daniel-uzcateg
 ---
 
 ## About
+
+> [!NOTE]
+> **The course is in progress.** New lectures, notebooks and corrections are added as
+> they are taught. Star or watch the repository to follow along.
 
 These are the notes I wrote by hand, on an iPad, while preparing and teaching
 **Bayesian Modelling** for the *Doctorado en Inteligencia Artificial*, a doctoral
