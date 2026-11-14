@@ -88,7 +88,7 @@ The notebooks are saved with their outputs, so plots and results show on GitHub 
 ### Run them locally
 
 ```bash
-git clone https://github.com/<your-username>/bayesian-modelling-notes.git
+git clone https://github.com/Danuzco/bayesian-modelling-notes.git
 cd bayesian-modelling-notes
 conda env create -f environment.yml
 conda activate bayesian-modelling

@@ -19,5 +19,6 @@ keywords:
   - MCMC
   - variational inference
   - hierarchical models
+repository-code: "https://github.com/Danuzco/bayesian-modelling-notes"
 license: CC-BY-4.0
 date-released: "2026-11-14"
