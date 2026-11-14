@@ -1,0 +1,23 @@
+cff-version: 1.2.0
+message: "If you use these lecture notes, please cite them as below."
+title: "Bayesian Modelling: Handwritten Lecture Notes"
+type: generic
+authors:
+  - family-names: Uzcategui
+    given-names: Daniel
+    orcid: "https://orcid.org/0009-0000-0375-6549"
+abstract: >-
+  Handwritten lecture notes and Jupyter notebooks for the Bayesian Modelling
+  course of the Doctorado en Inteligencia Artificial (Chile), from set theory
+  and probability to Kalman filters, Gaussian processes, MCMC, variational
+  inference and hierarchical models.
+keywords:
+  - Bayesian statistics
+  - probabilistic modelling
+  - Kalman filter
+  - Gaussian processes
+  - MCMC
+  - variational inference
+  - hierarchical models
+license: CC-BY-4.0
+date-released: "2026-11-14"

@@ -1,0 +1,9 @@
+numpy>=2.4
+scipy>=1.17
+matplotlib>=3.10
+scikit-learn>=1.8
+statsmodels>=0.14
+pymc>=6.0
+arviz>=1.0
+jax>=0.9
+jupyterlab
