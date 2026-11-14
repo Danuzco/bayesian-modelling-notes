@@ -29,8 +29,8 @@ by [**Daniel Uzcategui**](https://doctoradoia.cl/cuerpo-academico/daniel-uzcateg
 > they are taught. Star or watch the repository to follow along.
 
 These are the notes I wrote by hand, on an iPad, while preparing and teaching
-**Bayesian Modelling** for the *Doctorado en Inteligencia Artificial*, a doctoral
-program run jointly by the CRUCH Biobío–Ñuble universities (UCSC, UdeC, UBB and USM).
+**Bayesian Modelling** for the *Doctorado en Inteligencia Artificial*
+([my profile](https://doctoradoia.cl/cuerpo-academico/daniel-uzcategui/)).
 
 Every derivation here was worked out step by step: the crossed-out lines, side
 remarks and corrections are left in on purpose. They show how each result is
