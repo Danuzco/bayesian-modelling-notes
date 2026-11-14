@@ -16,7 +16,7 @@
 
 | Notebook | What it does |
 |---|---|
-| [`variational_inference`](code/variational_inference.ipynb) | Fits a Gaussian-mixture variational family to a banana-shaped posterior by maximizing a Monte Carlo ELBO, with gradients from JAX. |
+| [`variational_inference`](code/variational_inference.ipynb) | Variational inference written from scratch in JAX (`grad`, `jit`, `vmap`): fits a Gaussian-mixture family to a banana-shaped posterior by maximizing a Monte Carlo ELBO. |
 
 ---
 

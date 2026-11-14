@@ -12,7 +12,7 @@ by [**Daniel Uzcategui**](https://doctoradoia.cl/cuerpo-academico/daniel-uzcateg
 [![Pages](https://img.shields.io/badge/handwritten_pages-280-805ad5)](#course-map)
 [![Notebooks](https://img.shields.io/badge/notebooks-8-f37626?logo=jupyter&logoColor=white)](#code)
 [![PyMC](https://img.shields.io/badge/PyMC-6-1f4e79)](https://www.pymc.io/)
-[![JAX](https://img.shields.io/badge/JAX-autodiff-a855f7)](https://github.com/jax-ml/jax)
+[![JAX](https://img.shields.io/badge/JAX-inference_from_scratch-a855f7)](#code)
 [![Notes: CC BY 4.0](https://img.shields.io/badge/notes-CC_BY_4.0-lightgrey)](NOTES_LICENSE.md)
 [![Code: MIT](https://img.shields.io/badge/code-MIT-green)](LICENSE)
 
@@ -36,6 +36,12 @@ Every derivation here was worked out step by step: the crossed-out lines, side
 remarks and corrections are left in on purpose. They show how each result is
 reached, not only the final formula. Most lectures from Lecture 5 onward also have
 Jupyter notebooks that turn the equations into code and check them numerically.
+
+The notebooks also work as an **introduction to probabilistic inference in JAX**:
+Hamiltonian Monte Carlo and variational inference are written from scratch, with
+gradients from `jax.grad` and speed from `jit` and `vmap`, without a probabilistic
+programming library. Then the same ideas are used through PyMC, up to
+hierarchical models.
 
 The course goes from the foundations (sets, probability, random variables) to
 the tools used in modern probabilistic machine learning: conjugate models,
@@ -85,7 +91,7 @@ flowchart LR
 | 8 | [`metropolis_hastings`](lecture08_mcmc/code/metropolis_hastings.ipynb) | Inverse-CDF and Cholesky sampling, then Metropolis–Hastings on a banana-shaped target |
 | 8 | [`hmc`](lecture08_mcmc/code/hmc.ipynb) | Hamiltonian Monte Carlo from scratch, with gradients from JAX |
 | 8 | [`intro_pymc`](lecture08_mcmc/code/intro_pymc.ipynb) | First PyMC model: NUTS samples checked against the closed-form Gaussian posterior |
-| 9 | [`variational_inference`](lecture09_variational_inference/code/variational_inference.ipynb) | Gaussian-mixture variational family fitted to a banana posterior by maximizing a Monte Carlo ELBO in JAX |
+| 9 | [`variational_inference`](lecture09_variational_inference/code/variational_inference.ipynb) | Variational inference written from scratch in JAX: a Gaussian-mixture family fitted to a banana posterior by maximizing a Monte Carlo ELBO |
 | 10 | [`hierarchical_model`](lecture10_hierarchical_models/code/hierarchical_model.ipynb) | Eight-schools hierarchical model in PyMC (non-centred), MCMC compared with ADVI |
 
 The notebooks are saved with their outputs, so plots and results show on GitHub without running anything.
