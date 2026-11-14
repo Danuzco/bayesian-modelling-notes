@@ -32,11 +32,6 @@ These are the notes I wrote by hand, on an iPad, while preparing and teaching
 **Bayesian Modelling** for the *Doctorado en Inteligencia Artificial*
 ([my profile](https://doctoradoia.cl/cuerpo-academico/daniel-uzcategui/)).
 
-Every derivation here was worked out step by step: the crossed-out lines, side
-remarks and corrections are left in on purpose. They show how each result is
-reached, not only the final formula. Most lectures from Lecture 5 onward also have
-Jupyter notebooks that turn the equations into code and check them numerically.
-
 The notebooks also work as an **introduction to probabilistic inference in JAX**:
 Hamiltonian Monte Carlo and variational inference are written from scratch, with
 gradients from `jax.grad` and speed from `jit` and `vmap`, without a probabilistic
