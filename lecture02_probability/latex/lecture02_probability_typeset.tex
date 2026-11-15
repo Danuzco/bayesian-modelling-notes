@@ -73,7 +73,7 @@ B = A \cup (B - A) = A \cup (B \cap A^c).
 \]
 Since $A$ and $B \cap A^c$ are disjoint, by Axiom 3
 \[
-P(B) = P\big(A \cup (B \cap A^c)\big) = P(A) + P(B \cap A^c) \ge P(A),
+P(B) = P\big(A \cup (B \cap A^c)\big) = \new{P(A) + P(B \cap A^c)} \ge P(A),
 \]
 because $P(B \cap A^c) \ge 0$.
 \item If $B = \Omega$: $0 \le P(A) \le P(\Omega) = 1$, so $0 \le P(A) \le 1$.
@@ -96,9 +96,9 @@ where $A \cap \emptyset = \set{x \mid x \in A \wedge x \in \emptyset} = \emptyse
 Moreover, their union is $A \cup B$:
 \begin{align*}
 \big[(A \cap B^c) \cup (A \cap B)\big] \cup (A^c \cap B)
-&= \big[A \cap (B^c \cup B)\big] \cup (A^c \cap B)
-= (A \cap \U) \cup (A^c \cap B)\\
-&= A \cup (A^c \cap B) = (A \cup A^c) \cap (A \cup B) = \U \cap (A \cup B) = A \cup B.
+&= \big[A \cap \new{(B^c \cup B)}\big] \cup (A^c \cap B)
+= (A \cap \new{\U}) \cup (A^c \cap B)\\
+&= \new{A} \cup (A^c \cap B) = \new{(A \cup A^c) \cap (A \cup B)} = \new{\U} \cap (A \cup B) = A \cup B.
 \end{align*}
 \end{exercise}
 
@@ -106,8 +106,8 @@ Moreover, their union is $A \cup B$:
 Using the disjoint decomposition above,
 \begin{align*}
 P(A \cup B) &= P\big[(A \cap B^c) \cup (A \cap B) \cup (A^c \cap B)\big]\\
-&= P(A \cap B^c) + P(A \cap B) + P(A^c \cap B) + P(A \cap B) - P(A \cap B)\\
-&= P\big((A \cap B^c) \cup (A \cap B)\big) + P\big((A^c \cap B) \cup (A \cap B)\big) - P(A \cap B).
+&= P(A \cap B^c) + P(A \cap B) + P(A^c \cap B) \new{{}+ P(A \cap B) - P(A \cap B)}\\
+&= \new{P\big((A \cap B^c) \cup (A \cap B)\big)} + \new{P\big((A^c \cap B) \cup (A \cap B)\big)} - P(A \cap B).
 \end{align*}
 Since $(A^c \cap B) \cup (A \cap B) = (B \cap A^c) \cup (B \cap A) = B \cap (A^c \cup A) = B$, and similarly $(A \cap B^c) \cup (A \cap B) = A$,
 \[
@@ -166,7 +166,7 @@ The sample space can be written as
 \]
 then
 \[
-P(\Omega) = P(A_1 \cup A_2) = \underbrace{P(A_1)}_{p} + \underbrace{P(A_2)}_{p} = 1.
+P(\Omega) = P(A_1 \cup A_2) = \underbrace{P(A_1)}_{\new{p}} + \underbrace{P(A_2)}_{\new{p}} = 1.
 \]
 By the principle of indifference $P(A_1) = P(A_2) = p$, so $2p = 1 \Rightarrow p = \tfrac12$.
 
@@ -180,7 +180,7 @@ P(\Omega) = \sum_{i=1}^{n} P(\set{\omega_i}) = 1.
 \]
 Because of the indifference principle, $P(\set{\omega_i}) = \theta$ for all $i$, so
 \[
-\sum_{i=1}^{n} P(\set{\omega_i}) = \sum_{i=1}^{n} \theta = \theta \sum_{i=1}^{n} 1 = \theta\, n = 1
+\sum_{i=1}^{n} P(\set{\omega_i}) = \sum_{i=1}^{n} \new{\theta} = \new{\theta} \sum_{i=1}^{n} 1 = \theta\, \new{n} = 1
 \ \Rightarrow\ \theta = \frac{1}{n},
 \qquad
 P(\set{\omega_i}) = \frac1n = \frac{1}{|\Omega|}.
@@ -322,6 +322,57 @@ If $A \perp B$, then
 P(A \mid B) = \frac{P(A \cap B)}{P(B)} = \frac{P(A)\,P(B)}{P(B)} = P(A).
 \]
 
+\begin{homework}{2}
+A study of gas stations in the Biob\'io Region looked at three characteristics of their customers:
+\begin{align*}
+A &= \set{\text{the car is from the latest model year}},\\
+B &= \set{\text{the car runs on diesel}},\\
+C &= \set{\text{the customer pays with a credit card}},
+\end{align*}
+with
+\begin{gather*}
+P(A) = 0.17,\quad P(B) = 0.10,\quad P(C) = 0.36,\\
+P(A \cap B) = 0.06,\quad P(A \cap C) = 0.08,\quad P(B \cap C) = 0.03.
+\end{gather*}
+Also, $52\%$ of the customers have none of the three characteristics. For a customer chosen at random, find:
+\begin{enumerate}[label=(\roman*)]
+\item the probability that the car is not from the latest year and the customer does not pay by credit card;
+\item the probability that the car does not run on diesel and the customer pays by credit card;
+\item whether $A$ and $C$ are independent;
+\item given that the car is from the latest year, the probability that it runs on diesel;
+\item given that the customer does not pay by credit card, the probability that the car is from the latest year and does not run on diesel.
+\end{enumerate}
+
+\soln
+``None of the three'' is $A^c \cap B^c \cap C^c = (A \cup B \cup C)^c$, so $P(A \cup B \cup C) = 1 - 0.52 = 0.48$. Inclusion--exclusion for three events gives the one probability we are missing:
+\begin{align*}
+P(A \cup B \cup C) &= P(A) + P(B) + P(C) - P(A \cap B) - P(A \cap C) - P(B \cap C) + P(A \cap B \cap C),\\
+0.48 &= \new{0.46} + P(A \cap B \cap C)
+\quad\Longrightarrow\quad \new{P(A \cap B \cap C) = 0.02}.
+\end{align*}
+\begin{enumerate}[label=(\roman*)]
+\item By De Morgan, $A^c \cap C^c = (A \cup C)^c$:
+\[
+P(A^c \cap C^c) = 1 - P(A \cup C) = 1 - \big[P(A) + P(C) - P(A \cap C)\big] = 1 - \new{0.45} = \new{0.55}.
+\]
+\item $C$ splits into the disjoint pieces $C \cap B$ and $C \cap B^c$, so
+\[
+P(B^c \cap C) = P(C) - P(B \cap C) = 0.36 - 0.03 = \new{0.33}.
+\]
+\item $P(A)\,P(C) = 0.17 \times 0.36 = \new{0.0612} \neq 0.08 = P(A \cap C)$, so $A$ and $C$ are \emph{not} independent.
+\item $P(B \mid A) = \dfrac{P(A \cap B)}{P(A)} = \dfrac{0.06}{0.17} = \new{\dfrac{6}{17}} \approx 0.353$.
+\item We need $P(A \cap B^c \mid C^c) = P(A \cap B^c \cap C^c)/P(C^c)$. Removing from $A$ the parts that lie in $B$ or in $C$, and adding back their overlap (removed twice),
+\begin{align*}
+P(A \cap B^c \cap C^c) &= P(A) - P(A \cap B) - P(A \cap C) + \new{P(A \cap B \cap C)}\\
+&= 0.17 - 0.06 - 0.08 + \new{0.02} = \new{0.05},
+\end{align*}
+and $P(C^c) = 1 - 0.36 = 0.64$. Therefore
+\[
+P(A \cap B^c \mid C^c) = \frac{0.05}{0.64} = \new{\frac{5}{64}} \approx 0.078.
+\]
+\end{enumerate}
+\end{homework}
+
 %=====================================================
 \section{Law of total probability}
 Let $A_1, \dots, A_k$ be a partition of $\Omega$, i.e.\ $\Omega = A_1 \cup \cdots \cup A_k$ with $A_i \cap A_j = \emptyset$ for all $i \neq j$. For an event $B$ we have
@@ -348,18 +399,44 @@ P(R) &= \sum_{i=1}^{3} P(R \cap B_i) = \sum_{i=1}^{3} P(R \mid B_i)\,P(B_i)
 \end{align*}
 \end{example}
 
+
+\begin{homework}{2}
+A box has two coins: a fair coin and a trick coin with heads on both sides. One coin is chosen at random, with equal probability, and tossed twice. Let
+\[
+A = \set{\text{first toss is heads}},\quad
+B = \set{\text{second toss is heads}},\quad
+C = \set{\text{the fair coin is chosen}}.
+\]
+Find $P(A \mid C)$, $P(B \mid C)$, $P(A \cap B \mid C)$, $P(A)$, $P(B)$ and $P(A \cap B)$. Are $A$ and $B$ \emph{conditionally} independent given $C$, that is, $P(A \cap B \mid C) = P(A \mid C)\,P(B \mid C)$? Are they \emph{marginally} independent, $P(A \cap B) = P(A)\,P(B)$?
+
+\soln
+With the fair coin the two tosses are independent:
+\[
+P(A \mid C) = P(B \mid C) = \frac12,
+\qquad
+P(A \cap B \mid C) = \frac12 \cdot \frac12 = \new{\frac14} = P(A \mid C)\,P(B \mid C).
+\]
+So $A$ and $B$ are conditionally independent given $C$. With the trick coin every toss is heads: $P(A \mid C^c) = P(B \mid C^c) = P(A \cap B \mid C^c) = 1$. By the law of total probability, with $P(C) = P(C^c) = \tfrac12$,
+\begin{align*}
+P(A) &= P(A \mid C)\,P(C) + P(A \mid C^c)\,P(C^c) = \new{\tfrac12}\cdot\tfrac12 + \new{1}\cdot\tfrac12 = \new{\tfrac34},\\
+P(B) &= \tfrac34 \quad\text{(same computation)},\\
+P(A \cap B) &= P(A \cap B \mid C)\,P(C) + P(A \cap B \mid C^c)\,P(C^c) = \new{\tfrac14}\cdot\tfrac12 + \new{1}\cdot\tfrac12 = \new{\tfrac58}.
+\end{align*}
+Since $P(A)\,P(B) = \tfrac{9}{16} \neq \tfrac{10}{16} = P(A \cap B)$, $A$ and $B$ are \emph{not} marginally independent. Heads on the first toss makes the trick coin more likely, and that raises the chance of heads on the second toss. Conditional independence does not imply independence.
+\end{homework}
+
 %=====================================================
 \section{Bayes' theorem}
 \[
 P(A_i \mid B) = \frac{P(B \mid A_i)\,P(A_i)}{P(B)}
-= \frac{P(B \mid A_i)\,P(A_i)}{\sum_{k} P(B \cap A_k)}
-= \frac{P(B \mid A_i)\,P(A_i)}{\sum_{k} P(B \mid A_k)\,P(A_k)}.
+= \frac{P(B \mid A_i)\,P(A_i)}{\new{\sum_{k} P(B \cap A_k)}}
+= \frac{P(B \mid A_i)\,P(A_i)}{\sum_{k} \new{P(B \mid A_k)\,P(A_k)}}.
 \]
 
 \begin{example}
 Let us suppose, from the previous example, that the chosen ball turned out to be a red ball. What is the probability of having drawn the ball from Bag 1?
 \[
-P(B_1 \mid R) = \frac{P(R \mid B_1)\,P(B_1)}{P(R)} = \frac{\frac{75}{100}\times\frac13}{\frac{6}{10}} = \frac{\frac{25}{100}}{\frac{6}{10}} = \frac{10\times 25}{6\times 100} = \frac{10}{6\times 4} = \frac{5}{12}.
+P(B_1 \mid R) = \frac{P(R \mid B_1)\,P(B_1)}{P(R)} = \frac{\new{\frac{75}{100}\times\frac13}}{\new{\frac{6}{10}}} = \frac{\new{\frac{25}{100}}}{\frac{6}{10}} = \frac{10\times 25}{6\times 100} = \frac{10}{6\times 4} = \frac{5}{12}.
 \]
 \end{example}
 
@@ -376,9 +453,39 @@ P(+ \mid D) = 1 - P(- \mid D) = 1 - 0.01 = 0.99.
 Also $P(D) = 10^{-4}$ and $P(D^c) = 1 - 10^{-4}$. Then
 \begin{align*}
 P(D \mid +) &= \frac{P(+ \mid D)\,P(D)}{P(+ \cap D) + P(+ \cap D^c)}
-= \frac{P(+ \mid D)\,P(D)}{P(+ \mid D)\,P(D) + P(+ \mid D^c)\,P(D^c)}\\
-&= \frac{0.99\times 10^{-4}}{0.99\times 10^{-4} + 0.02\times(1 - 10^{-4})} \approx 0.0049.
+= \frac{P(+ \mid D)\,P(D)}{\new{P(+ \mid D)\,P(D) + P(+ \mid D^c)\,P(D^c)}}\\
+&= \frac{\new{0.99\times 10^{-4}}}{\new{0.99\times 10^{-4} + 0.02\times(1 - 10^{-4})}} \approx 0.0049.
 \end{align*}
 \end{example}
+
+
+\begin{homework}{2}
+A computer center has three printers, $A$, $B$ and $C$. A document is sent to each printer with probability
+\[
+P(A) = 0.6,\qquad P(B) = 0.3,\qquad P(C) = 0.1.
+\]
+Let $D$ be the event that the document is destroyed by a paper jam, with
+\[
+P(D \mid A) = 0.01,\qquad P(D \mid B) = 0.05,\qquad P(D \mid C) = 0.04.
+\]
+If a document is destroyed by a paper jam, what is the probability that it was printed on each of the printers $A$, $B$ and $C$? On which printer was it most likely printed?
+
+\soln
+The printers form a partition, so the law of total probability gives the denominator of Bayes' theorem:
+\begin{align*}
+P(D) &= P(D \mid A)\,P(A) + P(D \mid B)\,P(B) + P(D \mid C)\,P(C)\\
+&= \new{0.006} + \new{0.015} + \new{0.004} = \new{0.025}.
+\end{align*}
+Then
+\[
+P(A \mid D) = \frac{P(D \mid A)\,P(A)}{P(D)} = \frac{0.006}{0.025} = \new{0.24},
+\]
+and in the same way
+\[
+P(B \mid D) = \frac{0.015}{0.025} = \new{0.60},\qquad
+P(C \mid D) = \frac{0.004}{0.025} = \new{0.16}.
+\]
+The three posteriors add up to $1$, as they should. The document was most likely printed on printer $B$: it gets only $30\%$ of the documents, but it jams five times as often as $A$.
+\end{homework}
 
 \end{document}

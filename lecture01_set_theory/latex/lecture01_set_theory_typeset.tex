@@ -279,11 +279,11 @@ It is read as the complement of $A$ with respect to $\U$.
 \paragraph{Difference as an intersection.}
 Using $A \cap C = \set{x \mid x \in A \wedge x \in C}$ and $A - B = \set{x \mid x \in A \wedge x \notin B}$: if $x \notin B$ and $B \subseteq \U$, then $x \in B^c$. Hence
 \[
-A - B = \set{x \mid x \in A \wedge x \in B^c} = A \cap B^c.
+A - B = \set{x \mid x \in A \wedge \new{x \in B^c}} = A \cap B^c.
 \]
 Also,
 \[
-A \cap A^c = \set{x \mid x \in A \wedge x \in A^c} = \set{x \mid x \in A \wedge \neg(x \in A)} = \set{\ },
+A \cap A^c = \set{x \mid x \in A \wedge x \in A^c} = \set{x \mid x \in A \wedge \new{\neg(x \in A)}} = \set{\ },
 \]
 since $x \in A \wedge \neg(x \in A)$ is always false.
 
@@ -292,7 +292,7 @@ since $x \in A \wedge \neg(x \in A)$ is always false.
 
 \paragraph{Double complement.} $(A^c)^c = A$. Indeed, writing $B = A^c = \set{x \mid x \in \U \wedge x \notin A}$,
 \[
-(A^c)^c = B^c = \set{x \mid x \in \U \wedge x \notin A^c} = \set{x \mid x \in \U \wedge x \in A} = A.
+(A^c)^c = B^c = \set{x \mid x \in \U \wedge \new{x \notin A^c}} = \set{x \mid x \in \U \wedge \new{x \in A}} = A.
 \]
 
 \paragraph{Commutative laws.}
@@ -312,7 +312,7 @@ A \cup (B \cap C) = (A \cup B) \cap (A \cup C), \qquad A \cap (B \cup C) = (A \c
 For the first one: with $A \cup D = \set{x \mid x \in A \vee x \in D}$ and $D = B \cap C$,
 \begin{align*}
 A \cup (B \cap C) &= \set{x \mid x \in A \vee (x \in B \wedge x \in C)}\\
-&= \set{x \mid (x \in A \vee x \in B) \wedge (x \in A \vee x \in C)} = (A \cup B) \cap (A \cup C).
+&= \set{x \mid \new{(x \in A \vee x \in B) \wedge (x \in A \vee x \in C)}} = (A \cup B) \cap (A \cup C).
 \end{align*}
 
 \paragraph{De Morgan's laws.}
@@ -322,8 +322,8 @@ A \cup (B \cap C) &= \set{x \mid x \in A \vee (x \in B \wedge x \in C)}\\
 For the first one, recall $D^c = \set{x \mid x \in \U \wedge x \notin D}$, where $x \notin D$ means $\neg(x \in D)$. With $D = A \cap B = \set{x \mid x \in \U \wedge (x \in A \wedge x \in B)}$,
 \begin{align*}
 (A \cap B)^c &= \set{x \mid x \in \U \wedge \neg(x \in A \wedge x \in B)}\\
-&= \set{x \mid x \in \U \wedge (x \notin A \vee x \notin B)}\\
-&= \set{x \mid (x \in \U \wedge x \notin A) \vee (x \in \U \wedge x \notin B)} = A^c \cup B^c.
+&= \set{x \mid x \in \U \wedge \new{(x \notin A \vee x \notin B)}}\\
+&= \set{x \mid \new{(x \in \U \wedge x \notin A) \vee (x \in \U \wedge x \notin B)}} = A^c \cup B^c.
 \end{align*}
 The same holds for $(A \cup B)^c = A^c \cap B^c$.
 
@@ -339,7 +339,7 @@ The same holds for $(A \cup B)^c = A^c \cap B^c$.
 \item $B \cup B^c = \set{x \mid x \in B \vee x \in B^c}$, so $B \cup B^c = \U$.
 \item Use 2) and 3) to show
 \[
-A = A \cap \U = A \cap (B \cup B^c) = (A \cap B) \cup (A \cap B^c).
+A = A \cap \U = A \cap \new{(B \cup B^c)} = \new{(A \cap B) \cup (A \cap B^c)}.
 \]
 Are $(A \cap B)$ and $(A \cap B^c)$ disjoint?
 \end{enumerate}

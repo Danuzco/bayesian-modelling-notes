@@ -101,6 +101,31 @@ For a discrete random variable $X$, $P(X = x)$ is called a \emph{probability (ma
 \item for $A \subseteq R_X$, $P(X \in A) = \sum_{x \in A} P(X = x)$.
 \end{enumerate}
 
+\begin{homework}{2}
+Two six-sided dice are rolled. Let $X$ be the sum of the two results. Find
+\begin{enumerate}[label=(\roman*)]
+\item the range $R_X$ of $X$;
+\item the probability mass function $P(X = x)$ for each $x \in R_X$.
+\end{enumerate}
+
+\soln
+\begin{enumerate}[label=(\roman*)]
+\item The smallest sum is $1 + 1 = 2$ and the largest is $6 + 6 = 12$, and every value in between can occur: $R_X = \set{2, 3, \dots, 12}$.
+\item The sample space $\Omega = \set{(d_1, d_2) : d_1, d_2 \in \set{1, \dots, 6}}$ has $36$ equally likely outcomes, so $P(X = x) = |\set{X = x}|/36$. Counting the pairs with $d_1 + d_2 = x$:
+\begin{center}
+\begin{tabular}{c|ccccccccccc}
+$x$ & 2 & 3 & 4 & 5 & 6 & 7 & 8 & 9 & 10 & 11 & 12\\ \hline
+$36\,P(X = x)$ & 1 & 2 & 3 & 4 & 5 & 6 & 5 & 4 & 3 & 2 & 1
+\end{tabular}
+\end{center}
+For example, $\set{X = 5} = \set{(1,4), (2,3), (3,2), (4,1)}$, so $P(X = 5) = 4/36$, as in Lecture 2. In one formula,
+\[
+P(X = x) = \frac{6 - |x - 7|}{36}, \qquad x = 2, \dots, 12,
+\]
+and indeed $\sum_{x} P(X = x) = \frac{1 + 2 + 3 + 4 + 5 + 6 + 5 + 4 + 3 + 2 + 1}{36} = \new{\frac{36}{36}} = 1$.
+\end{enumerate}
+\end{homework}
+
 %=====================================================
 \section{Cumulative distribution function (CDF)}
 \[
@@ -287,6 +312,34 @@ P(Y = 1) = \binom{3}{1}\mu^{1}(1-\mu)^{2} = \frac{3!}{1!\,2!}\mu(1-\mu)^2 = 3\mu
 \]
 \end{example}
 
+
+\begin{homework}{2}
+Suppose $20\%$ of the copies of a textbook fail a binding-strength test. We pick $15$ copies at random and let $X$ be the number of copies, among the $15$, that fail the test. Find the probability that
+\begin{enumerate}[label=(\roman*)]
+\item exactly $8$ copies fail;
+\item at most $8$ copies fail;
+\item at least $8$ copies fail.
+\end{enumerate}
+
+\soln
+Each copy fails independently with the same probability, so $X \sim \operatorname{Bin}(x; n = 15, \theta = 0.2)$.
+\begin{enumerate}[label=(\roman*)]
+\item
+\[
+P(X = 8) = \binom{15}{8}(0.2)^{8}(0.8)^{7} = \new{6435}\times(0.2)^{8}(0.8)^{7} \approx \new{0.0035}.
+\]
+\item ``At most $8$'' means $X \le 8$:
+\[
+P(X \le 8) = \sum_{x=0}^{8}\binom{15}{x}(0.2)^{x}(0.8)^{15-x} \approx \new{0.9992}.
+\]
+\item ``At least $8$'' means $X \ge 8$. As in the disc example, the complement is quicker:
+\[
+P(X \ge 8) = 1 - P(X \le \new{7}) = 1 - \big[P(X \le 8) - P(X = 8)\big] \approx 1 - \new{0.9958} = \new{0.0042}.
+\]
+\end{enumerate}
+Note that (ii) and (iii) both include $X = 8$, so $P(X \le 8) + P(X \ge 8) = 1 + P(X = 8)$.
+\end{homework}
+
 \subsection{Categorical distribution}
 If now we have $K$ classes, $x \in \set{1, 2, \dots, K}$, then
 \[
@@ -353,44 +406,44 @@ P_k^{(ii)}(t+h) = P_{k-1}(t)\times \alpha h.
 Then
 \begin{align*}
 P_k(t+h) &= P_k(t)\times(1 - \alpha h) + P_{k-1}(t)\times \alpha h + o(h),\\
-P_k(t+h) - P_k(t) &= -\alpha h\,P_k(t) + \alpha h\,P_{k-1}(t) + o(h),\\
-\frac{P_k(t+h) - P_k(t)}{h} &= -\alpha P_k(t) + \alpha P_{k-1}(t) + \frac{o(h)}{h}.
+P_k(t+h) \new{{}- P_k(t)} &= -\alpha h\,P_k(t) + \alpha h\,P_{k-1}(t) + o(h),\\
+\frac{P_k(t+h) - P_k(t)}{\new{h}} &= -\alpha P_k(t) + \alpha P_{k-1}(t) + \new{\frac{o(h)}{h}}.
 \end{align*}
 If $h \to 0$,
 \[
-\frac{\mathrm{d}P_k(t)}{\mathrm{d}t} = -\alpha P_k(t) + \alpha P_{k-1}(t).
+\new{\frac{\mathrm{d}P_k(t)}{\mathrm{d}t}} = -\alpha P_k(t) + \alpha P_{k-1}(t).
 \]
 
 \begin{itemize}
 \item For $k = 0$:
 \[
-\frac{\mathrm{d}P_0(t)}{\mathrm{d}t} = -\alpha P_0(t) \ \Rightarrow\ P_0(t) = C e^{-\alpha t}.
+\frac{\mathrm{d}P_0(t)}{\mathrm{d}t} = -\alpha P_0(t) \ \Rightarrow\ P_0(t) = \new{C e^{-\alpha t}}.
 \]
 At $t = 0$ the probability of observing $k = 0$ is $1$: $P_0(t=0) = 1 = C$. As we wait longer, the probability of $k = 0$ (``observing nothing'') vanishes. Thus, for $t \to \infty$, $P_0(t) \to 0$.
 
 \item For $k = 1$:
 \[
-\frac{\mathrm{d}P_1(t)}{\mathrm{d}t} = -\alpha P_1(t) + \alpha P_0(t) = -\alpha P_1(t) + \alpha e^{-\alpha t},
+\frac{\mathrm{d}P_1(t)}{\mathrm{d}t} = -\alpha P_1(t) + \alpha P_0(t) = -\alpha P_1(t) + \alpha \new{e^{-\alpha t}},
 \qquad
-\frac{\mathrm{d}P_1(t)}{\mathrm{d}t} + \alpha P_1(t) = \alpha e^{-\alpha t}.
+\frac{\mathrm{d}P_1(t)}{\mathrm{d}t} \new{{}+ \alpha P_1(t)} = \alpha e^{-\alpha t}.
 \]
 Using $\frac{\mathrm{d}}{\mathrm{d}t}[u(t)v(t)] = \dot u(t)v(t) + u(t)\dot v(t)$, multiply by $u(t)$:
 \[
-u(t)\frac{\mathrm{d}P_1(t)}{\mathrm{d}t} + \alpha u(t)P_1(t) = \alpha u(t)e^{-\alpha t},
+\new{u(t)}\frac{\mathrm{d}P_1(t)}{\mathrm{d}t} + \alpha \new{u(t)}P_1(t) = \alpha \new{u(t)}e^{-\alpha t},
 \]
 and choose $\dot u(t) = \alpha u(t)$, i.e.\ $u(t) = e^{\alpha t}$:
 \[
-e^{\alpha t}\frac{\mathrm{d}P_1(t)}{\mathrm{d}t} + \alpha e^{\alpha t}P_1(t) = \alpha e^{\alpha t}e^{-\alpha t} = \alpha
+\new{e^{\alpha t}}\frac{\mathrm{d}P_1(t)}{\mathrm{d}t} + \alpha \new{e^{\alpha t}}P_1(t) = \alpha \new{e^{\alpha t}}e^{-\alpha t} = \new{\alpha}
 \ \Rightarrow\
-\frac{\mathrm{d}}{\mathrm{d}t}\big[e^{\alpha t}P_1(t)\big] = \alpha.
+\new{\frac{\mathrm{d}}{\mathrm{d}t}\big[e^{\alpha t}P_1(t)\big]} = \alpha.
 \]
 Integrating,
 \[
 \int \mathrm{d}t\,\frac{\mathrm{d}}{\mathrm{d}t}\big[e^{\alpha t}P_1(t)\big] = \alpha\int \mathrm{d}t
 \ \Rightarrow\
-e^{\alpha t}P_1(t) = \alpha t + C
+e^{\alpha t}P_1(t) = \new{\alpha t + C}
 \ \Rightarrow\
-P_1(t) = (\alpha t + C)e^{-\alpha t}.
+P_1(t) = (\alpha t + C)\new{e^{-\alpha t}}.
 \]
 At $t = 0$: $P_1(0) = \alpha\times 0 + C = 0$, so $C = 0$. Thus
 \[
@@ -683,9 +736,9 @@ x + y & 0 \le x \le 1,\ 0 \le y \le 1,\\
 Check:
 \begin{align*}
 \int_0^1\int_0^1 (x+y)\dd x\dd y &= \int_0^1\dd y\int_0^1\dd x\,(x+y)
-= \int_0^1\dd y\left(\frac12 x^2 + yx\right)\Big|_0^1
-= \int_0^1\dd y\left(\left(\frac12 + y\right) - 0\right)\\
-&= \left(\frac12 y + \frac12 y^2\right)\Big|_0^1 = \frac12 + \frac12 = 1.
+= \int_0^1\dd y\new{\left(\frac12 x^2 + yx\right)\Big|_0^1}
+= \int_0^1\dd y\left(\new{\left(\frac12 + y\right) - 0}\right)\\
+&= \new{\left(\frac12 y + \frac12 y^2\right)\Big|_0^1} = \new{\frac12 + \frac12} = 1.
 \end{align*}
 Find $P(X < 1/4 \mid Y = 1/3)$. We need $f_{X|Y}(x \mid y) = f_{XY}(x,y)/f_Y(y)$, with
 \[
@@ -696,12 +749,12 @@ f_{X|Y}(x \mid y) = \frac{x+y}{y + \frac12}.
 Then
 \begin{align*}
 P(X < 1/4 \mid Y = 1/3) &= \int_0^{1/4}\frac{x + 1/3}{\frac13 + \frac12}\dd x
-= \int_0^{1/4}\frac{x + 1/3}{5/6}\dd x
-= \int_0^{1/4}\frac{(3x+1)/3}{5/6}\dd x
-= \int_0^{1/4}\frac{2(3x+1)}{5}\dd x\\
-&= 0.4\left(\int_0^{1/4}3x\dd x + \int_0^{1/4}\dd x\right)
-= 0.4\left(\frac32 x^2\Big|_0^{1/4} + x\Big|_0^{1/4}\right)\\
-&= 0.4\left(\frac32\cdot\frac{1}{2^4} + \frac14\right)
+= \int_0^{1/4}\frac{x + 1/3}{\new{5/6}}\dd x
+= \int_0^{1/4}\frac{\new{(3x+1)/3}}{5/6}\dd x
+= \int_0^{1/4}\new{\frac{2(3x+1)}{5}}\dd x\\
+&= \new{0.4}\left(\new{\int_0^{1/4}3x\dd x + \int_0^{1/4}\dd x}\right)
+= 0.4\left(\new{\frac32 x^2\Big|_0^{1/4}} + \new{x\Big|_0^{1/4}}\right)\\
+&= 0.4\left(\new{\frac32\cdot\frac{1}{2^4}} + \new{\frac14}\right)
 = \frac{0.4}{4}\left(\frac{3}{2^3} + 1\right) = 0.1\left(\frac38 + 1\right) = \frac{0.1\times 11}{8} = \frac{1.1}{8}.
 \end{align*}
 \end{example}
@@ -802,18 +855,18 @@ With $N = n-1$, $y = x-1$ (so $N - y = n - x$):
 \Var(X) = \E\big((X - \underbrace{\E(X)}_{\mu_X})^2\big).
 \]
 \begin{align*}
-\Var(X) &= \sum_i (x_i - \mu)^2 P(X = x_i) = \sum_i (x_i^2 - 2x_i\mu + \mu^2)P(X = x_i)\\
-&= \sum_i x_i^2 P(X = x_i) - 2\mu\sum_i x_i P(X = x_i) + \mu^2\sum_i P(X = x_i)\\
-&= \E(X^2) - 2\mu^2 + \mu^2 = \E(X^2) - \mu^2.
+\Var(X) &= \sum_i (x_i - \mu)^2 P(X = x_i) = \sum_i \new{(x_i^2 - 2x_i\mu + \mu^2)}P(X = x_i)\\
+&= \new{\sum_i} x_i^2 P(X = x_i) - 2\mu\new{\sum_i} x_i P(X = x_i) + \mu^2\new{\sum_i} P(X = x_i)\\
+&= \new{\E(X^2)} - \new{2\mu^2} + \new{\mu^2} = \E(X^2) - \new{\mu^2}.
 \end{align*}
 
 \paragraph{Properties.}
 \begin{enumerate}[label=(\roman*)]
 \item If $a$ and $b$ are constants, then $\Var(aX + b) = a^2\Var(X)$. With $Y = aX + b$:
 \begin{align*}
-\Var(Y) &= \E(Y^2) - \E(Y)^2 = \E(Y^2) - (a\E(X) + b)^2\\
-&= \E(a^2X^2 + 2abX + b^2) - \big(a^2\E(X)^2 + 2ab\E(X) + b^2\big)\\
-&= a^2\E(X^2) - a^2\E(X)^2 = a^2\Var(X).
+\Var(Y) &= \E(Y^2) - \E(Y)^2 = \E(Y^2) - \new{(a\E(X) + b)^2}\\
+&= \E(\new{a^2X^2 + 2abX + b^2}) - \new{\big(a^2\E(X)^2 + 2ab\E(X) + b^2\big)}\\
+&= \new{a^2\E(X^2) - a^2\E(X)^2} = \new{a^2\Var(X)}.
 \end{align*}
 \item If $X_1, \dots, X_n$ are independent and $a_1, \dots, a_n$ are constants, then
 \[
@@ -826,12 +879,51 @@ Indeed,
 and, using $\big(\sum_{i=1}^{n} z_i\big)^2 = \sum_{i=1}^{n} z_i^2 + 2\sum_{i<j} z_i z_j$, the cross terms vanish for independent variables since $\E[(X_i - \E X_i)(X_j - \E X_j)] = \E(X_i - \E X_i)\,\E(X_j - \E X_j) = 0$.
 \end{enumerate}
 
+
+\begin{homework}{3}
+Let $Y \sim \operatorname{Bin}(n, \theta)$, with PMF
+\[
+P(Y = y) = \binom{n}{y}\theta^{y}(1-\theta)^{n-y}, \qquad y = 0, 1, \dots, n.
+\]
+Show that
+\begin{enumerate}[label=(\roman*)]
+\item the distribution is normalized, $\sum_{y=0}^{n} P(Y = y) = 1$;
+\item $\E[Y] = n\theta$;
+\item $\Var(Y) = n\theta(1-\theta)$.
+\end{enumerate}
+
+\soln
+\begin{enumerate}[label=(\roman*)]
+\item By the binomial theorem, $(a + b)^n = \sum_{y=0}^{n}\binom{n}{y}a^{y}b^{n-y}$. With $a = \theta$ and $b = 1 - \theta$,
+\[
+\sum_{y=0}^{n}\binom{n}{y}\theta^{y}(1-\theta)^{n-y} = \big(\theta + (1 - \theta)\big)^{n} = \new{1}^{n} = 1.
+\]
+\item This is the example in the section on expected values: $\E[Y] = n\theta$.
+\item It is easier to find $\E[Y(Y-1)]$ first and then use $\E[Y^2] = \E[Y(Y-1)] + \E[Y]$. The terms $y = 0$ and $y = 1$ vanish, and
+\[
+y(y-1)\binom{n}{y} = \frac{y(y-1)\,n!}{y!\,(n-y)!} = \new{n(n-1)}\frac{(n-2)!}{\new{(y-2)!}\,(n-y)!} = n(n-1)\binom{n-2}{y-2}.
+\]
+Then, with $N = n - 2$ and $k = y - 2$ (so $N - k = n - y$),
+\begin{align*}
+\E[Y(Y-1)] &= n(n-1)\sum_{y=2}^{n}\binom{n-2}{y-2}\theta^{y}(1-\theta)^{n-y}
+= n(n-1)\new{\theta^2}\sum_{k=0}^{N}\binom{N}{k}\theta^{k}(1-\theta)^{N-k}\\
+&= n(n-1)\theta^2 \cdot \new{1},
+\end{align*}
+where the last sum is a $\operatorname{Bin}(N, \theta)$ PMF summed over its range, which is $1$ by part (i). Therefore
+\begin{align*}
+\Var(Y) &= \E[Y^2] - \E[Y]^2 = \E[Y(Y-1)] + \E[Y] - \E[Y]^2\\
+&= n(n-1)\theta^2 + n\theta - n^2\theta^2 = \new{n\theta - n\theta^2} = n\theta(1 - \theta).
+\end{align*}
+\end{enumerate}
+Alternatively, $Y = \sum_{i=1}^{n} X_i$ with independent $X_i \sim \operatorname{Bernoulli}(\theta)$, $\Var(X_i) = \theta(1-\theta)$, and the property $\Var\big(\sum_i X_i\big) = \sum_i \Var(X_i)$ gives the same result in one line.
+\end{homework}
+
 %=====================================================
 \section{Covariance}
 \begin{align*}
-\Cov(X,Y) &= \E\big((X - \mu_X)(Y - \mu_Y)\big) = \E(XY - \mu_Y X - \mu_X Y + \mu_X\mu_Y)\\
-&= \E(XY) - \mu_Y\underbrace{\E(X)}_{\mu_X} - \mu_X\underbrace{\E(Y)}_{\mu_Y} + \mu_X\mu_Y
-= \E(XY) - \E(X)\,\E(Y),
+\Cov(X,Y) &= \E\big((X - \mu_X)(Y - \mu_Y)\big) = \E(\new{XY - \mu_Y X - \mu_X Y + \mu_X\mu_Y})\\
+&= \new{\E(XY)} - \mu_Y\underbrace{\new{\E(X)}}_{\mu_X} - \mu_X\underbrace{\new{\E(Y)}}_{\mu_Y} + \mu_X\mu_Y
+= \E(XY) - \new{\E(X)\,\E(Y)},
 \end{align*}
 with
 \[

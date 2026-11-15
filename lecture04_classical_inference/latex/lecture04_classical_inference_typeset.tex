@@ -48,18 +48,18 @@ In that case, we aim to find
 \hat\theta = \arg\max_{\theta}\sum_{i=1}^{N}\log p(Y = y_i \mid \theta),
 \]
 \[
-L(\theta) = \sum_{i=1}^{N}\log\left[\theta^{y_i}(1-\theta)^{1-y_i}\right] = \sum_{i=1}^{N}\left[y_i\log\theta + (1-y_i)\log(1-\theta)\right].
+L(\theta) = \sum_{i=1}^{N}\log\left[\theta^{y_i}(1-\theta)^{1-y_i}\right] = \sum_{i=1}^{N}\left[\new{y_i\log\theta + (1-y_i)\log(1-\theta)}\right].
 \]
 \[
-\frac{\partial L}{\partial\theta} = \sum_{i=1}^{N}\left(y_i\frac{1}{\theta} - (1-y_i)\frac{1}{1-\theta}\right)
-= \sum_{i=1}^{N}\left(\frac{y_i}{\theta} + \frac{y_i - 1}{1-\theta}\right)
-= \sum_{i=1}^{N}\frac{y_i(1-\theta) + \theta(y_i - 1)}{\theta(1-\theta)} = 0.
+\frac{\partial L}{\partial\theta} = \sum_{i=1}^{N}\left(y_i\new{\frac{1}{\theta}} - (1-y_i)\new{\frac{1}{1-\theta}}\right)
+= \sum_{i=1}^{N}\left(\frac{y_i}{\theta} \new{{}+ \frac{y_i - 1}{1-\theta}}\right)
+= \sum_{i=1}^{N}\frac{\new{y_i(1-\theta) + \theta(y_i - 1)}}{\new{\theta(1-\theta)}} = 0.
 \]
 Thus
 \[
-\sum_{i}\left(y_i - y_i\theta + \theta y_i - \theta\right) = 0
+\sum_{i}\left(\new{y_i - y_i\theta + \theta y_i - \theta}\right) = 0
 \ \Rightarrow\
-\sum_{i=1}^{N} y_i - \theta\underbrace{\sum_{i=1}^{N} 1}_{N} = 0
+\sum_{i=1}^{N} y_i - \theta\underbrace{\sum_{i=1}^{N} 1}_{\new{N}} = 0
 \ \Rightarrow\
 \boxed{\hat\theta = \frac{1}{N}\sum_{i=1}^{N} y_i}\quad\text{(MLE)}.
 \]
@@ -88,24 +88,24 @@ So, we aim to set a CI to estimate something about a population parameter:
 \[
 p\big(|\bar X - \mu| < x\big) = 1 - \alpha
 \ \Rightarrow\
-p\left(\frac{|\bar X - \mu|}{\sigma/\sqrt n} < \frac{x}{\sigma/\sqrt n}\right) = 1 - \alpha,
+p\left(\frac{|\bar X - \mu|}{\new{\sigma/\sqrt n}} < \frac{x}{\new{\sigma/\sqrt n}}\right) = 1 - \alpha,
 \]
 \[
 p\big(|Z| < z_\alpha\big) = 1 - \alpha
 \ \Rightarrow\
-p(-z_\alpha < Z < z_\alpha) = 1 - \alpha.
+p(\new{-z_\alpha < Z < z_\alpha}) = 1 - \alpha.
 \]
 Then
 \[
 -z_\alpha < \frac{\bar X - \mu}{\sigma/\sqrt n} < z_\alpha
 \ \Rightarrow\
--z_\alpha\frac{\sigma}{\sqrt n} < \bar X - \mu < z_\alpha\frac{\sigma}{\sqrt n}.
+-z_\alpha\new{\frac{\sigma}{\sqrt n}} < \bar X - \mu < z_\alpha\new{\frac{\sigma}{\sqrt n}}.
 \]
 Multiplying by minus,
 \[
-z_\alpha\frac{\sigma}{\sqrt n} > \mu - \bar X > -z_\alpha\frac{\sigma}{\sqrt n}
+\new{z_\alpha}\frac{\sigma}{\sqrt n} \mathrel{\new{>}} \new{\mu - \bar X} \mathrel{\new{>}} \new{-z_\alpha}\frac{\sigma}{\sqrt n}
 \ \Rightarrow\
-\bar X - z_\alpha\frac{\sigma}{\sqrt n} < \mu < \bar X + z_\alpha\frac{\sigma}{\sqrt n}.
+\new{\bar X} - z_\alpha\frac{\sigma}{\sqrt n} < \mu < \new{\bar X} + z_\alpha\frac{\sigma}{\sqrt n}.
 \]
 The interval is
 \[
@@ -115,13 +115,13 @@ We only need to find $z_\alpha$:
 \[
 p(-z_\alpha < Z < z_\alpha) = 1 - \alpha
 \ \Rightarrow\
-p(Z \le z_\alpha) - p(Z \le -z_\alpha) = 1 - \alpha,
+\new{p(Z \le z_\alpha) - p(Z \le -z_\alpha)} = 1 - \alpha,
 \]
 where $p(Z \le -z_\alpha) = p(Z > z_\alpha) = 1 - p(Z \le z_\alpha)$. Hence
 \[
-2p(Z \le z_\alpha) - 1 = 1 - \alpha
+\new{2}p(Z \le z_\alpha) \new{{}- 1} = 1 - \alpha
 \ \Rightarrow\
-p(Z \le z_\alpha) = 1 - \frac{\alpha}{2}.
+p(Z \le z_\alpha) = \new{1 - \frac{\alpha}{2}}.
 \]
 (This value is often written $z_{\alpha/2}$; e.g.\ $z_\alpha = 1.96$ for $\alpha = 0.05$.)
 

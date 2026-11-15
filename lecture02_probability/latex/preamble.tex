@@ -39,3 +39,19 @@
 \newcommand{\set}[1]{\left\{#1\right\}}
 \newcommand{\given}{\mid}
 \newcommand{\note}[1]{\textit{#1}}
+
+% --- Homework exercises (tinted box) and highlighted derivation steps ---
+\usepackage{tcolorbox}
+\tcbuselibrary{skins,breakable}
+\definecolor{hwfill}{RGB}{235,243,252}
+\definecolor{hwframe}{RGB}{31,78,140}
+\definecolor{newterm}{RGB}{196,78,0}
+\newtcolorbox{homework}[1]{enhanced, breakable,
+  colback=hwfill, colframe=hwframe, coltitle=white,
+  fonttitle=\bfseries, boxrule=0.6pt, arc=2pt,
+  left=6pt, right=6pt, top=4pt, bottom=4pt,
+  before skip=10pt, after skip=10pt,
+  title={Exercise (Homework #1)}}
+\newcommand{\soln}{\par\smallskip\noindent\textbf{Solution.}\ }
+% \new{...} marks what is new in a derivation step: a substituted or simplified term.
+\newcommand{\new}[1]{{\color{newterm}#1}}
