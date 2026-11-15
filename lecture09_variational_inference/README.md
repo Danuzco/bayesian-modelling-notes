@@ -1,7 +1,6 @@
 # Lecture 9 · Variational Inference
 
-📄 **[Handwritten notes](lecture09_variational_inference.pdf)** (11 pages)  
-📝 **[Typeset version (LaTeX)](lecture09_variational_inference_typeset.pdf)** (4 pages, [source](latex/lecture09_variational_inference_typeset.tex))
+📄 **[Handwritten notes](lecture09_variational_inference.pdf)** (11 pages)
 
 ## Outline
 
