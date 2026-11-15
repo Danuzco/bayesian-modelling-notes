@@ -136,4 +136,16 @@ taught in. If you find a mistake, please
 - **Code** (notebooks): [MIT](LICENSE).
 
 If these notes help your teaching or research, you can cite them with the
-**"Cite this repository"** button on GitHub (see [`CITATION.cff`](CITATION.cff)).
+**"Cite this repository"** button on GitHub (see [`CITATION.cff`](CITATION.cff)),
+or with this BibTeX entry (also in [`CITATION.bib`](CITATION.bib)):
+
+```bibtex
+@misc{uzcategui2026bayesian,
+  author       = {Uzcategui, Daniel},
+  title        = {{Bayesian Modelling: Handwritten Lecture Notes}},
+  year         = {2026},
+  howpublished = {GitHub repository},
+  url          = {https://github.com/Danuzco/bayesian-modelling-notes},
+  note         = {Lecture notes and Jupyter notebooks for the Bayesian Modelling course of the Doctorado en Inteligencia Artificial, Chile}
+}
+```
