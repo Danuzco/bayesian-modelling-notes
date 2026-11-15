@@ -1,6 +1,7 @@
 # Lecture 10 · Hierarchical Models
 
-📄 **[Handwritten notes](lecture10_hierarchical_models.pdf)** (10 pages)
+📄 **[Handwritten notes](lecture10_hierarchical_models.pdf)** (10 pages)  
+📝 **[Typeset version (LaTeX)](lecture10_hierarchical_models_typeset.pdf)** (4 pages, [source](latex/lecture10_hierarchical_models_typeset.tex))
 
 ## Outline
 
