@@ -16,3 +16,12 @@ desktop.ini
 .dropbox
 .dropbox.attr
 *conflicted copy*
+
+# LaTeX build files
+*.aux
+*.log
+*.out
+*.toc
+*.fls
+*.fdb_latexmk
+*.synctex.gz

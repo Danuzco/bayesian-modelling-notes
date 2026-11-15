@@ -47,10 +47,10 @@ hierarchical models.
 
 | # | Lecture | Highlights | Notes | Code |
 |:-:|---|---|:-:|:-:|
-| 1 | **Set Theory** | sets, subsets, power sets, Cartesian products, set identities, De Morgan | [PDF](lecture01_set_theory/lecture01_set_theory.pdf) · 24 pp | — |
-| 2 | **Probability** | axioms, interpretations of probability, counting, independence, conditional probability, total probability, Bayes' theorem | [PDF](lecture02_probability/lecture02_probability.pdf) · 35 pp | — |
-| 3 | **Random Variables** | PMF/PDF/CDF, Bernoulli → Poisson (derived from first principles), exponential, normal, joint and conditional distributions, expectation, variance, covariance | [PDF](lecture03_random_variables/lecture03_random_variables.pdf) · 64 pp | — |
-| 4 | **Classical Inference** | maximum likelihood, confidence intervals, hypothesis testing | [PDF](lecture04_classical_inference/lecture04_classical_inference.pdf) · 14 pp | — |
+| 1 | **Set Theory** | sets, subsets, power sets, Cartesian products, set identities, De Morgan | [PDF](lecture01_set_theory/lecture01_set_theory.pdf) · 24 pp · [typeset](lecture01_set_theory/lecture01_set_theory_typeset.pdf) | — |
+| 2 | **Probability** | axioms, interpretations of probability, counting, independence, conditional probability, total probability, Bayes' theorem | [PDF](lecture02_probability/lecture02_probability.pdf) · 35 pp · [typeset](lecture02_probability/lecture02_probability_typeset.pdf) | — |
+| 3 | **Random Variables** | PMF/PDF/CDF, Bernoulli → Poisson (derived from first principles), exponential, normal, joint and conditional distributions, expectation, variance, covariance | [PDF](lecture03_random_variables/lecture03_random_variables.pdf) · 64 pp · [typeset](lecture03_random_variables/lecture03_random_variables_typeset.pdf) | — |
+| 4 | **Classical Inference** | maximum likelihood, confidence intervals, hypothesis testing | [PDF](lecture04_classical_inference/lecture04_classical_inference.pdf) · 14 pp · [typeset](lecture04_classical_inference/lecture04_classical_inference_typeset.pdf) | — |
 | 5 | **Bayesian Statistics** | posterior and predictive distributions, Beta–Binomial, Gaussian–Gaussian, Normal–Inv-χ², exponential family, multivariate normal, linear Gaussian systems, model selection | [PDF](lecture05_bayesian_statistics/lecture05_bayesian_statistics.pdf) · 67 pp | [1 notebook](lecture05_bayesian_statistics/code) |
 | 6 | **Kalman Filters** | state-space models, Bayesian filtering equations, full Kalman derivation (Woodbury identity), forecasting | [PDF](lecture06_kalman_filters/lecture06_kalman_filters.pdf) · 18 pp | [1 notebook](lecture06_kalman_filters/code) |
 | 7 | **Gaussian Processes** | Bayesian linear regression, GP prior and posterior, prediction at new inputs, kernels | [PDF](lecture07_gaussian_processes/lecture07_gaussian_processes.pdf) · 17 pp | [1 notebook](lecture07_gaussian_processes/code) |
@@ -58,7 +58,7 @@ hierarchical models.
 | 9 | **Variational Inference** | KL divergence, ELBO via Jensen, mean-field VI, ADVI, score-function gradients | [PDF](lecture09_variational_inference/lecture09_variational_inference.pdf) · 11 pp | [1 notebook](lecture09_variational_inference/code) |
 | 10 | **Hierarchical Models** | complete, no and partial pooling, plate diagrams, the eight-schools model | [PDF](lecture10_hierarchical_models/lecture10_hierarchical_models.pdf) · 10 pp | [1 notebook](lecture10_hierarchical_models/code) |
 
-Each lecture folder has its own README with a short outline and a description of its notebooks.
+Lectures 1–4 also have a typeset LaTeX version, with its source in each folder's `latex/`. Each lecture folder has its own README with a short outline and a description of its notebooks.
 
 ## How the lectures connect
 
@@ -109,6 +109,8 @@ Or with pip: `pip install -r requirements.txt`.
 bayesian-modelling-notes/
 ├── lecture01_set_theory/
 │   ├── lecture01_set_theory.pdf      # handwritten notes
+│   ├── lecture01_set_theory_typeset.pdf  # typeset version (Lectures 1–4)
+│   ├── latex/                        # LaTeX source of the typeset version
 │   └── README.md                     # outline of the lecture
 ├── ...
 ├── lecture05_bayesian_statistics/

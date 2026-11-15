@@ -1,6 +1,7 @@
 # Lecture 3 · Random Variables
 
-📄 **[Handwritten notes](lecture03_random_variables.pdf)** (64 pages)
+📄 **[Handwritten notes](lecture03_random_variables.pdf)** (64 pages)  
+📝 **[Typeset version (LaTeX)](lecture03_random_variables_typeset.pdf)** (15 pages, [source](latex/lecture03_random_variables_typeset.tex))
 
 ## Outline
 

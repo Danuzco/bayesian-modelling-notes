@@ -1,0 +1,384 @@
+\input{preamble}
+\title{Lecture 2: Probability}
+\author{}\date{}
+
+\begin{document}
+\maketitle
+
+%=====================================================
+\section{Sample space}
+
+\begin{definition}[Sample space]
+The \emph{sample space} $\Omega$ is the set of possible outcomes of an experiment.
+\end{definition}
+
+Below, $C$ denotes heads (\emph{cara}) and $S$ denotes tails (\emph{sello}).
+
+\begin{example}
+The set of possible outcomes of a coin toss: $\Omega = \set{\text{Cara}, \text{Sello}} = \set{C, S}$.
+\end{example}
+\begin{example}
+Sample space of the toss of 2 coins: $\Omega = \set{CC, CS, SC, SS}$.
+\end{example}
+\begin{example}
+Sample space of a die throw: $\Omega = \set{1,2,3,4,5,6}$.
+\end{example}
+
+\begin{definition}[Event]
+Subsets of $\Omega$ are called \emph{events}.
+\end{definition}
+
+\begin{example}
+Let $\Omega = \set{1,2,3,4,5,6}$ be the sample space of a die throw. Then $A = \set{1,2,3} \subset \Omega$ is the event of a die throw resulting in less than $4$.
+\end{example}
+\begin{example}
+The event of the first coin of a two-coin throw resulting in heads: with $\Omega = \set{CC, CS, SC, SS}$,
+\[
+A = \set{CC, CS} \subset \Omega.
+\]
+\end{example}
+
+%=====================================================
+\section{Probability}
+\begin{definition}[Probability]
+A function $P$ that assigns a real number $P(A)$ to each event $A$ is a \emph{probability distribution} or a \emph{probability measure} if it satisfies the following axioms:
+\begin{description}
+\item[Axiom 1:] $P(A) \ge 0$ for every event $A$.
+\item[Axiom 2:] $P(\Omega) = 1$.
+\item[Axiom 3:] If $A_1, A_2, \dots$ are disjoint, that is, $A_i \cap A_j = \emptyset$ for $i \ne j$, then
+\[
+P(A_1 \cup A_2 \cup A_3 \cup \cdots) = \sum_{i=1}^{\infty} P(A_i),
+\qquad\text{i.e.}\qquad
+P\Big(\bigcup_{i=1}^{\infty} A_i\Big) = \sum_{i=1}^{\infty} P(A_i).
+\]
+\end{description}
+\end{definition}
+
+\paragraph{What does the probability of an event happening mean?}
+There are several interpretations:
+\begin{enumerate}[label=(\roman*)]
+\item \textbf{Frequentist:} the probability $P(A)$ of an event happening is the proportion of times an event $A$ occurs after repeating the same experiment many times under identical conditions.
+\item \textbf{Degrees of belief:} probability here is a measure of how much an observer is convinced that an event $A$ is true or will occur.
+\item \textbf{Extension of logic for reasoning under uncertainty:} logic tells whether certain propositions are true or false. Probability quantifies how plausible a proposition is given available information. That is, probability is a measure of our state of knowledge about a proposition, not a property of the physical world itself.
+\end{enumerate}
+
+\subsection{Other properties}
+\begin{itemize}
+\item $P(\emptyset) = 0$.
+\item $A \subseteq B \Rightarrow P(A) \le P(B)$.
+
+If $A \subseteq B$, then we can come up with a partition of $B$ such as
+\[
+B = A \cup (B - A) = A \cup (B \cap A^c).
+\]
+Since $A$ and $B \cap A^c$ are disjoint, by Axiom 3
+\[
+P(B) = P\big(A \cup (B \cap A^c)\big) = P(A) + P(B \cap A^c) \ge P(A),
+\]
+because $P(B \cap A^c) \ge 0$.
+\item If $B = \Omega$: $0 \le P(A) \le P(\Omega) = 1$, so $0 \le P(A) \le 1$.
+\item Since $\Omega = A \cup A^c$: $P(\Omega) = P(A \cup A^c) = P(A) + P(A^c) = 1$, so
+\[
+P(A^c) = 1 - P(A).
+\]
+\end{itemize}
+
+\begin{exercise}
+Let $A$ and $B$ be two non-disjoint sets (this is, $A \cap B \neq \emptyset$). Show that the sets $A \cap B^c$, $A \cap B$ and $A^c \cap B$ are disjoint between each other.
+
+\emph{Solution.}
+\begin{align*}
+(A \cap B^c) \cap (A \cap B) &= (A \cap A) \cap (B^c \cap B) = A \cap \emptyset = \emptyset,\\
+(A \cap B^c) \cap (A^c \cap B) &= (A \cap A^c) \cap (B^c \cap B) = \emptyset \cap \emptyset = \emptyset,\\
+(A \cap B) \cap (A^c \cap B) &= (A \cap A^c) \cap (B \cap B) = \emptyset \cap B = \emptyset,
+\end{align*}
+where $A \cap \emptyset = \set{x \mid x \in A \wedge x \in \emptyset} = \emptyset$, since $x \in \emptyset$ is false.
+Moreover, their union is $A \cup B$:
+\begin{align*}
+\big[(A \cap B^c) \cup (A \cap B)\big] \cup (A^c \cap B)
+&= \big[A \cap (B^c \cup B)\big] \cup (A^c \cap B)
+= (A \cap \U) \cup (A^c \cap B)\\
+&= A \cup (A^c \cap B) = (A \cup A^c) \cap (A \cup B) = \U \cap (A \cup B) = A \cup B.
+\end{align*}
+\end{exercise}
+
+\paragraph{$P(A \cup B)$ when $A \cap B \neq \emptyset$.}
+Using the disjoint decomposition above,
+\begin{align*}
+P(A \cup B) &= P\big[(A \cap B^c) \cup (A \cap B) \cup (A^c \cap B)\big]\\
+&= P(A \cap B^c) + P(A \cap B) + P(A^c \cap B) + P(A \cap B) - P(A \cap B)\\
+&= P\big((A \cap B^c) \cup (A \cap B)\big) + P\big((A^c \cap B) \cup (A \cap B)\big) - P(A \cap B).
+\end{align*}
+Since $(A^c \cap B) \cup (A \cap B) = (B \cap A^c) \cup (B \cap A) = B \cap (A^c \cup A) = B$, and similarly $(A \cap B^c) \cup (A \cap B) = A$,
+\[
+P(A \cup B) = P(A) + P(B) - P(A \cap B).
+\]
+
+\begin{exercise}
+There are 4 candidates for president: $A$, $B$, $C$ and $D$. According to some survey, it was estimated that $A$ has a $20\%$ chance of winning the election, whereas $B$ has a $40\%$ chance of winning. What is the probability of the election being won by $A$ or $B$?
+\end{exercise}
+
+\begin{exercise}
+In a residential area, $60\%$ of homes have internet service provided by the local cable company, $80\%$ have television service from the same company and $50\%$ have both services. If we randomly select one house:
+\begin{enumerate}[label=(\roman*)]
+\item What is the probability that the selected house has at least one of the services provided by the cable company?
+\[
+P(A \cup B) = P(A) + P(B) - P(A \cap B).
+\]
+\item What is the probability that the selected house has exactly one service? The event is
+\[
+\set{x \mid (x \in A \wedge x \notin B) \vee (x \notin A \wedge x \in B)} = (A \cap B^c) \cup (A^c \cap B),
+\]
+where $A - B = A \cap B^c$ and $B - A = B \cap A^c$. These two sets are disjoint, so
+\[
+P\big((A \cap B^c) \cup (A^c \cap B)\big) = P(A \cap B^c) + P(A^c \cap B).
+\]
+Since $A = A \cap \U = A \cap (B \cup B^c) = (A \cap B) \cup (A \cap B^c)$ and $B = (A \cap B) \cup (A^c \cap B)$,
+\[
+P(A) = P(A \cap B) + P(A \cap B^c), \qquad P(B) = P(A \cap B) + P(A^c \cap B),
+\]
+and therefore
+\[
+P\big((A \cap B^c) \cup (B \cap A^c)\big) = P(A) + P(B) - 2P(A \cap B).
+\]
+\begin{center}
+\begin{tikzpicture}
+\draw (0,0) rectangle (5,2.6);
+\begin{scope}[even odd rule]
+\clip (2.0,1.3) circle (0.9) (3.1,1.4) circle (0.65);
+\fill[pattern=north east lines] (0,0) rectangle (5,2.6);
+\end{scope}
+\draw (2.0,1.3) circle (0.9); \draw (3.1,1.4) circle (0.65);
+\node[fill=white,inner sep=1pt] at (1.6,1.1) {$A$}; \node[fill=white,inner sep=1pt] at (3.4,1.6) {$B$};
+\end{tikzpicture}
+\end{center}
+\end{enumerate}
+\end{exercise}
+
+\section{Probability on finite sample spaces}
+Let us consider the sample space of a coin throw, $\Omega = \set{C, S}$. What is the probability of observing $C$? Concretely, if $A = \set{C}$ is the event of observing heads (cara), the question is: what is $P(A)$?
+
+\paragraph{Principle of indifference.} There is no reason to think that an element of the sample set has distinct chances of occurring with respect to the other members of the set.
+
+The sample space can be written as
+\[
+\Omega = \set{C, S} = \underbrace{\set{C}}_{A_1} \cup \underbrace{\set{S}}_{A_2},
+\]
+then
+\[
+P(\Omega) = P(A_1 \cup A_2) = \underbrace{P(A_1)}_{p} + \underbrace{P(A_2)}_{p} = 1.
+\]
+By the principle of indifference $P(A_1) = P(A_2) = p$, so $2p = 1 \Rightarrow p = \tfrac12$.
+
+In general, for a sample space $\Omega = \set{\omega_1, \omega_2, \dots, \omega_n}$ we can write
+\[
+\Omega = \set{\omega_1} \cup \set{\omega_2} \cup \cdots \cup \set{\omega_n},
+\]
+then
+\[
+P(\Omega) = \sum_{i=1}^{n} P(\set{\omega_i}) = 1.
+\]
+Because of the indifference principle, $P(\set{\omega_i}) = \theta$ for all $i$, so
+\[
+\sum_{i=1}^{n} P(\set{\omega_i}) = \sum_{i=1}^{n} \theta = \theta \sum_{i=1}^{n} 1 = \theta\, n = 1
+\ \Rightarrow\ \theta = \frac{1}{n},
+\qquad
+P(\set{\omega_i}) = \frac1n = \frac{1}{|\Omega|}.
+\]
+
+We can also have an event with more than one element, e.g.\ $A = \set{\omega_1, \dots, \omega_{|A|}}$. Then we can split it as $A = \set{\omega_1} \cup \cdots \cup \set{\omega_{|A|}}$ and
+\[
+P(A) = \sum_{i=1}^{|A|} \underbrace{P(\set{\omega_i})}_{1/|\Omega|} = \frac{1}{|\Omega|} \sum_{i=1}^{|A|} 1 = \frac{|A|}{|\Omega|}.
+\]
+
+
+The probability $P(A) = \dfrac{|A|}{|\Omega|}$ is called the \emph{uniform probability distribution}.
+
+\begin{example}
+What is the probability of getting a value less than $4$ in a die throw? With $\Omega = \set{1,2,3,4,5,6}$ and $A = \set{1,2,3}$,
+\[
+P(A) = \frac{|A|}{|\Omega|} = \frac{3}{6} = \frac12.
+\]
+\end{example}
+
+\begin{example}
+In a two-dice throw, what is the probability of a result summing up to $5$? Writing $D_1$ and $D_2$ for the results of each die,
+\[
+P(D_1 + D_2 = 5) = \frac{4}{36} = \frac19.
+\]
+\end{example}
+
+\subsection{Counting techniques}
+An ordered subset is called a \emph{permutation}. The number of permutations of size $k$ that can be formed out of $n$ objects is
+\[
+P_{k,n} = \frac{n!}{(n-k)!}.
+\]
+An unordered subset is called a \emph{combination}. The number of combinations of size $k$ out of $n$ objects is
+\[
+C_{k,n} = \binom{n}{k} = \frac{n!}{k!\,(n-k)!}.
+\]
+
+\begin{example}[Example 2.23, Devore]
+$n = 25$, $k = 6$, where the $25$ objects are split into two groups, $l$ (with $10$ objects) and $i$ (with $15$). The probability of choosing $3$ from each group is
+\[
+P(l = 3, i = 3) =\frac{\binom{10}{3}\binom{15}{3}}{\binom{25}{6}}.
+\]
+\end{example}
+
+%=====================================================
+\section{Independent events}
+Two events $A$ and $B$ are \emph{independent} if
+\[
+P(A \cap B) = P(A)\,P(B).
+\]
+This is denoted as $A \perp B$.
+
+Three events $A$, $B$ and $C$ are independent if
+\[
+P(A \cap B \cap C) = P(A)\,P(B)\,P(C).
+\]
+For this to happen we also need
+\[
+P(A \cap B) = P(A)P(B), \qquad P(A \cap C) = P(A)P(C), \qquad P(B \cap C) = P(B)P(C).
+\]
+In general, a set of events $\set{A_i : i \in I}$ is independent if
+\[
+P\Big(\bigcap_{i \in J} A_i\Big) = \prod_{i \in J} P(A_i)
+\]
+for every finite subset $J$ of $I$.
+
+\begin{example}
+Toss a coin $10$ times. Let $A$ = ``at least one head''. Let $T_j$ be the event that tails occurs on the $j$-th toss. We can state $A$ as
+\[
+A:\ \#\text{heads} \ge 1, \qquad A^c:\ \#\text{heads} < 1, \ \text{i.e.}\ \#\text{tails} = 10.
+\]
+Since $P(A \cup A^c) = P(A) + P(A^c) = 1$, we have $P(A) = 1 - P(A^c)$, with $A^c = T_1 \cap T_2 \cap \cdots \cap T_{10}$. Using independence,
+\[
+P(A) = 1 - P(T_1)\,P(T_2)\cdots P(T_{10}) = 1 - \frac{1}{2^{10}}.
+\]
+\end{example}
+
+%=====================================================
+\section{Conditional probability}
+The \emph{conditional probability} of $A$ given that $B$ has occurred is defined as
+\[
+P(A \mid B) = \frac{P(A \cap B)}{P(B)},
+\]
+where $P(B) > 0$. Thus, for the uniform distribution,
+\[
+P(A \mid B) = \frac{|A \cap B|/|\Omega|}{|B|/|\Omega|} = \frac{|A \cap B|}{|B|}.
+\]
+
+$P(\cdot \mid B)$ satisfies all of the probability axioms:
+\begin{enumerate}[label=(\roman*)]
+\item $P(A \mid B) \ge 0$,
+\item $P(\Omega \mid B) = 1$,
+\item $P\big(\bigcup_{i=1}^{\infty} A_i \mid B\big) = \sum_{i=1}^{\infty} P(A_i \mid B)$ for disjoint $A_1, A_2, \dots$
+\end{enumerate}
+
+\begin{example}
+A container stores $5$ defective transistors (that fail immediately), $10$ partially defective (that fail after a couple of hours) and $25$ acceptable. A transistor is chosen at random. If it doesn't immediately fail, what is the probability for the transistor to be acceptable?
+
+Let $A$: defective, $B$: partially defective, $C$: acceptable. Then $A^c = C \cup B$ and
+\[
+P(C \mid A^c) = \frac{P(C \cap A^c)}{P(A^c)} = \frac{|C \cap A^c|}{|A^c|} = \frac{|C \cap (C \cup B)|}{|C \cup B|}.
+\]
+Since
+\begin{align*}
+C \cap (C \cup B) &= \set{x \mid x \in C \wedge (x \in C \vee x \in B)}\\
+&= \set{x \mid (x \in C \wedge x \in C) \vee \underbrace{(x \in C \wedge x \in B)}_{\text{false}}} = \set{x \mid x \in C} = C,
+\end{align*}
+we get
+\[
+P(C \mid A^c) = \frac{|C|}{|C \cup B|} = \frac{25}{35} = \frac57.
+\]
+\end{example}
+
+\begin{example}
+A medical test for disease $D$ has outcomes $+$ and $-$. The probabilities are
+\begin{center}
+\begin{tabular}{c|cc}
+ & $D$ & $D^c$\\ \hline
+$+$ & $0.009$ & $0.099$\\
+$-$ & $0.001$ & $0.891$
+\end{tabular}
+\end{center}
+Find the probability of testing $+$ given $D$:
+\[
+P(+ \mid D) = \frac{P(+ \cap D)}{P(D)} = \frac{0.009}{0.01} = \frac{9\times10^{-3}}{1\times10^{-2}} = 0.9.
+\]
+Similarly,
+\[
+P(- \mid D^c) = \frac{P(- \cap D^c)}{P(D^c)} = \frac{0.891}{0.99} = 0.9.
+\]
+Probability of having the disease given that a test resulted positive:
+\[
+P(D \mid +) = \frac{0.009}{0.009 + 0.099} \approx 0.083.
+\]
+\end{example}
+
+If $A \perp B$, then
+\[
+P(A \mid B) = \frac{P(A \cap B)}{P(B)} = \frac{P(A)\,P(B)}{P(B)} = P(A).
+\]
+
+%=====================================================
+\section{Law of total probability}
+Let $A_1, \dots, A_k$ be a partition of $\Omega$, i.e.\ $\Omega = A_1 \cup \cdots \cup A_k$ with $A_i \cap A_j = \emptyset$ for all $i \neq j$. For an event $B$ we have
+\[
+B = B \cap \Omega = B \cap (A_1 \cup \cdots \cup A_k) = (B \cap A_1) \cup (B \cap A_2) \cup \cdots \cup (B \cap A_k).
+\]
+These sets are disjoint, e.g.\ $(B \cap A_1) \cap (B \cap A_2) = B \cap B \cap \underbrace{A_1 \cap A_2}_{\emptyset} = B \cap \emptyset = \emptyset$. Therefore
+\[
+P(B) = \sum_{i=1}^{k} P(B \cap A_i) = \sum_{i=1}^{k} P(B \mid A_i)\,P(A_i).
+\]
+
+\begin{example}
+There are $3$ bags, each one containing $100$ small balls:
+\begin{enumerate}[label=(\roman*)]
+\item Bag 1 contains $75$ red balls and $25$ blue balls.
+\item Bag 2 contains $60$ red balls and $40$ blue balls.
+\item Bag 3 contains $45$ red balls and $55$ blue balls.
+\end{enumerate}
+If I pick a bag randomly and then draw a ball from the chosen bag, what would be the probability of getting a red ball? Let $R$ be the event ``red ball'' and $B_i$ the event ``bag $i$ is chosen'', with $P(B_i) = 1/3$:
+\begin{align*}
+P(R) &= \sum_{i=1}^{3} P(R \cap B_i) = \sum_{i=1}^{3} P(R \mid B_i)\,P(B_i)
+= \frac13\big[P(R \mid B_1) + P(R \mid B_2) + P(R \mid B_3)\big]\\
+&= \frac13\left[\frac{75}{100} + \frac{60}{100} + \frac{45}{100}\right] = \frac13\left(\frac{180}{100}\right) = \frac{6}{10} = 0.6.
+\end{align*}
+\end{example}
+
+%=====================================================
+\section{Bayes' theorem}
+\[
+P(A_i \mid B) = \frac{P(B \mid A_i)\,P(A_i)}{P(B)}
+= \frac{P(B \mid A_i)\,P(A_i)}{\sum_{k} P(B \cap A_k)}
+= \frac{P(B \mid A_i)\,P(A_i)}{\sum_{k} P(B \mid A_k)\,P(A_k)}.
+\]
+
+\begin{example}
+Let us suppose, from the previous example, that the chosen ball turned out to be a red ball. What is the probability of having drawn the ball from Bag 1?
+\[
+P(B_1 \mid R) = \frac{P(R \mid B_1)\,P(B_1)}{P(R)} = \frac{\frac{75}{100}\times\frac13}{\frac{6}{10}} = \frac{\frac{25}{100}}{\frac{6}{10}} = \frac{10\times 25}{6\times 100} = \frac{10}{6\times 4} = \frac{5}{12}.
+\]
+\end{example}
+
+\begin{example}
+A disease affects roughly $1$ out of $10\,000$ people. There exists a test to detect if a person has the disease. Let
+\begin{itemize}[nosep]
+\item $D$: has the disease; \ $D^c$: doesn't have the disease;
+\item the test result is $+$ or $-$.
+\end{itemize}
+We know $P(+ \mid D^c) = 0.02$ and $P(- \mid D) = 0.01$. Since $P(+ \mid D) + P(- \mid D) = 1$,
+\[
+P(+ \mid D) = 1 - P(- \mid D) = 1 - 0.01 = 0.99.
+\]
+Also $P(D) = 10^{-4}$ and $P(D^c) = 1 - 10^{-4}$. Then
+\begin{align*}
+P(D \mid +) &= \frac{P(+ \mid D)\,P(D)}{P(+ \cap D) + P(+ \cap D^c)}
+= \frac{P(+ \mid D)\,P(D)}{P(+ \mid D)\,P(D) + P(+ \mid D^c)\,P(D^c)}\\
+&= \frac{0.99\times 10^{-4}}{0.99\times 10^{-4} + 0.02\times(1 - 10^{-4})} \approx 0.0049.
+\end{align*}
+\end{example}
+
+\end{document}

@@ -1,0 +1,204 @@
+\input{preamble}
+\title{Lecture 4: Classical Inference}
+\author{}\date{}
+
+\begin{document}
+\maketitle
+
+\section*{Non-Bayesian methods of doing statistics}
+Here, I am going to talk about some of the most used methods for doing non-Bayesian statistics.
+
+%=====================================================
+\section{Maximum likelihood estimation (MLE)}
+It is a form of point estimation. The goal is to find the parameter $\theta$:
+\begin{align*}
+\hat\theta_{\text{mle}} &= \arg\max_{\theta}\, p(Y \mid X, \theta) && \text{(estimator, } \hat\theta(Y)\text{)},\\
+\hat\theta_{\text{mle}} &= \arg\max_{\theta}\, p(\vec y \mid \vec x, \vec\theta) && \text{(estimate)},
+\end{align*}
+where
+\[
+p(\vec y \mid \vec x, \vec\theta) = p(y_1, \dots, y_N \mid x_1, \dots, x_N, \theta_1, \dots, \theta_K).
+\]
+The maximum likelihood estimate is the value of $\theta$ that makes the data $\vec y$ most likely.
+
+When the samples are independent and identically distributed (iid), then
+\[
+p(\vec y \mid \vec x, \vec\theta) = p(y_1 \mid x_1, \vec\theta)\,p(y_2 \mid x_2, \vec\theta)\cdots p(y_N \mid x_N, \vec\theta) = \prod_{i=1}^{N} p(y_i \mid x_i, \vec\theta).
+\]
+Normally, we use the log-likelihood:
+\[
+\log p(\vec y \mid \vec x, \vec\theta) = \sum_{i=1}^{N}\log p(y_i \mid x_i, \vec\theta),
+\]
+\[
+\hat\theta = \arg\max_{\theta}\sum_{i=1}^{N}\log p(y_i \mid x_i, \vec\theta)
+\qquad\text{or}\qquad
+\hat\theta = \arg\min_{\theta}\left[-\sum_{i=1}^{N}\log p(y_i \mid x_i, \vec\theta)\right].
+\]
+Alternatively, one may want to maximize the joint likelihood:
+\[
+\hat\theta = \arg\min_{\theta}\left[-\sum_{i=1}^{N}\log p(y_i, x_i \mid \vec\theta)\right].
+\]
+
+\begin{example}[Bernoulli distribution]
+\[
+p(Y = y_i \mid \theta) = \theta^{y_i}(1-\theta)^{1-y_i}, \qquad y_i \in \set{0,1}.
+\]
+In that case, we aim to find
+\[
+\hat\theta = \arg\max_{\theta}\sum_{i=1}^{N}\log p(Y = y_i \mid \theta),
+\]
+\[
+L(\theta) = \sum_{i=1}^{N}\log\left[\theta^{y_i}(1-\theta)^{1-y_i}\right] = \sum_{i=1}^{N}\left[y_i\log\theta + (1-y_i)\log(1-\theta)\right].
+\]
+\[
+\frac{\partial L}{\partial\theta} = \sum_{i=1}^{N}\left(y_i\frac{1}{\theta} - (1-y_i)\frac{1}{1-\theta}\right)
+= \sum_{i=1}^{N}\left(\frac{y_i}{\theta} + \frac{y_i - 1}{1-\theta}\right)
+= \sum_{i=1}^{N}\frac{y_i(1-\theta) + \theta(y_i - 1)}{\theta(1-\theta)} = 0.
+\]
+Thus
+\[
+\sum_{i}\left(y_i - y_i\theta + \theta y_i - \theta\right) = 0
+\ \Rightarrow\
+\sum_{i=1}^{N} y_i - \theta\underbrace{\sum_{i=1}^{N} 1}_{N} = 0
+\ \Rightarrow\
+\boxed{\hat\theta = \frac{1}{N}\sum_{i=1}^{N} y_i}\quad\text{(MLE)}.
+\]
+\end{example}
+
+%=====================================================
+\section{Confidence intervals}
+A $100(1-\alpha)\%$ \emph{confidence interval} for a parameter $\theta$ is any interval $I = (l, u)$ such that
+\[
+p(\theta \in I) = 1 - \alpha.
+\]
+Here $\theta$ is fixed and the interval $I$ is random (it is computed from the sample), so the probability refers to $I$.
+To study confidence intervals (CI) we need sampling distributions.
+
+\begin{theorem}
+Let a population be normally distributed. This is, there is a random variable $X_i \sim \Normal(\mu, \sigma^2)$. Then, if a sample of size $n$ is drawn from the population, the sampling mean $\bar X = \frac1n\sum_i X_i$ satisfies
+\[
+\bar X \sim \Normal\left(\mu, \frac{\sigma^2}{n}\right),
+\qquad
+Z = \frac{\bar X - \mu}{\sigma/\sqrt n} \sim \Normal(0,1),
+\]
+with $\sigma/\sqrt n$ the \emph{standard error}.
+\end{theorem}
+
+So, we aim to set a CI to estimate something about a population parameter:
+\[
+p\big(|\bar X - \mu| < x\big) = 1 - \alpha
+\ \Rightarrow\
+p\left(\frac{|\bar X - \mu|}{\sigma/\sqrt n} < \frac{x}{\sigma/\sqrt n}\right) = 1 - \alpha,
+\]
+\[
+p\big(|Z| < z_\alpha\big) = 1 - \alpha
+\ \Rightarrow\
+p(-z_\alpha < Z < z_\alpha) = 1 - \alpha.
+\]
+Then
+\[
+-z_\alpha < \frac{\bar X - \mu}{\sigma/\sqrt n} < z_\alpha
+\ \Rightarrow\
+-z_\alpha\frac{\sigma}{\sqrt n} < \bar X - \mu < z_\alpha\frac{\sigma}{\sqrt n}.
+\]
+Multiplying by minus,
+\[
+z_\alpha\frac{\sigma}{\sqrt n} > \mu - \bar X > -z_\alpha\frac{\sigma}{\sqrt n}
+\ \Rightarrow\
+\bar X - z_\alpha\frac{\sigma}{\sqrt n} < \mu < \bar X + z_\alpha\frac{\sigma}{\sqrt n}.
+\]
+The interval is
+\[
+\left[\bar X - z_\alpha\frac{\sigma}{\sqrt n},\ \bar X + z_\alpha\frac{\sigma}{\sqrt n}\right].
+\]
+We only need to find $z_\alpha$:
+\[
+p(-z_\alpha < Z < z_\alpha) = 1 - \alpha
+\ \Rightarrow\
+p(Z \le z_\alpha) - p(Z \le -z_\alpha) = 1 - \alpha,
+\]
+where $p(Z \le -z_\alpha) = p(Z > z_\alpha) = 1 - p(Z \le z_\alpha)$. Hence
+\[
+2p(Z \le z_\alpha) - 1 = 1 - \alpha
+\ \Rightarrow\
+p(Z \le z_\alpha) = 1 - \frac{\alpha}{2}.
+\]
+(This value is often written $z_{\alpha/2}$; e.g.\ $z_\alpha = 1.96$ for $\alpha = 0.05$.)
+
+\begin{example}
+See Pg.~36, \emph{Hypothesis testing 2}.
+\end{example}
+
+\begin{theorem}
+Let $X_i$ be random variables, $X_i \sim \Normal(\mu, \sigma^2)$, and $S^2$ be the sampling variance. Then
+\[
+T = \frac{\bar X - \mu}{S/\sqrt n} \sim t(n-1).
+\]
+\end{theorem}
+In the same way,
+\[
+p(-t_\alpha < T < t_\alpha) = 1 - \alpha
+\ \Rightarrow\
+\left[\bar X - t_\alpha\frac{S}{\sqrt n},\ \bar X + t_\alpha\frac{S}{\sqrt n}\right].
+\]
+
+%=====================================================
+\section{Hypothesis testing}
+A \emph{hypothesis} is a statement about population parameters. We have two hypotheses:
+\begin{itemize}[nosep]
+\item null hypothesis $H_0$,
+\item alternative hypothesis $H_1$.
+\end{itemize}
+$H_0$ is assumed to be true, and it is either rejected or not rejected. Null hypothesis: no change.
+
+$\alpha$: significance level.
+\begin{align*}
+p(\text{reject } H_0 \mid H_0 \text{ true}) &= \alpha,\\
+p(\text{not reject } H_0 \mid H_0 \text{ false}) &= \beta,\\
+p(\text{reject } H_0 \mid H_0 \text{ false}) &= 1 - \beta.
+\end{align*}
+
+We need a statistic and a rejection region. We can have
+\[
+\begin{cases}
+H_0: \theta = \theta_0\\
+H_1: \theta > \theta_0
+\end{cases}
+\qquad
+\begin{cases}
+H_0: \theta = \theta_0\\
+H_1: \theta < \theta_0
+\end{cases}
+\qquad
+\begin{cases}
+H_0: \theta = \theta_0\\
+H_1: \theta \neq \theta_0
+\end{cases}
+\]
+$H_1$ is contradictory to $H_0$.
+
+How to find the rejection region? We set
+\[
+p(\text{type I error}) = \alpha.
+\]
+
+\begin{example}[Cigarettes, Pg.~51]
+$n = 30$, $\alpha = 0.05$, $X \sim \Normal(\mu, \sigma^2)$,
+\[
+H_0: \mu \le 1.5\ \text{mg}, \qquad H_1: \mu > 1.5\ \text{mg}.
+\]
+I need a statistic to compare to $\mu$: that is $\bar X$.
+\begin{align*}
+p(\bar X > x_c) &= 0.05,\\
+p\left(\frac{\bar X - \mu}{\sigma/\sqrt n} > z\right) &= 0.05,\\
+1 - p\left(\frac{\bar X - \mu}{\sigma/\sqrt n} \le z\right) &= 0.05,\\
+p\left(\frac{\bar X - \mu}{\sigma/\sqrt n} \le z\right) &= 0.95 \ \Rightarrow\ z = 1.64.
+\end{align*}
+Rejection region:
+\[
+\boxed{\bar X > \mu + 1.64\frac{\sigma}{\sqrt n}}
+\]
+with $\mu = 1.5$ mg.
+\end{example}
+
+\end{document}

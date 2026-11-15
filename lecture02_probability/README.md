@@ -1,6 +1,7 @@
 # Lecture 2 · Probability
 
-📄 **[Handwritten notes](lecture02_probability.pdf)** (35 pages)
+📄 **[Handwritten notes](lecture02_probability.pdf)** (35 pages)  
+📝 **[Typeset version (LaTeX)](lecture02_probability_typeset.pdf)** (7 pages, [source](latex/lecture02_probability_typeset.tex))
 
 ## Outline
 
