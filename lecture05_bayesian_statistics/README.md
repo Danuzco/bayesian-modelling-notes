@@ -19,6 +19,7 @@
 
 | Notebook | What it does |
 |---|---|
+| [`coin_bayesian_updating`](code/coin_bayesian_updating.ipynb) | Beta–Binomial updating for a coin with unknown bias: how different priors (uniform, fair-coin, tail-biased, Jeffreys) are updated flip by flip, the posterior mean as a weighted average of prior mean and MLE, 95% credible intervals, the posterior predictive compared with the plug-in binomial, and a Gamma–Poisson example for counts. |
 | [`gaussian_2d_inference`](code/gaussian_2d_inference.ipynb) | Posterior of a 2D Gaussian mean with known Σ, as a special case of a linear Gaussian system (y = Wz + b + ε with W = I). Uses the Iris *setosa* measurements. |
 
 ---
