@@ -1,7 +1,7 @@
 # Lecture 1 · Set Theory
 
 📄 **[Handwritten notes](lecture01_set_theory.pdf)** (24 pages)  
-📝 **[Typeset version (LaTeX)](lecture01_set_theory_typeset.pdf)** (6 pages, [source](latex/lecture01_set_theory_typeset.tex))
+📝 **[Typeset version (LaTeX)](lecture01_set_theory_typeset.pdf)** (7 pages, [source](latex/lecture01_set_theory_typeset.tex))
 
 ## Outline
 

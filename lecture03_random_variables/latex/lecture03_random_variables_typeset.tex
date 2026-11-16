@@ -70,7 +70,7 @@ There are two types of random variables:
 \end{itemize}
 
 \begin{example}
-Flip a coin twice and let $X$ be the number of ``caras''. Then
+Flip a coin twice and let $X$ be the number of ``caras''.\footnote{Wasserman, \emph{All of Statistics}, Example 2.4.} Then
 \[
 \Omega = \set{SS, CS, SC, CC}, \qquad R_X = \set{0,1,2},
 \]
@@ -177,8 +177,8 @@ P(X \le b) &= P(X \le a) + P(a < X \le b),\\
 P(a < X \le b) &= P(X \le b) - P(X \le a) = F_X(b) - F_X(a).
 \end{align*}
 
-\begin{exercise}[Exercise 2.14.2]
-Plot the CDF for $P(X = 2) = P(X = 3) = 1/10$ and $P(X = 5) = 8/10$.
+\begin{exercise}
+Plot the CDF for $P(X = 2) = P(X = 3) = 1/10$ and $P(X = 5) = 8/10$.\footnote{Wasserman, \emph{All of Statistics}, Chapter 2, Exercise 2.}
 \[
 F_X(x) =
 \begin{cases}
@@ -287,7 +287,7 @@ The expression above allows us to make one significant difference between Bayesi
 \end{remark}
 
 \begin{example}
-It is known that discs produced in a factory are defective with probability $0.01$, independently between them. The discs are sold in packages containing $10$ discs, and a guarantee offers a refund whenever more than one, out of ten, are defective.
+It is known that discs produced in a factory are defective with probability $0.01$, independently between them. The discs are sold in packages containing $10$ discs, and a guarantee offers a refund whenever more than one, out of ten, are defective.\footnote{Ross, \emph{A First Course in Probability}, Chapter 4, Problem 48.}
 
 (i) What is the probability of using the guarantee? We need $P(X > 1)$, with $X \sim \operatorname{Bin}(x; n, \theta)$, $n = 10$, $\theta = 0.01$:
 \[
@@ -314,7 +314,7 @@ P(Y = 1) = \binom{3}{1}\mu^{1}(1-\mu)^{2} = \frac{3!}{1!\,2!}\mu(1-\mu)^2 = 3\mu
 
 
 \begin{homework}{2}
-Suppose $20\%$ of the copies of a textbook fail a binding-strength test. We pick $15$ copies at random and let $X$ be the number of copies, among the $15$, that fail the test. Find the probability that
+Suppose $20\%$ of the copies of a textbook fail a binding-strength test.\footnotemark We pick $15$ copies at random and let $X$ be the number of copies, among the $15$, that fail the test. Find the probability that
 \begin{enumerate}[label=(\roman*)]
 \item exactly $8$ copies fail;
 \item at most $8$ copies fail;
@@ -339,6 +339,7 @@ P(X \ge 8) = 1 - P(X \le \new{7}) = 1 - \big[P(X \le 8) - P(X = 8)\big] \approx 
 \end{enumerate}
 Note that (ii) and (iii) both include $X = 8$, so $P(X \le 8) + P(X \ge 8) = 1 + P(X = 8)$.
 \end{homework}
+\footnotetext{Devore, \emph{Probability and Statistics for Engineering and the Sciences}, Example 3.31.}
 
 \subsection{Categorical distribution}
 If now we have $K$ classes, $x \in \set{1, 2, \dots, K}$, then
@@ -719,7 +720,7 @@ f(x,y) =
 0 & \text{otherwise}.
 \end{cases}
 \]
-Find $P(X \le 1/2, Y \le 1/2)$:
+Find $P(X \le 1/2, Y \le 1/2)$:\footnote{Wasserman, \emph{All of Statistics}, Example 2.20.}
 \[
 P(X \le 1/2, Y \le 1/2) = \int_0^{1/2}\int_0^{1/2}\dd x\dd y = \int_0^{1/2}\dd x\int_0^{1/2}\dd y = \frac12\times\frac12 = \frac14.
 \]
@@ -733,7 +734,7 @@ x + y & 0 \le x \le 1,\ 0 \le y \le 1,\\
 0 & \text{otherwise}.
 \end{cases}
 \]
-Check:
+Check:\footnote{Wasserman, \emph{All of Statistics}, Examples 2.21 and 2.38.}
 \begin{align*}
 \int_0^1\int_0^1 (x+y)\dd x\dd y &= \int_0^1\dd y\int_0^1\dd x\,(x+y)
 = \int_0^1\dd y\new{\left(\frac12 x^2 + yx\right)\Big|_0^1}
@@ -790,7 +791,7 @@ for a given $R_X$. Then
 f_Y(y) = \frac{\mathrm{d}F_Y(y)}{\mathrm{d}y}.
 \]
 \begin{exercise}
-$f_X(x) = e^{-x}$, \ $Y(X) = \log(X)$.
+$f_X(x) = e^{-x}$, \ $Y(X) = \log(X)$.\footnote{Wasserman, \emph{All of Statistics}, Example 2.46.}
 \end{exercise}
 
 %=====================================================
@@ -936,6 +937,8 @@ with
 \begin{itemize}
 \item Wasserman, L. (2004). \emph{All of Statistics: A Concise Course in Statistical Inference}. Springer. Chapters 2--3: random variables, common distributions, joint and conditional distributions, expectation, variance and covariance.
 \item Pishro-Nik, H. (2014). \emph{Introduction to Probability, Statistics, and Random Processes}. Kappa Research. \url{https://www.probabilitycourse.com/} Chapters 3--5: discrete and continuous random variables and joint distributions; Section 11.1: the Poisson process.
+\item Devore, J.~L. \emph{Probability and Statistics for Engineering and the Sciences}. Cengage Learning. Chapter 3, the source of the binding-strength example (Example 3.31).
+\item Ross, S.~M. \emph{A First Course in Probability}. Pearson. Chapter 4, the source of the defective-discs example (Problem 48).
 \end{itemize}
 
 \end{document}
