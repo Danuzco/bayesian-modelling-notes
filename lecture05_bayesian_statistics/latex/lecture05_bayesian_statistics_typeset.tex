@@ -1,7 +1,6 @@
 \input{preamble}
 \title{Lecture 5: Bayesian Statistics}
 \author{}\date{}
-\newcommand{\one}{\mathbb{1}}
 
 \begin{document}
 \maketitle
@@ -721,8 +720,9 @@ where $\lambda_i$ are the eigenvalues of $\Sigma$ and the vectors $u_i \in \R^D$
 Indeed,
 \[
 \Sigma\Sigma^{-1} = \sum_i\sum_j\frac{\lambda_i}{\lambda_j}u_i\underbrace{u_i^{\top}u_j}_{\new{\delta_{ij}}}u_j^{\top}
-= \sum_j\frac{\new{\lambda_j}}{\lambda_j}\new{u_j}u_j^{\top} = \new{\one}.
+= \sum_j\frac{\new{\lambda_j}}{\lambda_j}\new{u_j}u_j^{\top} = \new{I},
 \]
+with $I$ the $D\times D$ identity matrix.
 
 Notice that, in
 \[
