@@ -1,6 +1,7 @@
 # Lecture 6 · Kalman Filters
 
-📄 **[Handwritten notes](lecture06_kalman_filters.pdf)** (18 pages)
+📄 **[Handwritten notes](lecture06_kalman_filters.pdf)** (18 pages)  
+📝 **[Typeset version (LaTeX)](lecture06_kalman_filters_typeset.pdf)** (10 pages, [source](latex/lecture06_kalman_filters_typeset.tex))
 
 ## Outline
 

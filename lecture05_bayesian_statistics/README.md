@@ -1,6 +1,7 @@
 # Lecture 5 · Bayesian Statistics
 
-📄 **[Handwritten notes](lecture05_bayesian_statistics.pdf)** (67 pages)
+📄 **[Handwritten notes](lecture05_bayesian_statistics.pdf)** (67 pages)  
+📝 **[Typeset version (LaTeX)](lecture05_bayesian_statistics_typeset.pdf)** (18 pages, [source](latex/lecture05_bayesian_statistics_typeset.tex))
 
 ## Outline
 

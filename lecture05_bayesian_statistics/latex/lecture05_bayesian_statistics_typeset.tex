@@ -1,0 +1,959 @@
+\input{preamble}
+\title{Lecture 5: Bayesian Statistics}
+\author{}\date{}
+\newcommand{\vy}{\vec y}
+\newcommand{\vmu}{\vec\mu}
+\newcommand{\one}{\mathbb{1}}
+
+\begin{document}
+\maketitle
+
+\section{Bayes' rule}
+Let us consider some observed data
+\[
+y = (y_1, \dots, y_n)^{\top}.
+\]
+Bayesian statistics has two main goals:
+\begin{enumerate}[label=(\roman*)]
+\item To make inference about some unknown (unobserved) quantities $\theta = (\theta_1, \theta_2, \dots)^{\top}$, which correspond to population parameters, physical quantities, etc.
+\item Prediction of new or unobserved data $\tilde y$.
+\end{enumerate}
+
+\subsection{Posterior distribution $p(\theta \mid y)$}
+\[
+p(\theta \mid Y = y) = \frac{p(Y = y \mid \theta)\,p(\theta)}{p(Y = y)},
+\]
+or more compactly
+\[
+p(\theta \mid y) = \frac{p(y \mid \theta)\,p(\theta)}{p(y)}.
+\]
+This is
+\[
+p(\theta \mid y) = \frac{p(y \mid \theta)\,p(\theta)}{\sum_{\theta'} p(y \mid \theta')\,p(\theta')}
+\]
+for discrete variables, or
+\[
+f(\theta \mid y) = \frac{f(y \mid \theta)\,f(\theta)}{\int \mathrm{d}\theta'\,f(y \mid \theta')\,f(\theta')}
+\]
+for continuous variables. I will write $p(\cdot)$ for both discrete and continuous variables.
+
+$p(\theta)$ is called the \emph{prior distribution}; it reflects what we know before seeing the data. $p(y \mid \theta)$ is the \emph{likelihood} (or data distribution); it reflects the data we expect to see for each setting of parameters.
+
+\subsection{Covariates}
+Covariates are independent variables (not in the sense of statistically independent). For the supervised case, we also have covariates $X = \set{\vec x_1, \dots, \vec x_n}$, with $\vec x_i \in \R^k$. $X$ is usually written as an $n\times k$ matrix
+\[
+X = \begin{pmatrix}
+x_{11} & x_{12} & \cdots & x_{1k}\\
+x_{21} & x_{22} & \cdots & x_{2k}\\
+\vdots & & & \vdots\\
+x_{n1} & x_{n2} & \cdots & x_{nk}
+\end{pmatrix},
+\]
+where each row corresponds to a vector $x_i \in \R^k$, such that
+\[
+x_i = (x_{i1}\ x_{i2}\ \cdots\ x_{ik}) \qquad\text{and}\qquad x = (x_1, \dots, x_n).
+\]
+
+Covariates appear in regression models. This is, models where we have
+\[
+Y = f_\theta(X) + \varepsilon,
+\]
+with $\varepsilon$ a random error. These models, also called \emph{statistical models}, aim to capture input--output relationships. In reality, most of the time there is no actual deterministic relationship between $Y$ and $X$, because there might be other unmeasured variables (for example $Z$, so that $Y = f(X, Z)$) contributing to $Y$, including measurement errors.
+
+Regression models assume $\E(\varepsilon \mid X = x_0, \theta = \theta_0) = 0$. Thus
+\begin{align*}
+\E[Y \mid x_0, \theta_0] &= \E[f_\theta(X) + \varepsilon \mid x_0, \theta_0] = \E[f_\theta(X) \mid x_0, \theta_0] + \underbrace{\E[\varepsilon \mid x_0, \theta_0]}_{0},\\
+\E[f_\theta(X) \mid x_0, \theta_0] &= \E[f_{\theta_0}(x_0) \mid x_0, \theta_0] = f_{\theta_0}(x_0).
+\end{align*}
+In that case, we need a posterior for the parameters given the data $(y, x)$:
+\[
+p(\theta \mid y, x) = \frac{p(y, x \mid \theta)\,p(\theta)}{p(y, x)}.
+\]
+Since $p(x, \theta) = p(x \mid \theta)\,p(\theta) = p(\theta \mid x)\,p(x)$, and normally $p(x \mid \theta) = p(x)$ (equivalently $p(\theta \mid x) = p(\theta)$), we have
+\begin{align*}
+p(y, x) &= p(y \mid x)\,p(x),\\
+p(y, x \mid \theta) &= p(y \mid x, \theta)\,p(x \mid \theta) = p(y \mid x, \theta)\,p(x).
+\end{align*}
+Thus
+\[
+p(\theta \mid y, x) = \frac{p(y \mid x, \theta)\,p(x)\,p(\theta)}{p(y \mid x)\,p(x)}
+= \frac{p(y \mid x, \theta)\,p(\theta)}{p(y \mid x)}
+= \frac{p(y \mid x, \theta)\,p(\theta)}{\int \mathrm{d}\theta'\,p(y \mid x, \theta')\,p(\theta')}.
+\]
+
+%=====================================================
+\section{Predictive distributions}
+
+\subsection{Prior predictive distribution}
+\[
+p(y) = \int \mathrm{d}\theta\,p(y, \theta) = \int \mathrm{d}\theta\,p(y \mid \theta)\,p(\theta).
+\]
+This is
+\[
+p(y_1, \dots, y_n) = \int \mathrm{d}\theta_1\int \mathrm{d}\theta_2\cdots\int \mathrm{d}\theta_k\,p(y_1, \dots, y_n \mid \theta_1, \dots, \theta_k)\,p(\theta_1, \dots, \theta_k).
+\]
+
+\subsection{Posterior predictive distribution}
+Let us suppose now that we want to predict a new $\tilde Y$ (currently unobserved) outcome, e.g.\ $\tilde Y = (\tilde Y_1)$, given the previous data $y_1, \dots, y_n$. This is
+\[
+p(\tilde Y_1 \mid y_1, \dots, y_n) = \int \mathrm{d}\theta\,p(\tilde Y_1 \mid y_1, \dots, y_n, \theta_1, \dots, \theta_k)\,p(\theta_1, \dots, \theta_k \mid y_1, \dots, y_n),
+\]
+which can be written as
+\[
+p(\tilde Y \mid y) = \int \mathrm{d}\theta\,p(\tilde Y \mid \theta, y)\,p(\theta \mid y).
+\]
+More generally, we can wonder about the chances of certain values $\tilde Y = (\tilde Y_1, \tilde Y_2, \dots)$.
+
+It is usually assumed that $\tilde Y \perp Y \mid \theta$. This is,
+\[
+p(y, \tilde y \mid \theta) = p(y \mid \theta)\,p(\tilde y \mid \theta).
+\]
+Let us consider
+\[
+p(y, \tilde y) = p(\tilde y \mid y)\,p(y), \qquad p(y, \tilde y \mid \theta) = p(\tilde y \mid y, \theta)\,p(y \mid \theta).
+\]
+Then
+\[
+p(y \mid \theta)\,p(\tilde y \mid \theta) = p(\tilde y \mid y, \theta)\,p(y \mid \theta)
+\ \Rightarrow\
+p(\tilde y \mid y, \theta) = p(\tilde y \mid \theta).
+\]
+Therefore
+\[
+p(\tilde y \mid y) = \int \mathrm{d}\theta\,p(\tilde y \mid \theta)\,p(\theta \mid y).
+\]
+
+\begin{remark}
+$p(\tilde Y \mid y, \theta) = p(\tilde Y \mid \theta)$ is a modelling assumption. That is no longer the case for time series. That is, generally
+\[
+p(y_{n+1} \mid y, \theta) \neq p(y_{n+1} \mid \theta),
+\]
+where $\tilde Y_1 = Y_{n+1}$. Thus, with the shorter notation $y = (y_1, \dots, y_n)^{\top} = y_{1:n}$,
+\[
+p(y_{n+1} \mid y_{1:n}) = \int \mathrm{d}\theta\,p(y_{n+1} \mid y_{1:n}, \theta)\,p(\theta \mid y_{1:n}).
+\]
+\end{remark}
+
+\paragraph{With covariates.}
+Let us consider now that there are covariates involved and we want to find
+\[
+p(\tilde Y \mid \tilde x, x, y) = \int \mathrm{d}\theta\,p(\tilde Y \mid \theta, \tilde x, x, y)\,p(\theta \mid \tilde x, x, y).
+\]
+Usually $p(\theta)$ is updated to $p(\theta \mid x, y)$ using previously observed data, and it is assumed not to depend on $\tilde x$. Then
+\[
+p(\theta \mid \tilde x, x, y) = p(\theta \mid x, y).
+\]
+It is also assumed that
+\[
+p(\tilde y \mid \theta, \tilde x, x, y) = p(\tilde y \mid \theta, \tilde x)
+\]
+for any $\theta$ fixed. This is, once $\theta$ is known, past data $(x, y)$ gives no additional information about $\tilde y$ beyond what $\theta$ and $\tilde x$ encode. Combined with $p(\theta \mid \tilde x, x, y) = p(\theta \mid x, y)$, this gives
+\[
+p(\tilde Y \mid \tilde x, x, y) = \int \mathrm{d}\theta\,p(\tilde Y \mid \theta, \tilde x)\,p(\theta \mid x, y).
+\]
+
+%=====================================================
+\section{Modelling}
+Bayesian modelling can be framed in an ice-cream factory analogy. We can imagine that there are $k$ knobs whose positions correspond to values $\theta_1, \dots, \theta_k$. For example, $\theta_1$ can be the amount of vanilla, $\theta_2$ the amount of chocolate, $\theta_3$ the size of the container, etc. Thus, from the modelling standpoint, $p(\theta)$ represents the modeller's uncertainty about the unknown positions of the knobs before inspecting any ice cream.
+
+Thus, the factory produces ice creams $Y = (Y_1, \dots, Y_n)^{\top}$ for some fixed knob positions. This is $Y \mid \theta$. However, because of uncontrolled production variability, ice creams can still differ. The likelihood $p(Y \mid \theta)$, also called \emph{sampling distribution}, describes this variability.
+
+With $Y = (Y_1, \dots, Y_n)^{\top}$ and $y = (y_1, \dots, y_n)^{\top}$: after observing ice creams $y$, we can update our belief about the parameters $\theta$ as
+\[
+p(\theta \mid y) = \frac{p(y \mid \theta)\,p(\theta)}{p(y)}.
+\]
+Of course, the factory needs some raw material $x$ to produce ice creams. Thus
+\[
+p(\theta \mid y, x) = \frac{p(y \mid x, \theta)\,p(\theta)}{\int \mathrm{d}\theta'\,p(y \mid x, \theta')\,p(\theta')}.
+\]
+
+%=====================================================
+\section{Conjugate priors}
+There are pairs (prior, likelihood) for which we can compute the posterior in closed form.
+
+A family $\mathcal{F}$ of distributions for $\theta$ is \emph{conjugate} to a likelihood $p(y \mid \theta)$ if
+\[
+p(\theta) \in \mathcal{F} \ \Rightarrow\ p(\theta \mid y) \in \mathcal{F}.
+\]
+Any prior in $\mathcal{F}$ is called a \emph{conjugate prior} to that likelihood.
+
+%-----------------------------------------------------
+\subsection{The Beta--Binomial model}
+Let us consider the binomial likelihood
+\[
+p(y \mid \theta) = \operatorname{Bin}(y \mid n, \theta) = \binom{n}{y}\theta^{y}(1-\theta)^{n-y},
+\]
+where $n$ is the number of trials, $y$ the number of successes and $\theta$ the probability of a success (the likelihood gives meaning to $\theta$).
+
+Let us also consider now a prior
+\[
+p(\theta) = \operatorname{Beta}(\theta \mid \alpha, \beta) = \underbrace{\frac{\Gamma(\alpha+\beta)}{\Gamma(\alpha)\Gamma(\beta)}}_{1/B(\alpha,\beta)}\theta^{\alpha-1}(1-\theta)^{\beta-1},
+\qquad
+\frac{1}{B(\alpha,\beta)} = \frac{1}{\int_0^1 t^{\alpha-1}(1-t)^{\beta-1}\dd t},
+\]
+for $\alpha > 0$ and $\beta > 0$, or $p(\theta) \propto \theta^{\alpha-1}(1-\theta)^{\beta-1}$. For example, for $\alpha = 1$ and $\beta = 1$, $p(\theta) \propto 1$. This is,
+\[
+p(\theta) = \operatorname{Beta}(\theta \mid 1, 1) = \operatorname{Uniform}(0,1).
+\]
+Notice that
+\[
+\E[\theta] = \frac{\alpha}{\alpha + \beta}, \qquad \Var(\theta) = \frac{\alpha\beta}{(\alpha+\beta)^2(\alpha+\beta+1)}.
+\]
+Then the posterior $p(\theta \mid y)$ is
+\[
+p(\theta \mid y) \propto \theta^{y}(1-\theta)^{n-y}\cdot\theta^{\alpha-1}(1-\theta)^{\beta-1}
+= \theta^{\new{(y+\alpha)}-1}(1-\theta)^{\new{(\beta+n-y)}-1},
+\]
+so
+\[
+p(\theta \mid y) = \operatorname{Beta}(\theta \mid \new{y + \alpha}, \new{\beta + n - y}).
+\]
+One nice thing about this posterior is that the expectation value and the variance can be calculated straight away:
+\[
+\E[\theta \mid y] = \frac{y + \alpha}{\alpha + \beta + n},
+\qquad
+\Var[\theta \mid y] = \frac{(y+\alpha)(\beta + n - y)}{(\alpha+\beta+n)^2(\alpha+\beta+n+1)}.
+\]
+
+\begin{homework}{3}
+Let $\theta \sim \operatorname{Beta}(\alpha, \beta)$, with PDF
+\[
+p(\theta) = \frac{1}{B(\alpha,\beta)}\theta^{\alpha-1}(1-\theta)^{\beta-1}, \qquad 0 < \theta < 1,\ \alpha > 0,\ \beta > 0,
+\]
+where $B(\alpha,\beta) = \int_0^1 t^{\alpha-1}(1-t)^{\beta-1}\dd t = \dfrac{\Gamma(\alpha)\Gamma(\beta)}{\Gamma(\alpha+\beta)}$. Show that
+\begin{enumerate}[label=(\roman*)]
+\item the distribution is normalized, $\int_0^1 p(\theta)\dd\theta = 1$;
+\item $\E[\theta] = \dfrac{\alpha}{\alpha+\beta}$;
+\item $\Var(\theta) = \dfrac{\alpha\beta}{(\alpha+\beta)^2(\alpha+\beta+1)}$.
+\end{enumerate}
+
+\soln
+\begin{enumerate}[label=(\roman*)]
+\item By the definition of $B(\alpha,\beta)$,
+\[
+\int_0^1 p(\theta)\dd\theta = \frac{1}{B(\alpha,\beta)}\int_0^1 \theta^{\alpha-1}(1-\theta)^{\beta-1}\dd\theta = \frac{\new{B(\alpha,\beta)}}{B(\alpha,\beta)} = 1.
+\]
+\item Multiplying by $\theta$ only raises the first exponent by one, so the integral is again a Beta function:
+\[
+\E[\theta] = \frac{1}{B(\alpha,\beta)}\int_0^1 \theta^{\new{\alpha}}(1-\theta)^{\beta-1}\dd\theta = \frac{B(\new{\alpha+1},\beta)}{B(\alpha,\beta)}
+= \frac{\Gamma(\alpha+1)\,\Gamma(\alpha+\beta)}{\Gamma(\alpha)\,\Gamma(\alpha+\beta+1)} = \new{\frac{\alpha}{\alpha+\beta}},
+\]
+using $\Gamma(z+1) = z\,\Gamma(z)$ twice, the $\Gamma(\beta)$ factors having cancelled.
+\item In the same way,
+\[
+\E[\theta^2] = \frac{B(\new{\alpha+2},\beta)}{B(\alpha,\beta)} = \frac{\Gamma(\alpha+2)\,\Gamma(\alpha+\beta)}{\Gamma(\alpha)\,\Gamma(\alpha+\beta+2)} = \new{\frac{\alpha(\alpha+1)}{(\alpha+\beta)(\alpha+\beta+1)}},
+\]
+so
+\begin{align*}
+\Var(\theta) &= \E[\theta^2] - \E[\theta]^2 = \frac{\alpha(\alpha+1)}{(\alpha+\beta)(\alpha+\beta+1)} - \frac{\alpha^2}{(\alpha+\beta)^2}\\
+&= \frac{\alpha\big[(\alpha+1)(\alpha+\beta) - \alpha(\alpha+\beta+1)\big]}{(\alpha+\beta)^2(\alpha+\beta+1)}
+= \frac{\alpha\,\new{\beta}}{(\alpha+\beta)^2(\alpha+\beta+1)}.
+\end{align*}
+\end{enumerate}
+These are the prior moments quoted above. Replacing $\alpha \to y + \alpha$ and $\beta \to \beta + n - y$ gives the posterior moments.
+\end{homework}
+
+\paragraph{Posterior predictive.}
+The posterior predictive distribution is
+\[
+p(\tilde y \mid y) = \int p(\tilde y \mid \theta)\,p(\theta \mid y)\dd\theta.
+\]
+For $\tilde n \ge 1$ new trials,
+\begin{align*}
+p(\tilde y \mid y) &= \int \operatorname{Bin}(\tilde y \mid \tilde n, \theta)\,\operatorname{Beta}(\theta \mid y + \alpha, \beta + n - y)\dd\theta\\
+&= \new{\binom{\tilde n}{\tilde y}}\new{\frac{1}{B(y+\alpha, \beta+n-y)}}\int \new{\theta^{\tilde y}(1-\theta)^{\tilde n - \tilde y}}\,\new{\theta^{y+\alpha-1}(1-\theta)^{\beta+n-y-1}}\dd\theta\\
+&= \binom{\tilde n}{\tilde y}\frac{\new{B(\tilde y + y + \alpha,\ \beta + n + \tilde n - y - \tilde y)}}{B(y + \alpha,\ \beta + n - y)}.
+\end{align*}
+
+\begin{example}
+Let us consider that we observed $y = 4$ out of $n = 5$. Also, let us choose $\alpha = 1$ and $\beta = 1$, so that $\operatorname{Beta}(\theta \mid 1, 1) = \operatorname{Uniform}(0,1)$. In that case,
+\[
+p(\tilde y \mid y = 4) = \binom{\tilde n}{\tilde y}\frac{B(\tilde y + 5,\ \tilde n - \tilde y + 2)}{B(5, 2)}.
+\]
+\end{example}
+
+
+\begin{homework}{4}
+Let $y_1, \dots, y_n$ be i.i.d.\ Poisson with parameter $\theta > 0$,
+\[
+p(y_i \mid \theta) = \frac{\theta^{y_i}e^{-\theta}}{y_i!}, \qquad y_i = 0, 1, 2, \dots,
+\]
+and let the prior be a Gamma density with shape $\alpha > 0$ and rate $\beta > 0$,
+\[
+p(\theta) = \frac{\beta^{\alpha}}{\Gamma(\alpha)}\theta^{\alpha-1}e^{-\beta\theta}, \qquad \theta > 0.
+\]
+\begin{enumerate}[label=(\roman*)]
+\item Show that $p(\theta)$ is a conjugate prior for the likelihood $p(y_1, \dots, y_n \mid \theta)$.
+\item Find the mean and variance of the posterior $p(\theta \mid y_1, \dots, y_n)$.
+\item Find the posterior predictive distribution $p(\tilde y \mid y_1, \dots, y_n)$ of a new observation $\tilde y$.
+\item Find the mean and variance of $p(\tilde y \mid y_1, \dots, y_n)$.
+\end{enumerate}
+
+\soln
+\begin{enumerate}[label=(\roman*)]
+\item Write $s = \sum_{i=1}^{n} y_i$. By independence,
+\[
+p(y_1, \dots, y_n \mid \theta) = \prod_{i=1}^{n}\frac{\theta^{y_i}e^{-\theta}}{y_i!} \propto \theta^{\new{s}}e^{\new{-n\theta}},
+\]
+and therefore
+\[
+p(\theta \mid y) \propto \theta^{s}e^{-n\theta}\cdot\theta^{\alpha-1}e^{-\beta\theta} = \theta^{\new{(\alpha+s)}-1}e^{-\new{(\beta+n)}\theta}.
+\]
+This is the kernel of a Gamma density, so $p(\theta \mid y) = \operatorname{Gamma}(\theta \mid \alpha_n, \beta_n)$ with
+\[
+\alpha_n = \alpha + \sum_{i=1}^{n} y_i, \qquad \beta_n = \beta + n.
+\]
+The posterior is in the same family as the prior, so the Gamma prior is conjugate to the Poisson likelihood.
+\item For a $\operatorname{Gamma}(a, b)$ density the mean is $a/b$ and the variance $a/b^2$, so
+\[
+\E[\theta \mid y] = \frac{\alpha + \sum_i y_i}{\beta + n}, \qquad
+\Var(\theta \mid y) = \frac{\alpha + \sum_i y_i}{(\beta + n)^2}.
+\]
+\item Integrating the Poisson likelihood of $\tilde y$ against the posterior,
+\begin{align*}
+p(\tilde y \mid y) &= \int_0^\infty \frac{\theta^{\tilde y}e^{-\theta}}{\tilde y!}\,\frac{\beta_n^{\alpha_n}}{\Gamma(\alpha_n)}\theta^{\alpha_n-1}e^{-\beta_n\theta}\dd\theta
+= \frac{\beta_n^{\alpha_n}}{\Gamma(\alpha_n)\,\tilde y!}\int_0^\infty \theta^{\new{\alpha_n+\tilde y}-1}e^{-\new{(\beta_n+1)}\theta}\dd\theta\\
+&= \frac{\beta_n^{\alpha_n}}{\Gamma(\alpha_n)\,\tilde y!}\,\new{\frac{\Gamma(\alpha_n+\tilde y)}{(\beta_n+1)^{\alpha_n+\tilde y}}}
+= \frac{\Gamma(\alpha_n+\tilde y)}{\Gamma(\alpha_n)\,\tilde y!}\left(\frac{\beta_n}{\beta_n+1}\right)^{\alpha_n}\left(\frac{1}{\beta_n+1}\right)^{\tilde y},
+\end{align*}
+for $\tilde y = 0, 1, 2, \dots$, using $\int_0^\infty \theta^{a-1}e^{-b\theta}\dd\theta = \Gamma(a)/b^{a}$. This is a negative binomial distribution, $\tilde y \mid y \sim \operatorname{NegBin}\big(\alpha_n,\ \beta_n/(\beta_n+1)\big)$.
+\item By the laws of total expectation and total variance, with $\E[\tilde y \mid \theta] = \Var(\tilde y \mid \theta) = \theta$,
+\begin{align*}
+\E[\tilde y \mid y] &= \E\big[\E[\tilde y \mid \theta] \,\big|\, y\big] = \E[\theta \mid y] = \frac{\alpha_n}{\beta_n},\\
+\Var(\tilde y \mid y) &= \E\big[\Var(\tilde y \mid \theta) \,\big|\, y\big] + \Var\big(\E[\tilde y \mid \theta] \,\big|\, y\big)
+= \frac{\alpha_n}{\beta_n} + \frac{\alpha_n}{\beta_n^2} = \new{\frac{\alpha_n(\beta_n+1)}{\beta_n^2}}.
+\end{align*}
+The predictive variance is larger than its mean, unlike a Poisson: the extra $\alpha_n/\beta_n^2$ is our remaining uncertainty about $\theta$.
+\end{enumerate}
+\end{homework}
+
+%-----------------------------------------------------
+\subsection{The Gaussian--Gaussian model: known variance}
+Let us consider the likelihood for a single observation $y_i$:
+\[
+p(y_i \mid \theta) = \frac{1}{\sqrt{2\pi\sigma^2}}\exp\left(-\frac{1}{2\sigma^2}(y_i - \theta)^2\right),
+\]
+and assuming that $y_1, \dots, y_n$ are conditionally independent given $\theta$, then
+\begin{align*}
+p(y \mid \theta) &= \prod_{i=1}^{n} p(y_i \mid \theta) = \new{\frac{1}{(2\pi\sigma^2)^{n/2}}}\exp\left(-\frac{1}{2\sigma^2}\new{\sum_{i=1}^{n}}(y_i - \theta)^2\right)
+\propto \exp\left(-\frac{1}{2\sigma^2}\sum_{i=1}^{n}(y_i - \theta)^2\right)\\
+&= \exp\left(-\frac{1}{2\sigma^2}\sum_{i=1}^{n}\new{(y_i^2 - 2\theta y_i + \theta^2)}\right)
+= \exp\left(-\frac{1}{2\sigma^2}\sum_{i=1}^{n}y_i^2 + \frac{2\theta}{2\sigma^2}\,\new{n\,\frac1n}\sum_{i=1}^{n}y_i - \frac{1}{2\sigma^2}\theta^2 \new{n}\right)\\
+&= \exp\left(-\frac{1}{2\sigma^2}\sum_{i} y_i^2\right)\times\exp\left(\frac{\theta n\new{\bar y}}{\sigma^2} - \frac{1}{2\sigma^2}\theta^2 n\right)
+\propto \exp\left(\new{\frac{n}{2\sigma^2}}\left(2\theta\bar y - \theta^2\right)\right)\\
+&= \exp\left(-\frac{n}{2\sigma^2}\left(\theta^2 - 2\theta\bar y \new{{}+ \bar y^2 - \bar y^2}\right)\right)
+= \exp\left(-\frac{n}{2\sigma^2}\new{(\theta - \bar y)^2} + \frac{\bar y^2 n}{2\sigma^2}\right)\\
+&= \exp\left(-\frac{n}{2\sigma^2}(\theta - \bar y)^2\right)\new{\exp\left(\frac{n\bar y^2}{2\sigma^2}\right)}
+\propto \exp\left(-\frac{n}{2\sigma^2}(\theta - \bar y)^2\right).
+\end{align*}
+So
+\[
+p(y \mid \theta) \propto \exp\left(-\frac{n}{2\sigma^2}(\theta - \bar y)^2\right).
+\]
+Also, consider a Gaussian prior
+\[
+p(\theta) = \frac{1}{(2\pi\tau_0^2)^{1/2}}\exp\left(-\frac{1}{2\tau_0^2}(\theta - \mu_0)^2\right),
+\qquad\text{which}\qquad
+p(\theta) \propto \exp\left(-\frac{1}{2\tau_0^2}(\theta - \mu_0)^2\right).
+\]
+Then
+\[
+p(y \mid \theta)\,p(\theta) \propto \exp\left[-\frac{n}{2\sigma^2}(\theta - \bar y)^2 - \frac{1}{2\tau_0^2}(\theta - \mu_0)^2\right].
+\]
+The exponent is
+\begin{align*}
+&-\frac{n}{2\sigma^2}(\theta^2 - 2\theta\bar y + \bar y^2) - \frac{1}{2\tau_0^2}(\theta^2 - 2\theta\mu_0 + \mu_0^2)\\
+&= -\frac12\left[\theta^2\new{\left(\frac{n}{\sigma^2} + \frac{1}{\tau_0^2}\right)} - 2\theta\new{\left(\frac{\bar y n}{\sigma^2} + \frac{\mu_0}{\tau_0^2}\right)} + \bar y^2\frac{n}{\sigma^2} + \frac{\mu_0^2}{\tau_0^2}\right].
+\end{align*}
+The bracket equals
+\[
+\underbrace{\left(\frac{n}{\sigma^2} + \frac{1}{\tau_0^2}\right)}_{\new{1/\tau_n^2}}
+\Bigg[\theta^2 - 2\theta\underbrace{\frac{\frac{\mu_0}{\tau_0^2} + \frac{\bar y n}{\sigma^2}}{\new{\frac{n}{\sigma^2} + \frac{1}{\tau_0^2}}}}_{\new{\mu_n}}\Bigg]
++ \underbrace{\left(\bar y^2\frac{n}{\sigma^2} + \frac{\mu_0^2}{\tau_0^2}\right)}_{\new{C}}.
+\]
+Bringing back the $-\frac12$:
+\[
+-\frac{1}{2\tau_n^2}\left(\theta^2 - 2\theta\mu_n \new{{}+ \mu_n^2}\right) \new{{}+ \frac{\mu_n^2}{2\tau_n^2}} - \frac12 C
+= -\frac{1}{2\tau_n^2}\new{(\theta - \mu_n)^2} + \new{K}.
+\]
+Then
+\[
+p(y \mid \theta)\,p(\theta) \propto \exp\left(-\frac{1}{2\tau_n^2}(\theta - \mu_n)^2\right)\times\exp(K)
+\ \Rightarrow\
+p(y \mid \theta)\,p(\theta) \propto \exp\left[-\frac{1}{2\tau_n^2}(\theta - \mu_n)^2\right].
+\]
+Since $p(\theta \mid y) \propto p(y \mid \theta)\,p(\theta)$,
+\[
+p(\theta \mid y) \propto \exp\left[-\frac{1}{2\tau_n^2}(\theta - \mu_n)^2\right],
+\qquad
+\theta \mid y \sim \Normal(\mu_n, \tau_n^2),
+\]
+with
+\[
+\frac{1}{\tau_n^2} = \frac{n}{\sigma^2} + \frac{1}{\tau_0^2},
+\qquad
+\mu_n = \frac{\frac{\mu_0}{\tau_0^2} + \frac{\bar y n}{\sigma^2}}{\frac{n}{\sigma^2} + \frac{1}{\tau_0^2}}.
+\]
+Thus
+\[
+\E[\theta \mid y] = \mu_n, \qquad \Var(\theta \mid y) = \tau_n^2.
+\]
+
+\paragraph{Posterior predictive distribution.}
+\[
+p(\tilde y \mid y) = \int p(\tilde y \mid \theta, y)\,p(\theta \mid y)\dd\theta = \int p(\tilde y \mid \theta)\,p(\theta \mid y)\dd\theta.
+\]
+With $m$ the new number of observations and $\bar{\tilde y}$ their mean, the same split $\sum_i(\tilde y_i - \theta)^2 = \sum_i(\tilde y_i - \bar{\tilde y})^2 + m(\bar{\tilde y} - \theta)^2$ used for the likelihood gives
+\[
+p(\tilde y \mid y) \propto \exp\left(-\frac{1}{2\sigma^2}\sum_{i=1}^{m}(\tilde y_i - \bar{\tilde y})^2\right)\int \mathrm{d}\theta\,\exp\left(-\frac{m}{2\sigma^2}(\theta - \bar{\tilde y})^2\right)\exp\left(-\frac{1}{2\tau_n^2}(\theta - \mu_n)^2\right).
+\]
+The first factor depends on $\tilde y$, so it must be kept: we want a distribution over $\tilde y$, and only factors free of $\tilde y$ can go into the proportionality constant. Every factor is the exponential of a quadratic in $(\tilde y, \theta)$, and integrating $\theta$ out of a joint Gaussian leaves a Gaussian, so $p(\tilde y \mid y)$ is a (multivariate) Normal. Its moments are, with $\mathbf{1}$ the vector of $m$ ones,
+\[
+\tilde y \mid y \sim \Normal\left(\mu_n\mathbf{1},\ \sigma^2 I_m + \tau_n^2\,\mathbf{1}\mathbf{1}^{\top}\right),
+\]
+since $\tilde y_i = \theta + \varepsilon_i$ with $\theta \mid y \sim \Normal(\mu_n, \tau_n^2)$ shared by all new observations and $\varepsilon_i \sim \Normal(0, \sigma^2)$ independent. Also,
+\[
+\E[\tilde y \mid y] = \E\big[\E[\tilde y \mid \theta, y] \mid y\big],
+\]
+\[
+\E[\tilde y \mid y] = \int \mathrm{d}\tilde y\,\tilde y\int p(\tilde y \mid \theta)\,p(\theta \mid y)\dd\theta
+= \int \mathrm{d}\theta\,p(\theta \mid y)\underbrace{\int \mathrm{d}\tilde y\,\tilde y\,p(\tilde y \mid \theta)}_{\theta}
+= \mu_n.
+\]
+For $m = 1$,
+\[
+\Var(\tilde y \mid y) = \sigma^2 + \tau_n^2.
+\]
+
+%-----------------------------------------------------
+\subsection{Known mean (unknown variance)}
+We saw before that for iid $y_1, \dots, y_n$
+\[
+p(y \mid \theta) = \prod_{i=1}^{n} p(y_i \mid \theta) = \frac{1}{(2\pi\sigma^2)^{n/2}}\exp\left(-\frac{1}{2\sigma^2}\sum_{i=1}^{n}(y_i - \theta)^2\right),
+\]
+where $p(y_i \mid \theta) = \frac{1}{\sqrt{2\pi}\,\sigma}\exp\left(-\frac{1}{2\sigma^2}(y_i - \theta)^2\right)$.
+
+But now we consider that $\theta$ is known and $\sigma^2$ is unknown. Thus, we can rewrite $p(y \mid \theta)$ as
+\[
+p(y \mid \sigma^2) = \frac{1}{(2\pi\sigma^2)^{n/2}}\exp\left(-\frac{1}{2\sigma^2}\sum_{i=1}^{n}(y_i - \theta)^2\right)
+\propto \frac{1}{(\sigma^2)^{n/2}}\exp\left(-\frac{nv}{2\sigma^2}\right),
+\qquad
+v = \frac1n\sum_{i=1}^{n}(y_i - \theta)^2.
+\]
+The appropriate prior for this is the \emph{inverse-gamma distribution}
+\[
+p(\phi) = \frac{\beta^\alpha}{\Gamma(\alpha)}\phi^{-(\alpha+1)}e^{-\beta/\phi}, \qquad \phi > 0,
+\]
+with
+\[
+\E[\phi] = \frac{\beta}{\alpha - 1}\ (\alpha > 1), \qquad \Var(\phi) = \frac{\beta^2}{(\alpha-1)^2(\alpha-2)}\ (\alpha > 2).
+\]
+Setting $\phi = \sigma^2$ we obtain
+\[
+p(\sigma^2) \propto (\sigma^2)^{-(\alpha+1)}e^{-\beta/\sigma^2}.
+\]
+Thus, the posterior is
+\begin{align*}
+p(\sigma^2 \mid y) &\propto p(y \mid \sigma^2)\,p(\sigma^2)
+\propto (\sigma^2)^{\new{-n/2 - (\alpha+1)}}\exp\left[-\left(\new{\frac{nv}{2\sigma^2} + \frac{\beta}{\sigma^2}}\right)\right]\\
+&= (\sigma^2)^{-(\new{\frac n2 + \alpha} + 1)}\exp\left[-\new{\frac{1}{\sigma^2}}\left(\new{\frac{nv}{2} + \beta}\right)\right],
+\end{align*}
+\[
+p(\sigma^2 \mid y) = \frac{\beta'^{\alpha'}}{\Gamma(\alpha')}(\sigma^2)^{-(\new{\alpha'}+1)}\exp\left[-\frac{1}{\sigma^2}\new{\beta'}\right],
+\qquad
+\alpha' = \frac n2 + \alpha, \quad \beta' = \frac{nv}{2} + \beta.
+\]
+
+\paragraph{Posterior predictive distribution.}
+\[
+p(\tilde y \mid y) = \int \mathrm{d}\sigma^2\,p(\tilde y \mid \sigma^2, \theta)\,p(\sigma^2 \mid y),
+\qquad
+p(\tilde y \mid \sigma^2, \theta) = \frac{1}{(2\pi\sigma^2)^{m/2}}\exp\left[-\frac{1}{2\sigma^2}\sum_{i=1}^{m}(\tilde y_i - \theta)^2\right].
+\]
+Thus
+\begin{align*}
+p(\tilde y \mid y) &\propto \int \mathrm{d}\sigma^2\,\frac{1}{(\sigma^2)^{m/2}}\exp\left[-\frac{1}{2\sigma^2}\sum_{i=1}^{m}(\tilde y_i - \theta)^2\right](\sigma^2)^{-(\alpha'+1)}\exp\left[-\frac{1}{\sigma^2}\beta'\right]\\
+&= \int \mathrm{d}\sigma^2\,(\sigma^2)^{-(\new{\frac m2 + \alpha'} + 1)}\exp\left[-\frac{1}{\sigma^2}\left(\new{\beta' + \frac12\sum_{i=1}^{m}(\tilde y_i - \theta)^2}\right)\right]
+= \int \mathrm{d}\sigma^2\,(\sigma^2)^{-(\new{a}+1)}\exp\left[-\frac{\new{b}}{\sigma^2}\right],
+\end{align*}
+with
+\[
+a = \frac m2 + \alpha', \qquad b = \beta' + \frac12\sum_{i=1}^{m}(\tilde y_i - \theta)^2.
+\]
+Recall that $p(\phi) = \frac{\beta^\alpha}{\Gamma(\alpha)}\phi^{-(\alpha+1)}e^{-\beta/\phi}$; therefore
+\[
+\int \mathrm{d}\phi\,p(\phi) = \frac{\beta^\alpha}{\Gamma(\alpha)}\int \phi^{-(\alpha+1)}e^{-\beta/\phi}\dd\phi = 1
+\quad\text{and thus}\quad
+\int \phi^{-(\alpha+1)}e^{-\beta/\phi}\dd\phi = \frac{\Gamma(\alpha)}{\beta^\alpha}.
+\]
+Thus, keeping the constants,
+\[
+p(\tilde y \mid y) = \frac{1}{(2\pi)^{m/2}}\frac{\beta'^{\alpha'}}{\Gamma(\alpha')}\int \mathrm{d}\sigma^2\,(\sigma^2)^{-(a+1)}e^{-b/\sigma^2}
+= \frac{1}{(2\pi)^{m/2}}\frac{\beta'^{\alpha'}}{\Gamma(\alpha')}\frac{\Gamma(a)}{b^a},
+\]
+\[
+p(\tilde y \mid y) = \frac{1}{(2\pi)^{m/2}}\frac{(\beta')^{\alpha'}\,\Gamma(\frac m2 + \alpha')}{\Gamma(\alpha')\left[\beta' + \frac12\sum_{i=1}^{m}(\tilde y_i - \theta)^2\right]^{\frac m2 + \alpha'}}.
+\]
+If $m = 1$:
+\[
+p(\tilde y \mid y) = \frac{1}{(2\pi)^{1/2}}\frac{(\beta')^{\alpha'}\,\Gamma(\frac12 + \alpha')}{\Gamma(\alpha')\left[\beta' + \frac12(\tilde y_1 - \theta)^2\right]^{\frac12 + \alpha'}}.
+\]
+This is a $t$-Student distribution with $2\alpha'$ degrees of freedom, with
+\[
+\E[\tilde y \mid y] = \theta, \qquad \Var[\tilde y \mid y] = \frac{\beta'}{\alpha' - 1}.
+\]
+
+%-----------------------------------------------------
+\subsection{Unknown $\mu$ and $\sigma^2$}
+Now, we want to make inference about $\mu$ and $\sigma^2$. This is, $\theta = (\mu, \sigma^2)$ and
+\[
+p(\mu, \sigma^2 \mid y) \propto p(y \mid \mu, \sigma^2)\,p(\mu, \sigma^2).
+\]
+The trick here is to write
+\[
+p(\mu, \sigma^2) = p(\mu \mid \sigma^2)\,p(\sigma^2)
+\]
+and choose
+\[
+\mu \mid \sigma^2 \sim \Normal(\mu_0, \sigma^2/\kappa_0), \qquad \sigma^2 \sim \text{Inv-}\chi^2(\nu_0, \sigma_0^2).
+\]
+This is
+\[
+p(\mu \mid \sigma^2) = \left(\frac{\kappa_0}{2\pi\sigma^2}\right)^{1/2}\exp\left(-\frac{\kappa_0(\mu - \mu_0)^2}{2\sigma^2}\right),
+\qquad
+p(\sigma^2) \propto (\sigma^2)^{-(\nu_0/2 + 1)}\exp\left(-\frac{\nu_0\sigma_0^2}{2\sigma^2}\right),
+\]
+knowing that
+\[
+\int_0^\infty x^{-(a+1)}e^{-b/x}\dd x = \frac{\Gamma(a)}{b^a}.
+\]
+Together,
+\[
+p(\mu, \sigma^2) = \text{N-Inv-}\chi^2\left(\mu, \sigma^2 \,\Big|\, \mu_0, \frac{\sigma_0^2}{\kappa_0}; \nu_0, \sigma_0^2\right).
+\]
+
+\paragraph{Likelihood.} With $\theta = (\mu, \sigma^2)$,
+\[
+p(y \mid \mu, \sigma^2) = \frac{1}{(2\pi\sigma^2)^{n/2}}\exp\left(-\frac{1}{2\sigma^2}\sum_{i=1}^{n}(y_i - \mu)^2\right)
+= \frac{1}{(2\pi\sigma^2)^{n/2}}\exp\left(-\frac{1}{2\sigma^2}\new{\left[(n-1)s^2 + n(\bar y - \mu)^2\right]}\right),
+\]
+where
+\[
+s^2 = \frac{1}{n-1}\sum_{i=1}^{n}(y_i - \bar y)^2
+\]
+is the sampling variance.
+
+\paragraph{Posterior.} $p(\mu, \sigma^2 \mid y) \propto p(y \mid \mu, \sigma^2)\,p(\mu, \sigma^2)$, giving
+\[
+p(\mu, \sigma^2 \mid y) = \text{N-Inv-}\chi^2\left(\mu, \sigma^2 \,\Big|\, \mu_n, \frac{\sigma_n^2}{\kappa_n}; \nu_n, \sigma_n^2\right),
+\]
+with
+\begin{align*}
+\mu_n &= \left(\frac{\kappa_0}{\kappa_0 + n}\right)\mu_0 + \frac{n}{\kappa_0 + n}\bar y \qquad\text{(weighted average)},\\
+\kappa_n &= \kappa_0 + n,\\
+\nu_n &= \nu_0 + n,\\
+\nu_n\sigma_n^2 &= \nu_0\sigma_0^2 + (n-1)s^2 + \left(\frac{\kappa_0 n}{\kappa_0 + n}\right)(\bar y - \mu_0)^2.
+\end{align*}
+Then,
+\[
+\mu \mid \sigma^2, y \sim \Normal(\mu_n, \sigma^2/\kappa_n), \qquad \sigma^2 \mid y \sim \text{Inv-}\chi^2(\nu_n, \sigma_n^2).
+\]
+
+\paragraph{Posterior predictive.}
+\[
+p(\tilde y) = \int \mathrm{d}\theta\,p(\tilde y \mid \theta)\,p(\theta),
+\qquad
+p(\tilde y \mid y) = \int \mathrm{d}\theta\,p(\tilde y \mid \theta, y)\,p(\theta \mid y) = \int \mathrm{d}\theta\,\new{p(\tilde y \mid \theta)}\,p(\theta \mid y),
+\]
+\[
+p(\tilde y \mid y) = \new{\int \mathrm{d}\sigma^2\int \mathrm{d}\mu}\,p(\tilde y \mid \new{\mu, \sigma^2})\,p(\new{\mu, \sigma^2} \mid y).
+\]
+Since $\int \tilde y\,p(\tilde y \mid \mu, \sigma^2)\dd\tilde y = \mu$,
+\[
+\int \tilde y\,p(\tilde y \mid y)\dd\tilde y = \int \mu\,p(\mu \mid y)\dd\mu.
+\]
+
+\paragraph{Marginal posterior of $\mu$.}
+From the likelihood and the prior,
+\begin{align*}
+p(y \mid \mu, \sigma^2) &= \frac{1}{(2\pi\sigma^2)^{n/2}}\exp\left(-\frac{1}{2\sigma^2}\left[(n-1)s^2 + n(\bar y - \mu)^2\right]\right),\\
+p(\mu, \sigma^2) &\propto \left(\frac{\kappa_0}{2\pi\sigma^2}\right)^{1/2}\exp\left(-\frac{\kappa_0(\mu - \mu_0)^2}{2\sigma^2}\right)\times(\sigma^2)^{-(\nu_0/2 + 1)}\exp\left(-\frac{\nu_0\sigma_0^2}{2\sigma^2}\right),
+\end{align*}
+we get
+\[
+p(\mu, \sigma^2 \mid y) \propto \frac{1}{(\sigma^2)^{n/2}}\frac{1}{(\sigma^2)^{1/2}}\frac{1}{(\sigma^2)^{(\nu_0/2 + 1)}}\exp\left(-\frac{\new{B}}{\sigma^2}\right)
+= (\sigma^2)^{\new{-(\frac{\nu_0}{2} + \frac n2 + \frac12 + 1)}}\exp\left(-\frac{B}{\sigma^2}\right),
+\]
+\[
+p(\mu, \sigma^2 \mid y) = \new{K}(\sigma^2)^{-(\new{A}+1)}\exp\left(-\frac{B}{\sigma^2}\right),
+\]
+with
+\[
+A = \frac{\nu_0 + n + 1}{2} = \frac{\nu_n + 1}{2},
+\qquad
+B = \frac12\left[\nu_n\sigma_n^2 + \kappa_n(\mu - \mu_n)^2\right].
+\]
+Then
+\[
+\int p(\mu, \sigma^2 \mid y)\dd\sigma^2 = p(\mu \mid y),
+\]
+\[
+\int p(\mu, \sigma^2 \mid y)\dd\sigma^2 = \new{K}\int \new{(\sigma^2)^{-(A+1)}e^{-B/\sigma^2}}\dd\sigma^2 = K\new{\frac{\Gamma(A)}{B^A}} = K\,\Gamma(A)\,\new{B^{-A}},
+\]
+so
+\[
+p(\mu \mid y) \propto \new{\Gamma\left(\frac{\nu_n + 1}{2}\right)}\new{\left[1 + \frac{\kappa_n(\mu - \mu_n)^2}{\nu_n\sigma_n^2}\right]^{-\frac{\nu_n + 1}{2}}}.
+\]
+
+%=====================================================
+\section{Exponential family}
+For $n$ observations, a distribution that can be written as
+\[
+p(\vec y \mid \vec\theta) \propto g(\vec\theta)^{n}\exp\left[f(\vec\theta)^{\top}T(\vec y)\right]
+\]
+is said to belong to the \emph{exponential family}. $T(\vec y)$ is the \emph{sufficient statistic} for $\vec\theta$, and $f(\vec\theta)$ is the \emph{natural parameter}.
+
+If the prior can be written as
+\[
+p(\vec\theta) \propto g(\vec\theta)^{\eta}\exp\left[f(\vec\theta)^{\top}\vec\nu\right],
+\]
+then the posterior is
+\[
+p(\vec\theta \mid \vec y) \propto g(\vec\theta)^{n+\eta}\exp\left[f(\vec\theta)^{\top}\big(T(\vec y) + \vec\nu\big)\right]:
+\]
+same $f(\vec\theta)$ and same $g(\vec\theta)$.
+
+\begin{example}[Beta--Binomial]
+\[
+p(y \mid \theta) = \binom{m}{y}\theta^{y}(1-\theta)^{m-y} = \binom{m}{y}\exp\left[\log\left(\theta^{y}(1-\theta)^{m-y}\right)\right]
+= \binom{m}{y}\exp\left[y\log\theta + (m-y)\log(1-\theta)\right]
+\]
+\[
+\propto \exp\left(f(\theta)^{\top}T(y)\right),
+\qquad
+f(\theta) = \begin{pmatrix}\log\theta\\ \log(1-\theta)\end{pmatrix},
+\]
+\[
+T(y) = \begin{pmatrix}y\\ m-y\end{pmatrix}\ \text{(sufficient statistics vector)},
+\quad
+g(\theta) = 1.
+\]
+Beta prior:
+\[
+p(\theta) \propto \theta^{\alpha-1}(1-\theta)^{\beta-1} = \exp\left[(\alpha-1)\log\theta + (\beta-1)\log(1-\theta)\right].
+\]
+Thus
+\[
+\vec\nu = \begin{pmatrix}\alpha - 1\\ \beta - 1\end{pmatrix}.
+\]
+\end{example}
+
+
+\begin{homework}{4}
+\begin{enumerate}[label=(\roman*)]
+\item For the Poisson likelihood $p(y_1, \dots, y_n \mid \theta)$ of the previous exercise, find the natural parameter $f(\theta)$, the function $g(\theta)$ and the sufficient statistic $T(y)$.
+\item Using this notation, find a suitable prior for the Poisson likelihood and identify the resulting distribution.
+\end{enumerate}
+Make sure all distributions are normalized and the parameters are consistent with the exponential-family notation.
+
+\soln
+\begin{enumerate}[label=(\roman*)]
+\item
+\[
+p(y \mid \theta) = \prod_{i=1}^{n}\frac{\theta^{y_i}e^{-\theta}}{y_i!}
+= \Big(\prod_i \frac{1}{y_i!}\Big)\,e^{-n\theta}\,\theta^{\sum_i y_i}
+\propto \new{\big(e^{-\theta}\big)^{n}}\exp\Big[\new{\log\theta}\,\new{\sum_i y_i}\Big],
+\]
+so
+\[
+g(\theta) = e^{-\theta}, \qquad f(\theta) = \log\theta, \qquad T(y) = \sum_{i=1}^{n} y_i.
+\]
+\item A conjugate prior has the form
+\[
+p(\theta) \propto g(\theta)^{\eta}\exp\big[f(\theta)\,\nu\big] = e^{-\eta\theta}\exp(\nu\log\theta) = \new{\theta^{\nu}e^{-\eta\theta}},
+\]
+the kernel of a $\operatorname{Gamma}(\nu + 1, \eta)$ density (shape $\nu + 1$, rate $\eta$). Normalized,
+\[
+p(\theta) = \frac{\eta^{\nu+1}}{\Gamma(\nu+1)}\theta^{\nu}e^{-\eta\theta}, \qquad \nu > -1,\ \eta > 0.
+\]
+The posterior is then
+\[
+p(\theta \mid y) \propto g(\theta)^{n+\eta}\exp\big[f(\theta)\big(T(y) + \nu\big)\big] = \theta^{\new{\nu + \sum_i y_i}}e^{-\new{(\eta+n)}\theta},
+\]
+that is $\operatorname{Gamma}\big(\nu + 1 + \sum_i y_i,\ \eta + n\big)$. With $\alpha = \nu + 1$ and $\beta = \eta$ this is the result of the previous exercise.
+\end{enumerate}
+\end{homework}
+
+%=====================================================
+\section{Multivariate normal model with known variance}
+\paragraph{Likelihood.}
+\[
+p(\vec y \mid \vmu, \Sigma) = |\Sigma|^{-1/2}(2\pi)^{-D/2}\exp\left(-\frac12(\vec y - \vmu)^{\top}\Sigma^{-1}(\vec y - \vmu)\right),
+\]
+with $\Sigma$ the covariance matrix with entries
+\[
+\Sigma = \E\left[(\vec Y - \vmu)(\vec Y - \vmu)^{\top}\right],
+\qquad
+\Sigma_{jk} = \Cov(Y_j, Y_k) = \E(Y_jY_k) - \E(Y_j)\E(Y_k).
+\]
+For a population of size $N$, we can find $\Sigma$ as
+\[
+\Sigma = \frac1N\sum_{i=1}^{N}(\vec y_i - \vmu)(\vec y_i - \vmu)^{\top},
+\qquad
+\hat\mu = \frac1N\sum_{i=1}^{N}\vec y_i.
+\]
+For a sample of size $n$,
+\[
+\hat\Sigma = \frac{1}{n-1}\sum_{i=1}^{n}(\vec y_i - \hat\mu)(\vec y_i - \hat\mu)^{\top}.
+\]
+For $n$ iid observations $\vec y_1, \dots, \vec y_n \in \R^D$, the likelihood is
+\[
+p(\vec y_1, \dots, \vec y_n \mid \vmu, \Sigma) \propto |\Sigma|^{-n/2}\exp\left[-\frac12\sum_{i=1}^{n}(\vec y_i - \vmu)^{\top}\Sigma^{-1}(\vec y_i - \vmu)\right],
+\qquad
+\hat\mu = \frac1n\sum_{i=1}^{n}\vec y_i.
+\]
+
+To find $\Sigma^{-1}$ we can find the spectral decomposition of $\Sigma$ as
+\[
+\Sigma = \sum_{i=1}^{D}\lambda_i\vec u_i\vec u_i^{\top},
+\qquad
+\Sigma^{-1} = \sum_{j=1}^{D}\frac{1}{\lambda_j}\vec u_j\vec u_j^{\top}.
+\]
+Indeed,
+\[
+\Sigma\Sigma^{-1} = \sum_i\sum_j\frac{\lambda_i}{\lambda_j}\vec u_i\underbrace{\vec u_i^{\top}\vec u_j}_{\new{\delta_{ij}}}\vec u_j^{\top}
+= \sum_j\frac{\new{\lambda_j}}{\lambda_j}\new{\vec u_j}\vec u_j^{\top} = \new{\one}.
+\]
+
+Notice that, in
+\[
+\sum_{i=1}^{n}(\vec y_i - \vmu)^{\top}\Sigma^{-1}(\vec y_i - \vmu),
+\]
+taking $\vec\zeta = \vec y_\ell - \vmu$ and $\vec\zeta = \sum_j\zeta_j\vec e_j$ with $\vec e_j$ the canonical basis, and writing $\Sigma^{-1} = \sum_{k\ell}\sigma_{k\ell}\vec e_k\vec e_\ell^{\top}$, then
+\[
+\Big(\sum_j\zeta_j\vec e_j^{\top}\Big)\Big(\sum_{k\ell}\sigma_{k\ell}\vec e_k\vec e_\ell^{\top}\Big)\Big(\sum_m\zeta_m\vec e_m\Big)
+= \sum_{jk\ell m}\zeta_j\zeta_m\new{\delta_{jk}\delta_{\ell m}}\sigma_{k\ell}
+= \sum_{k\ell}\new{\zeta_k\zeta_\ell}\sigma_{k\ell}
+= \sum_k\zeta_k\new{\sum_\ell}\zeta_\ell\sigma_{k\ell}.
+\]
+
+\subsection{Prior for $\vmu$ with known $\Sigma$}
+\[
+\vmu \sim \Normal(\vmu_0, \Lambda_0),
+\qquad
+p(\vmu \mid \Lambda_0) \propto \exp\left[-\frac12(\vmu - \vmu_0)^{\top}\Lambda_0^{-1}(\vmu - \vmu_0)\right].
+\]
+
+\paragraph{Posterior.}
+\begin{align*}
+p(\vmu \mid \vec y_1, \dots, \vec y_n, \Sigma) &\propto \exp\left[-\frac12\sum_{i=1}^{n}(\vec y_i - \vmu)^{\top}\Sigma^{-1}(\vec y_i - \vmu)\right]\times\exp\left[-\frac12(\vmu - \vmu_0)^{\top}\Lambda_0^{-1}(\vmu - \vmu_0)\right]\\
+&= \exp\left[-\frac12\left(\sum_{i=1}^{n}(\vec y_i - \vmu)^{\top}\Sigma^{-1}(\vec y_i - \vmu) \new{{}+ (\vmu - \vmu_0)^{\top}\Lambda_0^{-1}(\vmu - \vmu_0)}\right)\right].
+\end{align*}
+Expanding and dropping the terms without $\vmu$,
+\[
+\exp\Big[-\frac12\Big(n\vmu^{\top}\Sigma^{-1}\vmu - \sum_i\vec y_i^{\top}\Sigma^{-1}\vmu - \vmu^{\top}\Sigma^{-1}\sum_i\vec y_i + \vmu^{\top}\Lambda_0^{-1}\vmu - \vmu^{\top}\Lambda_0^{-1}\vmu_0 - \vmu_0^{\top}\Lambda_0^{-1}\vmu\Big)\Big]
+\]
+\[
+\propto \exp\Big[-\frac12\Big(\vmu^{\top}\new{(n\Sigma^{-1} + \Lambda_0^{-1})}\vmu - \vmu^{\top}\new{\Big(\Sigma^{-1}\sum_{i=1}^{n}\vec y_i + \Lambda_0^{-1}\vmu_0\Big)} - \new{\Big(\sum_{i=1}^{n}\vec y_i^{\top}\Sigma^{-1} + \vmu_0^{\top}\Lambda_0^{-1}\Big)}\vmu\Big)\Big].
+\]
+The argument is
+\[
+\vmu^{\top}\new{\Lambda_n^{-1}}\vmu - \vmu^{\top}\left(\new{n\Sigma^{-1}\bar{\vec y}} + \Lambda_0^{-1}\vmu_0\right) - \left(\new{n\bar{\vec y}^{\top}}\Sigma^{-1} + \vmu_0^{\top}\Lambda_0^{-1}\right)\vmu,
+\qquad\text{with}\quad \Lambda_n^{-1} = n\Sigma^{-1} + \Lambda_0^{-1}.
+\]
+Let us define
+\[
+\left(n\Sigma^{-1}\bar{\vec y} + \Lambda_0^{-1}\vmu_0\right) = \new{\Lambda_n^{-1}\vmu_n}
+\ \Rightarrow\
+\vmu_n = \new{\Lambda_n}\left(n\Sigma^{-1}\bar{\vec y} + \Lambda_0^{-1}\vmu_0\right),
+\qquad
+\left(n\bar{\vec y}^{\top}\Sigma^{-1} + \vmu_0^{\top}\Lambda_0^{-1}\right) = \vmu_n^{\top}\Lambda_n^{-1}.
+\]
+Then the argument is
+\begin{align*}
+&\vmu^{\top}\Lambda_n^{-1}\vmu - \vmu^{\top}\Lambda_n^{-1}\vmu_n - \vmu_n^{\top}\Lambda_n^{-1}\vmu \new{{}+ \vmu_n^{\top}\Lambda_n^{-1}\vmu_n - \vmu_n^{\top}\Lambda_n^{-1}\vmu_n}\\
+&= \new{(\vmu^{\top} - \vmu_n^{\top})}\Lambda_n^{-1}\vmu - \new{(\vmu^{\top} - \vmu_n^{\top})}\Lambda_n^{-1}\vmu_n - \vmu_n^{\top}\Lambda_n^{-1}\vmu_n\\
+&= (\vmu - \vmu_n)^{\top}\new{\left(\Lambda_n^{-1}\vmu - \Lambda_n^{-1}\vmu_n\right)} - \vmu_n^{\top}\Lambda_n^{-1}\vmu_n
+= (\vmu - \vmu_n)^{\top}\new{\Lambda_n^{-1}(\vmu - \vmu_n)} - \vmu_n^{\top}\Lambda_n^{-1}\vmu_n.
+\end{align*}
+Thus
+\[
+p(\vmu \mid \vec y_1, \dots, \vec y_n, \Sigma) \propto \exp\left[-\frac12(\vmu - \vmu_n)^{\top}\Lambda_n^{-1}(\vmu - \vmu_n)\right],
+\]
+\[
+p(\vmu \mid \vec y_1, \dots, \vec y_n, \Sigma) = (2\pi)^{-D/2}|\Lambda_n|^{-1/2}\exp\left[-\frac12(\vmu - \vmu_n)^{\top}\Lambda_n^{-1}(\vmu - \vmu_n)\right],
+\]
+with
+\[
+\Lambda_n^{-1} = n\Sigma^{-1} + \Lambda_0^{-1}
+\qquad\text{and}\qquad
+\vmu_n = \Lambda_n\left(n\Sigma^{-1}\bar{\vec y} + \Lambda_0^{-1}\vmu_0\right).
+\]
+
+\subsection{Posterior predictive distribution}
+\[
+p(\tilde y \mid y) = \int p(\tilde y \mid \theta)\,p(\theta \mid y)\dd\theta,
+\qquad
+p(\tilde{\vec y} \mid \vec y_1, \dots, \vec y_n, \Sigma) = \int p(\tilde{\vec y} \mid \vmu, \Sigma)\,p(\vmu \mid \vec y_1, \dots, \vec y_n, \Sigma)\dd\vmu,
+\]
+with
+\[
+p(\tilde{\vec y} \mid \vmu, \Sigma) \propto \exp\left(-\frac12(\tilde{\vec y} - \vmu)^{\top}\Sigma^{-1}(\tilde{\vec y} - \vmu)\right),
+\]
+\[
+p(\vmu \mid \vec y_1, \dots, \vec y_n, \Sigma) \propto \exp\left[-\frac12(\vmu - \vmu_n)^{\top}\Lambda_n^{-1}(\vmu - \vmu_n)\right].
+\]
+\textbf{Mean:}
+\[
+\E[\tilde{\vec y} \mid \vec y_{1:n}] = \int \tilde{\vec y}\,p(\tilde{\vec y} \mid \vec y_{1:n}, \Sigma)\dd\tilde{\vec y}
+= \int \mathrm{d}\vmu\,p(\vmu \mid \vec y_{1:n}, \Sigma)\underbrace{\int \mathrm{d}\tilde{\vec y}\,\tilde{\vec y}\,p(\tilde{\vec y} \mid \vmu, \Sigma)}_{\new{\vmu}}
+= \int \mathrm{d}\vmu\,\new{\vmu}\,p(\vmu \mid \vec y_{1:n}, \Sigma) = \new{\vmu_n}.
+\]
+\textbf{Variance:}
+\[
+\Var(\tilde{\vec y} \mid \vec y_{1:n}) = \int\big(\tilde{\vec y} - \underbrace{\E(\tilde{\vec y})}_{\vmu_n}\big)\big(\tilde{\vec y} - \underbrace{\E(\tilde{\vec y})}_{\vmu_n}\big)^{\top}p(\tilde{\vec y} \mid \vec y_{1:n})\dd\tilde{\vec y}.
+\]
+Expanding $\tilde{\vec y}\tilde{\vec y}^{\top} - \tilde{\vec y}\vmu_n^{\top} - \vmu_n\tilde{\vec y}^{\top} + \vmu_n\vmu_n^{\top}$,
+\begin{align*}
+\Var(\tilde{\vec y} \mid \vec y_{1:n}) &= \int \tilde{\vec y}\tilde{\vec y}^{\top}p(\tilde{\vec y} \mid \vec y_{1:n})\dd\tilde{\vec y} - \underbrace{\Big(\int \tilde{\vec y}\,p(\tilde{\vec y} \mid \vec y_{1:n})\dd\tilde{\vec y}\Big)}_{\new{\vmu_n}}\vmu_n^{\top} - \vmu_n\underbrace{\Big(\int \tilde{\vec y}^{\top}p(\tilde{\vec y} \mid \vec y_{1:n})\dd\tilde{\vec y}\Big)}_{\new{\vmu_n^{\top}}} + \vmu_n\vmu_n^{\top}\\
+&= \int \tilde{\vec y}\tilde{\vec y}^{\top}p(\tilde{\vec y} \mid \vec y_{1:n})\dd\tilde{\vec y} \new{{}- \vmu_n\vmu_n^{\top}}.
+\end{align*}
+Using $p(\tilde y \mid y) = \int \mathrm{d}\vmu\,p(\tilde{\vec y} \mid \vmu, \Sigma)\,p(\vmu \mid \vec y_{1:n})$,
+\[
+\int \tilde{\vec y}\tilde{\vec y}^{\top}p(\tilde{\vec y} \mid \vec y_{1:n})\dd\tilde{\vec y}
+= \int \mathrm{d}\vmu\,p(\vmu \mid \vec y_{1:n})\underbrace{\Big(\int \mathrm{d}\tilde{\vec y}\,\tilde{\vec y}\tilde{\vec y}^{\top}p(\tilde{\vec y} \mid \vmu, \Sigma)\Big)}_{\new{\Sigma + \vmu\vmu^{\top}}}
+= \new{\Sigma} + \underbrace{\int \new{\vmu\vmu^{\top}}p(\vmu \mid \vec y_{1:n})\dd\vmu}_{\new{\Lambda_n + \vmu_n\vmu_n^{\top}}}.
+\]
+Therefore
+\[
+\boxed{\Var(\tilde{\vec y} \mid \vec y_{1:n}) = \Sigma + \Lambda_n.}
+\]
+
+%=====================================================
+\section{Linear Gaussian systems}
+Let us consider that we have noisy measurements of an unknown vector $\vec z$ such that
+\[
+\vec y = W\vec z + \vec b + \vec\varepsilon,
+\]
+where $\vec\varepsilon \sim \Normal(\vec 0, \Sigma_y)$, such that
+\[
+\E[\vec y \mid \vec z] = W\vec z + \vec b + \underbrace{\E(\vec\varepsilon)}_{0}.
+\]
+Thus,
+\[
+p(\vec y \mid \vec z) = \Normal(\vec y \mid W\vec z + \vec b, \Sigma_y).
+\]
+For this model, we choose a prior
+\[
+p(\vec z) = \Normal(\vec z \mid \vmu_z, \Sigma_z).
+\]
+Thus, the posterior distribution is
+\[
+p(\vec z \mid \vec y) \propto p(\vec y \mid \vec z)\,p(\vec z).
+\]
+For $n$ observations, $\vec y_i = W_i\vec z + \vec b_i + \vec\varepsilon_i$, we have
+\[
+p(\vec z \mid \vec y_{1:n}) \propto p(\vec y_{1:n} \mid \vec z)\,p(\vec z),
+\qquad
+p(\vec y_{1:n} \mid \vec z) = \prod_{i=1}^{n}p(\vec y_i \mid \vec z),
+\]
+where
+\[
+p(\vec y_i \mid \vec z) \propto \exp\left[-\frac12(\vec y_i - W_i\vec z - \vec b_i)^{\top}\Sigma_y^{-1}(\vec y_i - W_i\vec z - \vec b_i)\right],
+\qquad
+p(\vec z) \propto \exp\left[-\frac12(\vec z - \vmu_z)^{\top}\Sigma_z^{-1}(\vec z - \vmu_z)\right].
+\]
+Then, in the exponent of $p(\vec z \mid \vec y_{1:n})$ (times $-2$) we have
+\begin{align*}
+\sum_{i=1}^{n}\Big(&\vec y_i^{\top}\Sigma_y^{-1}\vec y_i - \vec y_i^{\top}\Sigma_y^{-1}W_i\vec z - \vec y_i^{\top}\Sigma_y^{-1}\vec b_i
+- \vec z^{\top}W_i^{\top}\Sigma_y^{-1}\vec y_i + \vec z^{\top}W_i^{\top}\Sigma_y^{-1}W_i\vec z + \vec z^{\top}W_i^{\top}\Sigma_y^{-1}\vec b_i\\
+&- \vec b_i^{\top}\Sigma_y^{-1}\vec y_i + \vec b_i^{\top}\Sigma_y^{-1}W_i\vec z + \vec b_i^{\top}\Sigma_y^{-1}\vec b_i\Big)
++ \vec z^{\top}\Sigma_z^{-1}\vec z - \vec z^{\top}\Sigma_z^{-1}\vmu_z - \vmu_z^{\top}\Sigma_z^{-1}\vec z + \vmu_z^{\top}\Sigma_z^{-1}\vmu_z.
+\end{align*}
+I only need terms with $\vec z$. Thus
+\[
+\vec z^{\top}\new{\Big(\Sigma_z^{-1} + \sum_i W_i^{\top}\Sigma_y^{-1}W_i\Big)}\vec z
++ \new{2}\vec z^{\top}\sum_{i=1}^{n}\big(W_i^{\top}\Sigma_y^{-1}\vec b_i\big) - \new{2}\vec z^{\top}\sum_{i=1}^{n}\big(W_i^{\top}\Sigma_y^{-1}\vec y_i\big) - \new{2}\vec z^{\top}\Sigma_z^{-1}\vmu_z.
+\]
+Defining
+\[
+\Sigma_{z|y}^{-1} = \Sigma_z^{-1} + \sum_{i=1}^{n}\big(W_i^{\top}\Sigma_y^{-1}W_i\big),
+\]
+then
+\[
+\vec z^{\top}\new{\Sigma_{z|y}^{-1}}\vec z - 2\vec z^{\top}\underbrace{\Big[\sum_{i=1}^{n}W_i^{\top}\Sigma_y^{-1}\new{(\vec y_i - \vec b_i)} + \Sigma_z^{-1}\vmu_z\Big]}_{\new{\vec r}}
+= \vec z^{\top}\Sigma_{z|y}^{-1}\vec z - 2\vec z^{\top}\new{\vec r}
+= \vec z^{\top}\Sigma_{z|y}^{-1}\vec z - 2\vec z^{\top}\new{\Sigma_{z|y}^{-1}\vmu_{z|y}},
+\]
+with
+\[
+\vmu_{z|y} = \Sigma_{z|y}\Big(\sum_{i=1}^{n}W_i^{\top}\Sigma_y^{-1}(\vec y_i - \vec b_i) + \Sigma_z^{-1}\vmu_z\Big).
+\]
+Completing the square,
+\begin{align*}
+&\vec z^{\top}\Sigma_{z|y}^{-1}\vec z - \vec z^{\top}\Sigma_{z|y}^{-1}\vmu_{z|y} - \vmu_{z|y}^{\top}\Sigma_{z|y}^{-1}\vec z \new{{}+ \vmu_{z|y}^{\top}\Sigma_{z|y}^{-1}\vmu_{z|y} - \vmu_{z|y}^{\top}\Sigma_{z|y}^{-1}\vmu_{z|y}}\\
+&= \new{(\vec z - \vmu_{z|y})^{\top}}\Sigma_{z|y}^{-1}\vec z - \new{(\vec z - \vmu_{z|y})^{\top}}\Sigma_{z|y}^{-1}\vmu_{z|y} - \vmu_{z|y}^{\top}\Sigma_{z|y}^{-1}\vmu_{z|y}\\
+&= (\vec z - \vmu_{z|y})^{\top}\Sigma_{z|y}^{-1}\new{(\vec z - \vmu_{z|y})} - \vmu_{z|y}^{\top}\Sigma_{z|y}^{-1}\vmu_{z|y},
+\end{align*}
+so $p(\vec z \mid \vec y_{1:n}) = \Normal(\vec z \mid \vmu_{z|y}, \Sigma_{z|y})$.
+
+%=====================================================
+\section{Mixture of conjugate priors}
+If $p(\theta \mid m = k)$ is a conjugate prior to a likelihood $p(y \mid \theta)$, such that
+\[
+p(\theta \mid y, m = k) = \frac{p(y \mid \theta, m = k)\,p(\theta \mid m = k)}{p(y \mid m = k)}
+\]
+for all $k \in \set{1, 2, \dots, K}$, then
+\[
+p(\theta) = \sum_k p(\theta \mid m = k)\,\underbrace{p(m = k)}_{\pi_k}, \qquad \sum_k \pi_k = 1,
+\]
+is also a conjugate prior to the likelihood $p(y \mid \theta)$.
+
+The likelihood $p(y \mid \theta, m = k)$ is the same for all the priors $p(\theta \mid m = k)$. Thus,
+\[
+p(y \mid \theta, m = k) = p(y \mid \theta).
+\]
+Therefore
+\[
+p(\theta \mid y, m = k) = \frac{p(y \mid \theta)\,p(\theta \mid m = k)}{p(y \mid m = k)}
+\qquad\text{and}\qquad
+p(\theta \mid y, m = k)\,p(y \mid m = k) = p(y \mid \theta)\,p(\theta \mid m = k).
+\]
+Multiplying by $p(m = k)$ and summing up all the cases,
+\[
+\new{\sum_k p(m = k)}\,p(\theta \mid y, m = k)\,p(y \mid m = k) = p(y \mid \theta)\new{\sum_k p(m = k)}\,p(\theta \mid m = k).
+\]
+Taking $p(\theta) = \sum_k p(m = k)\,p(\theta \mid m = k)$ and $p(y \mid m = k)\,p(m = k) = p(m = k \mid y)\,p(y)$, we get
+\[
+\sum_k p(\theta \mid y, m = k)\,\new{p(m = k \mid y)} = \frac{p(y \mid \theta)\,\new{p(\theta)}}{\new{p(y)}} = \new{p(\theta \mid y)}.
+\]
+
+%=====================================================
+\section{Model selection}
+Let us suppose that we have different models, each labeled by $m \in \set{1, \dots, K}$, with likelihood $p(\mathcal{D} \mid \theta_m, m)$ and prior $p(\theta_m \mid m)$. Conditioning on $m$ specifies which model is being considered. Each model may have its own likelihood, parameters and prior.
+\[
+p(m \mid \mathcal{D}) = \frac{p(\mathcal{D} \mid m)\,p(m)}{\sum_{m'}p(\mathcal{D} \mid m')\,p(m')},
+\]
+and choose the model $\hat m$ such that
+\[
+\hat m = \arg\max_m\,p(m \mid \mathcal{D}).
+\]
+\[
+p(\mathcal{D} \mid m) = \int \mathrm{d}\theta_m\,p(\mathcal{D} \mid \theta_m, m)\,p(\theta_m \mid m)
+\]
+is called the \emph{marginal likelihood} or \emph{model evidence}.
+
+If the prior $p(m)$ is uniform, that is $p(m) = 1/K$, then
+\[
+\hat m = \arg\max_m\,p(\mathcal{D} \mid m).
+\]
+
+%=====================================================
+\section*{References}
+\begin{itemize}
+\item Gelman, A., Carlin, J.~B., Stern, H.~S., Dunson, D.~B., Vehtari, A., and Rubin, D.~B. (2013). \emph{Bayesian Data Analysis} (3rd ed.). CRC Press. Chapters 1--3: Bayesian inference, single-parameter models (binomial, normal, Poisson), conjugacy and the exponential family, the normal model with unknown mean and variance, and the multivariate normal. Chapter 7: model comparison.
+\item Hoff, P.~D. (2009). \emph{A First Course in Bayesian Statistical Methods}. Springer. Chapters 3, 5 and 7: binomial and Poisson models, the normal model, the multivariate normal model.
+\item Murphy, K.~P. (2012). \emph{Machine Learning: A Probabilistic Perspective}. MIT Press. Chapter 4: Gaussian models, including linear Gaussian systems; Chapter 5: Bayesian statistics, mixtures of conjugate priors and Bayesian model selection.
+\end{itemize}
+
+\end{document}
