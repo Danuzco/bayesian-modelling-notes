@@ -13,30 +13,31 @@ Here, I am going to talk about some of the most used methods for doing non-Bayes
 It is a form of point estimation. The goal is to find the parameter $\theta$:
 \begin{align*}
 \hat\theta_{\text{mle}} &= \arg\max_{\theta}\, p(Y \mid X, \theta) && \text{(estimator, } \hat\theta(Y)\text{)},\\
-\hat\theta_{\text{mle}} &= \arg\max_{\theta}\, p(\vec y \mid \vec x, \vec\theta) && \text{(estimate)},
+\hat\theta_{\text{mle}} &= \arg\max_{\theta}\, p(y \mid x, \theta) && \text{(estimate)},
 \end{align*}
 where
 \[
-p(\vec y \mid \vec x, \vec\theta) = p(y_1, \dots, y_N \mid x_1, \dots, x_N, \theta_1, \dots, \theta_K).
+p(y \mid x, \theta) = p(y_1, \dots, y_N \mid x_1, \dots, x_N, \theta_1, \dots, \theta_K).
 \]
-The maximum likelihood estimate is the value of $\theta$ that makes the data $\vec y$ most likely.
+Here $y = (y_1, \dots, y_N)\T$ and $x = (x_1, \dots, x_N)\T$ are vectors collecting the observations and the inputs, and $\theta = (\theta_1, \dots, \theta_K)\T$ is the vector of parameters.
+The maximum likelihood estimate is the value of $\theta$ that makes the data $y$ most likely.
 
 When the samples are independent and identically distributed (iid), then
 \[
-p(\vec y \mid \vec x, \vec\theta) = p(y_1 \mid x_1, \vec\theta)\,p(y_2 \mid x_2, \vec\theta)\cdots p(y_N \mid x_N, \vec\theta) = \prod_{i=1}^{N} p(y_i \mid x_i, \vec\theta).
+p(y \mid x, \theta) = p(y_1 \mid x_1, \theta)\,p(y_2 \mid x_2, \theta)\cdots p(y_N \mid x_N, \theta) = \prod_{i=1}^{N} p(y_i \mid x_i, \theta).
 \]
 Normally, we use the log-likelihood:
 \[
-\log p(\vec y \mid \vec x, \vec\theta) = \sum_{i=1}^{N}\log p(y_i \mid x_i, \vec\theta),
+\log p(y \mid x, \theta) = \sum_{i=1}^{N}\log p(y_i \mid x_i, \theta),
 \]
 \[
-\hat\theta = \arg\max_{\theta}\sum_{i=1}^{N}\log p(y_i \mid x_i, \vec\theta)
+\hat\theta = \arg\max_{\theta}\sum_{i=1}^{N}\log p(y_i \mid x_i, \theta)
 \qquad\text{or}\qquad
-\hat\theta = \arg\min_{\theta}\left[-\sum_{i=1}^{N}\log p(y_i \mid x_i, \vec\theta)\right].
+\hat\theta = \arg\min_{\theta}\left[-\sum_{i=1}^{N}\log p(y_i \mid x_i, \theta)\right].
 \]
 Alternatively, one may want to maximize the joint likelihood:
 \[
-\hat\theta = \arg\min_{\theta}\left[-\sum_{i=1}^{N}\log p(y_i, x_i \mid \vec\theta)\right].
+\hat\theta = \arg\min_{\theta}\left[-\sum_{i=1}^{N}\log p(y_i, x_i \mid \theta)\right].
 \]
 
 \begin{example}[Bernoulli distribution]

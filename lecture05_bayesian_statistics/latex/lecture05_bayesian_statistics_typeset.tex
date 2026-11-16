@@ -1,8 +1,6 @@
 \input{preamble}
 \title{Lecture 5: Bayesian Statistics}
 \author{}\date{}
-\newcommand{\vy}{\vec y}
-\newcommand{\vmu}{\vec\mu}
 \newcommand{\one}{\mathbb{1}}
 
 \begin{document}
@@ -40,7 +38,7 @@ for continuous variables. I will write $p(\cdot)$ for both discrete and continuo
 $p(\theta)$ is called the \emph{prior distribution}; it reflects what we know before seeing the data. $p(y \mid \theta)$ is the \emph{likelihood} (or data distribution); it reflects the data we expect to see for each setting of parameters.
 
 \subsection{Covariates}
-Covariates are independent variables (not in the sense of statistically independent). For the supervised case, we also have covariates $X = \set{\vec x_1, \dots, \vec x_n}$, with $\vec x_i \in \R^k$. $X$ is usually written as an $n\times k$ matrix
+Covariates are independent variables (not in the sense of statistically independent). For the supervised case, we also have covariates $X = \set{x_1, \dots, x_n}$, where each $x_i \in \R^k$ is a vector. $X$ is usually written as an $n\times k$ matrix
 \[
 X = \begin{pmatrix}
 x_{11} & x_{12} & \cdots & x_{1k}\\
@@ -609,19 +607,19 @@ p(\mu \mid y) \propto \new{\Gamma\left(\frac{\nu_n + 1}{2}\right)}\new{\left[1 +
 \section{Exponential family}
 For $n$ observations, a distribution that can be written as
 \[
-p(\vec y \mid \vec\theta) \propto g(\vec\theta)^{n}\exp\left[f(\vec\theta)^{\top}T(\vec y)\right]
+p(y \mid \theta) \propto g(\theta)^{n}\exp\left[f(\theta)^{\top}T(y)\right]
 \]
-is said to belong to the \emph{exponential family}. $T(\vec y)$ is the \emph{sufficient statistic} for $\vec\theta$, and $f(\vec\theta)$ is the \emph{natural parameter}.
+is said to belong to the \emph{exponential family}. $T(y)$ is the \emph{sufficient statistic} for $\theta$, and $f(\theta)$ is the \emph{natural parameter}. In general $y = (y_1, \dots, y_n)\T$ and $\theta$ are vectors, and $T(y)$ and $f(\theta)$ are vectors of the same length.
 
 If the prior can be written as
 \[
-p(\vec\theta) \propto g(\vec\theta)^{\eta}\exp\left[f(\vec\theta)^{\top}\vec\nu\right],
+p(\theta) \propto g(\theta)^{\eta}\exp\left[f(\theta)^{\top}\nu\right],
 \]
-then the posterior is
+where $\nu$ is a vector of the same length as $T(y)$, then the posterior is
 \[
-p(\vec\theta \mid \vec y) \propto g(\vec\theta)^{n+\eta}\exp\left[f(\vec\theta)^{\top}\big(T(\vec y) + \vec\nu\big)\right]:
+p(\theta \mid y) \propto g(\theta)^{n+\eta}\exp\left[f(\theta)^{\top}\big(T(y) + \nu\big)\right]:
 \]
-same $f(\vec\theta)$ and same $g(\vec\theta)$.
+same $f(\theta)$ and same $g(\theta)$.
 
 \begin{example}[Beta--Binomial]
 \[
@@ -644,7 +642,7 @@ p(\theta) \propto \theta^{\alpha-1}(1-\theta)^{\beta-1} = \exp\left[(\alpha-1)\l
 \]
 Thus
 \[
-\vec\nu = \begin{pmatrix}\alpha - 1\\ \beta - 1\end{pmatrix}.
+\nu = \begin{pmatrix}\alpha - 1\\ \beta - 1\end{pmatrix}.
 \]
 \end{example}
 
@@ -688,192 +686,193 @@ that is $\operatorname{Gamma}\big(\nu + 1 + \sum_i y_i,\ \eta + n\big)$. With $\
 \section{Multivariate normal model with known variance}
 \paragraph{Likelihood.}
 \[
-p(\vec y \mid \vmu, \Sigma) = |\Sigma|^{-1/2}(2\pi)^{-D/2}\exp\left(-\frac12(\vec y - \vmu)^{\top}\Sigma^{-1}(\vec y - \vmu)\right),
+p(y \mid \mu, \Sigma) = |\Sigma|^{-1/2}(2\pi)^{-D/2}\exp\left(-\frac12(y - \mu)^{\top}\Sigma^{-1}(y - \mu)\right),
 \]
-with $\Sigma$ the covariance matrix with entries
+where $y, \mu \in \R^D$ are vectors (an observation and the mean), and $\Sigma$ is the $D\times D$ covariance matrix with entries
 \[
-\Sigma = \E\left[(\vec Y - \vmu)(\vec Y - \vmu)^{\top}\right],
+\Sigma = \E\left[(Y - \mu)(Y - \mu)^{\top}\right],
 \qquad
 \Sigma_{jk} = \Cov(Y_j, Y_k) = \E(Y_jY_k) - \E(Y_j)\E(Y_k).
 \]
 For a population of size $N$, we can find $\Sigma$ as
 \[
-\Sigma = \frac1N\sum_{i=1}^{N}(\vec y_i - \vmu)(\vec y_i - \vmu)^{\top},
+\Sigma = \frac1N\sum_{i=1}^{N}(y_i - \mu)(y_i - \mu)^{\top},
 \qquad
-\hat\mu = \frac1N\sum_{i=1}^{N}\vec y_i.
+\hat\mu = \frac1N\sum_{i=1}^{N}y_i.
 \]
 For a sample of size $n$,
 \[
-\hat\Sigma = \frac{1}{n-1}\sum_{i=1}^{n}(\vec y_i - \hat\mu)(\vec y_i - \hat\mu)^{\top}.
+\hat\Sigma = \frac{1}{n-1}\sum_{i=1}^{n}(y_i - \hat\mu)(y_i - \hat\mu)^{\top}.
 \]
-For $n$ iid observations $\vec y_1, \dots, \vec y_n \in \R^D$, the likelihood is
+For $n$ iid observations $y_1, \dots, y_n \in \R^D$, the likelihood is
 \[
-p(\vec y_1, \dots, \vec y_n \mid \vmu, \Sigma) \propto |\Sigma|^{-n/2}\exp\left[-\frac12\sum_{i=1}^{n}(\vec y_i - \vmu)^{\top}\Sigma^{-1}(\vec y_i - \vmu)\right],
+p(y_1, \dots, y_n \mid \mu, \Sigma) \propto |\Sigma|^{-n/2}\exp\left[-\frac12\sum_{i=1}^{n}(y_i - \mu)^{\top}\Sigma^{-1}(y_i - \mu)\right],
 \qquad
-\hat\mu = \frac1n\sum_{i=1}^{n}\vec y_i.
+\hat\mu = \frac1n\sum_{i=1}^{n}y_i.
 \]
 
 To find $\Sigma^{-1}$ we can find the spectral decomposition of $\Sigma$ as
 \[
-\Sigma = \sum_{i=1}^{D}\lambda_i\vec u_i\vec u_i^{\top},
+\Sigma = \sum_{i=1}^{D}\lambda_i u_i u_i^{\top},
 \qquad
-\Sigma^{-1} = \sum_{j=1}^{D}\frac{1}{\lambda_j}\vec u_j\vec u_j^{\top}.
+\Sigma^{-1} = \sum_{j=1}^{D}\frac{1}{\lambda_j}u_j u_j^{\top},
 \]
+where $\lambda_i$ are the eigenvalues of $\Sigma$ and the vectors $u_i \in \R^D$ its orthonormal eigenvectors.
 Indeed,
 \[
-\Sigma\Sigma^{-1} = \sum_i\sum_j\frac{\lambda_i}{\lambda_j}\vec u_i\underbrace{\vec u_i^{\top}\vec u_j}_{\new{\delta_{ij}}}\vec u_j^{\top}
-= \sum_j\frac{\new{\lambda_j}}{\lambda_j}\new{\vec u_j}\vec u_j^{\top} = \new{\one}.
+\Sigma\Sigma^{-1} = \sum_i\sum_j\frac{\lambda_i}{\lambda_j}u_i\underbrace{u_i^{\top}u_j}_{\new{\delta_{ij}}}u_j^{\top}
+= \sum_j\frac{\new{\lambda_j}}{\lambda_j}\new{u_j}u_j^{\top} = \new{\one}.
 \]
 
 Notice that, in
 \[
-\sum_{i=1}^{n}(\vec y_i - \vmu)^{\top}\Sigma^{-1}(\vec y_i - \vmu),
+\sum_{i=1}^{n}(y_i - \mu)^{\top}\Sigma^{-1}(y_i - \mu),
 \]
-taking $\vec\zeta = \vec y_\ell - \vmu$ and $\vec\zeta = \sum_j\zeta_j\vec e_j$ with $\vec e_j$ the canonical basis, and writing $\Sigma^{-1} = \sum_{k\ell}\sigma_{k\ell}\vec e_k\vec e_\ell^{\top}$, then
+taking $\zeta = y_\ell - \mu$ and $\zeta = \sum_j\zeta_j e_j$ with $e_j$ the canonical basis vectors of $\R^D$, and writing $\Sigma^{-1} = \sum_{k\ell}\sigma_{k\ell}e_k e_\ell^{\top}$, then
 \[
-\Big(\sum_j\zeta_j\vec e_j^{\top}\Big)\Big(\sum_{k\ell}\sigma_{k\ell}\vec e_k\vec e_\ell^{\top}\Big)\Big(\sum_m\zeta_m\vec e_m\Big)
+\Big(\sum_j\zeta_j e_j^{\top}\Big)\Big(\sum_{k\ell}\sigma_{k\ell}e_k e_\ell^{\top}\Big)\Big(\sum_m\zeta_m e_m\Big)
 = \sum_{jk\ell m}\zeta_j\zeta_m\new{\delta_{jk}\delta_{\ell m}}\sigma_{k\ell}
 = \sum_{k\ell}\new{\zeta_k\zeta_\ell}\sigma_{k\ell}
 = \sum_k\zeta_k\new{\sum_\ell}\zeta_\ell\sigma_{k\ell}.
 \]
 
-\subsection{Prior for $\vmu$ with known $\Sigma$}
+\subsection{Prior for $\mu$ with known $\Sigma$}
 \[
-\vmu \sim \Normal(\vmu_0, \Lambda_0),
+\mu \sim \Normal(\mu_0, \Lambda_0),
 \qquad
-p(\vmu \mid \Lambda_0) \propto \exp\left[-\frac12(\vmu - \vmu_0)^{\top}\Lambda_0^{-1}(\vmu - \vmu_0)\right].
+p(\mu \mid \Lambda_0) \propto \exp\left[-\frac12(\mu - \mu_0)^{\top}\Lambda_0^{-1}(\mu - \mu_0)\right].
 \]
 
 \paragraph{Posterior.}
 \begin{align*}
-p(\vmu \mid \vec y_1, \dots, \vec y_n, \Sigma) &\propto \exp\left[-\frac12\sum_{i=1}^{n}(\vec y_i - \vmu)^{\top}\Sigma^{-1}(\vec y_i - \vmu)\right]\times\exp\left[-\frac12(\vmu - \vmu_0)^{\top}\Lambda_0^{-1}(\vmu - \vmu_0)\right]\\
-&= \exp\left[-\frac12\left(\sum_{i=1}^{n}(\vec y_i - \vmu)^{\top}\Sigma^{-1}(\vec y_i - \vmu) \new{{}+ (\vmu - \vmu_0)^{\top}\Lambda_0^{-1}(\vmu - \vmu_0)}\right)\right].
+p(\mu \mid y_1, \dots, y_n, \Sigma) &\propto \exp\left[-\frac12\sum_{i=1}^{n}(y_i - \mu)^{\top}\Sigma^{-1}(y_i - \mu)\right]\times\exp\left[-\frac12(\mu - \mu_0)^{\top}\Lambda_0^{-1}(\mu - \mu_0)\right]\\
+&= \exp\left[-\frac12\left(\sum_{i=1}^{n}(y_i - \mu)^{\top}\Sigma^{-1}(y_i - \mu) \new{{}+ (\mu - \mu_0)^{\top}\Lambda_0^{-1}(\mu - \mu_0)}\right)\right].
 \end{align*}
-Expanding and dropping the terms without $\vmu$,
+Expanding and dropping the terms without $\mu$,
 \[
-\exp\Big[-\frac12\Big(n\vmu^{\top}\Sigma^{-1}\vmu - \sum_i\vec y_i^{\top}\Sigma^{-1}\vmu - \vmu^{\top}\Sigma^{-1}\sum_i\vec y_i + \vmu^{\top}\Lambda_0^{-1}\vmu - \vmu^{\top}\Lambda_0^{-1}\vmu_0 - \vmu_0^{\top}\Lambda_0^{-1}\vmu\Big)\Big]
+\exp\Big[-\frac12\Big(n\mu^{\top}\Sigma^{-1}\mu - \sum_i y_i^{\top}\Sigma^{-1}\mu - \mu^{\top}\Sigma^{-1}\sum_i y_i + \mu^{\top}\Lambda_0^{-1}\mu - \mu^{\top}\Lambda_0^{-1}\mu_0 - \mu_0^{\top}\Lambda_0^{-1}\mu\Big)\Big]
 \]
 \[
-\propto \exp\Big[-\frac12\Big(\vmu^{\top}\new{(n\Sigma^{-1} + \Lambda_0^{-1})}\vmu - \vmu^{\top}\new{\Big(\Sigma^{-1}\sum_{i=1}^{n}\vec y_i + \Lambda_0^{-1}\vmu_0\Big)} - \new{\Big(\sum_{i=1}^{n}\vec y_i^{\top}\Sigma^{-1} + \vmu_0^{\top}\Lambda_0^{-1}\Big)}\vmu\Big)\Big].
+\propto \exp\Big[-\frac12\Big(\mu^{\top}\new{(n\Sigma^{-1} + \Lambda_0^{-1})}\mu - \mu^{\top}\new{\Big(\Sigma^{-1}\sum_{i=1}^{n}y_i + \Lambda_0^{-1}\mu_0\Big)} - \new{\Big(\sum_{i=1}^{n}y_i^{\top}\Sigma^{-1} + \mu_0^{\top}\Lambda_0^{-1}\Big)}\mu\Big)\Big].
 \]
 The argument is
 \[
-\vmu^{\top}\new{\Lambda_n^{-1}}\vmu - \vmu^{\top}\left(\new{n\Sigma^{-1}\bar{\vec y}} + \Lambda_0^{-1}\vmu_0\right) - \left(\new{n\bar{\vec y}^{\top}}\Sigma^{-1} + \vmu_0^{\top}\Lambda_0^{-1}\right)\vmu,
+\mu^{\top}\new{\Lambda_n^{-1}}\mu - \mu^{\top}\left(\new{n\Sigma^{-1}\bar{y}} + \Lambda_0^{-1}\mu_0\right) - \left(\new{n\bar{y}^{\top}}\Sigma^{-1} + \mu_0^{\top}\Lambda_0^{-1}\right)\mu,
 \qquad\text{with}\quad \Lambda_n^{-1} = n\Sigma^{-1} + \Lambda_0^{-1}.
 \]
 Let us define
 \[
-\left(n\Sigma^{-1}\bar{\vec y} + \Lambda_0^{-1}\vmu_0\right) = \new{\Lambda_n^{-1}\vmu_n}
+\left(n\Sigma^{-1}\bar{y} + \Lambda_0^{-1}\mu_0\right) = \new{\Lambda_n^{-1}\mu_n}
 \ \Rightarrow\
-\vmu_n = \new{\Lambda_n}\left(n\Sigma^{-1}\bar{\vec y} + \Lambda_0^{-1}\vmu_0\right),
+\mu_n = \new{\Lambda_n}\left(n\Sigma^{-1}\bar{y} + \Lambda_0^{-1}\mu_0\right),
 \qquad
-\left(n\bar{\vec y}^{\top}\Sigma^{-1} + \vmu_0^{\top}\Lambda_0^{-1}\right) = \vmu_n^{\top}\Lambda_n^{-1}.
+\left(n\bar{y}^{\top}\Sigma^{-1} + \mu_0^{\top}\Lambda_0^{-1}\right) = \mu_n^{\top}\Lambda_n^{-1}.
 \]
 Then the argument is
 \begin{align*}
-&\vmu^{\top}\Lambda_n^{-1}\vmu - \vmu^{\top}\Lambda_n^{-1}\vmu_n - \vmu_n^{\top}\Lambda_n^{-1}\vmu \new{{}+ \vmu_n^{\top}\Lambda_n^{-1}\vmu_n - \vmu_n^{\top}\Lambda_n^{-1}\vmu_n}\\
-&= \new{(\vmu^{\top} - \vmu_n^{\top})}\Lambda_n^{-1}\vmu - \new{(\vmu^{\top} - \vmu_n^{\top})}\Lambda_n^{-1}\vmu_n - \vmu_n^{\top}\Lambda_n^{-1}\vmu_n\\
-&= (\vmu - \vmu_n)^{\top}\new{\left(\Lambda_n^{-1}\vmu - \Lambda_n^{-1}\vmu_n\right)} - \vmu_n^{\top}\Lambda_n^{-1}\vmu_n
-= (\vmu - \vmu_n)^{\top}\new{\Lambda_n^{-1}(\vmu - \vmu_n)} - \vmu_n^{\top}\Lambda_n^{-1}\vmu_n.
+&\mu^{\top}\Lambda_n^{-1}\mu - \mu^{\top}\Lambda_n^{-1}\mu_n - \mu_n^{\top}\Lambda_n^{-1}\mu \new{{}+ \mu_n^{\top}\Lambda_n^{-1}\mu_n - \mu_n^{\top}\Lambda_n^{-1}\mu_n}\\
+&= \new{(\mu^{\top} - \mu_n^{\top})}\Lambda_n^{-1}\mu - \new{(\mu^{\top} - \mu_n^{\top})}\Lambda_n^{-1}\mu_n - \mu_n^{\top}\Lambda_n^{-1}\mu_n\\
+&= (\mu - \mu_n)^{\top}\new{\left(\Lambda_n^{-1}\mu - \Lambda_n^{-1}\mu_n\right)} - \mu_n^{\top}\Lambda_n^{-1}\mu_n
+= (\mu - \mu_n)^{\top}\new{\Lambda_n^{-1}(\mu - \mu_n)} - \mu_n^{\top}\Lambda_n^{-1}\mu_n.
 \end{align*}
 Thus
 \[
-p(\vmu \mid \vec y_1, \dots, \vec y_n, \Sigma) \propto \exp\left[-\frac12(\vmu - \vmu_n)^{\top}\Lambda_n^{-1}(\vmu - \vmu_n)\right],
+p(\mu \mid y_1, \dots, y_n, \Sigma) \propto \exp\left[-\frac12(\mu - \mu_n)^{\top}\Lambda_n^{-1}(\mu - \mu_n)\right],
 \]
 \[
-p(\vmu \mid \vec y_1, \dots, \vec y_n, \Sigma) = (2\pi)^{-D/2}|\Lambda_n|^{-1/2}\exp\left[-\frac12(\vmu - \vmu_n)^{\top}\Lambda_n^{-1}(\vmu - \vmu_n)\right],
+p(\mu \mid y_1, \dots, y_n, \Sigma) = (2\pi)^{-D/2}|\Lambda_n|^{-1/2}\exp\left[-\frac12(\mu - \mu_n)^{\top}\Lambda_n^{-1}(\mu - \mu_n)\right],
 \]
 with
 \[
 \Lambda_n^{-1} = n\Sigma^{-1} + \Lambda_0^{-1}
 \qquad\text{and}\qquad
-\vmu_n = \Lambda_n\left(n\Sigma^{-1}\bar{\vec y} + \Lambda_0^{-1}\vmu_0\right).
+\mu_n = \Lambda_n\left(n\Sigma^{-1}\bar{y} + \Lambda_0^{-1}\mu_0\right).
 \]
 
 \subsection{Posterior predictive distribution}
 \[
 p(\tilde y \mid y) = \int p(\tilde y \mid \theta)\,p(\theta \mid y)\dd\theta,
 \qquad
-p(\tilde{\vec y} \mid \vec y_1, \dots, \vec y_n, \Sigma) = \int p(\tilde{\vec y} \mid \vmu, \Sigma)\,p(\vmu \mid \vec y_1, \dots, \vec y_n, \Sigma)\dd\vmu,
+p(\tilde{y} \mid y_1, \dots, y_n, \Sigma) = \int p(\tilde{y} \mid \mu, \Sigma)\,p(\mu \mid y_1, \dots, y_n, \Sigma)\dd\mu,
 \]
 with
 \[
-p(\tilde{\vec y} \mid \vmu, \Sigma) \propto \exp\left(-\frac12(\tilde{\vec y} - \vmu)^{\top}\Sigma^{-1}(\tilde{\vec y} - \vmu)\right),
+p(\tilde{y} \mid \mu, \Sigma) \propto \exp\left(-\frac12(\tilde{y} - \mu)^{\top}\Sigma^{-1}(\tilde{y} - \mu)\right),
 \]
 \[
-p(\vmu \mid \vec y_1, \dots, \vec y_n, \Sigma) \propto \exp\left[-\frac12(\vmu - \vmu_n)^{\top}\Lambda_n^{-1}(\vmu - \vmu_n)\right].
+p(\mu \mid y_1, \dots, y_n, \Sigma) \propto \exp\left[-\frac12(\mu - \mu_n)^{\top}\Lambda_n^{-1}(\mu - \mu_n)\right].
 \]
 \textbf{Mean:}
 \[
-\E[\tilde{\vec y} \mid \vec y_{1:n}] = \int \tilde{\vec y}\,p(\tilde{\vec y} \mid \vec y_{1:n}, \Sigma)\dd\tilde{\vec y}
-= \int \mathrm{d}\vmu\,p(\vmu \mid \vec y_{1:n}, \Sigma)\underbrace{\int \mathrm{d}\tilde{\vec y}\,\tilde{\vec y}\,p(\tilde{\vec y} \mid \vmu, \Sigma)}_{\new{\vmu}}
-= \int \mathrm{d}\vmu\,\new{\vmu}\,p(\vmu \mid \vec y_{1:n}, \Sigma) = \new{\vmu_n}.
+\E[\tilde{y} \mid y_{1:n}] = \int \tilde{y}\,p(\tilde{y} \mid y_{1:n}, \Sigma)\dd\tilde{y}
+= \int \mathrm{d}\mu\,p(\mu \mid y_{1:n}, \Sigma)\underbrace{\int \mathrm{d}\tilde{y}\,\tilde{y}\,p(\tilde{y} \mid \mu, \Sigma)}_{\new{\mu}}
+= \int \mathrm{d}\mu\,\new{\mu}\,p(\mu \mid y_{1:n}, \Sigma) = \new{\mu_n}.
 \]
 \textbf{Variance:}
 \[
-\Var(\tilde{\vec y} \mid \vec y_{1:n}) = \int\big(\tilde{\vec y} - \underbrace{\E(\tilde{\vec y})}_{\vmu_n}\big)\big(\tilde{\vec y} - \underbrace{\E(\tilde{\vec y})}_{\vmu_n}\big)^{\top}p(\tilde{\vec y} \mid \vec y_{1:n})\dd\tilde{\vec y}.
+\Var(\tilde{y} \mid y_{1:n}) = \int\big(\tilde{y} - \underbrace{\E(\tilde{y})}_{\mu_n}\big)\big(\tilde{y} - \underbrace{\E(\tilde{y})}_{\mu_n}\big)^{\top}p(\tilde{y} \mid y_{1:n})\dd\tilde{y}.
 \]
-Expanding $\tilde{\vec y}\tilde{\vec y}^{\top} - \tilde{\vec y}\vmu_n^{\top} - \vmu_n\tilde{\vec y}^{\top} + \vmu_n\vmu_n^{\top}$,
+Expanding $\tilde{y}\tilde{y}^{\top} - \tilde{y}\mu_n^{\top} - \mu_n\tilde{y}^{\top} + \mu_n\mu_n^{\top}$,
 \begin{align*}
-\Var(\tilde{\vec y} \mid \vec y_{1:n}) &= \int \tilde{\vec y}\tilde{\vec y}^{\top}p(\tilde{\vec y} \mid \vec y_{1:n})\dd\tilde{\vec y} - \underbrace{\Big(\int \tilde{\vec y}\,p(\tilde{\vec y} \mid \vec y_{1:n})\dd\tilde{\vec y}\Big)}_{\new{\vmu_n}}\vmu_n^{\top} - \vmu_n\underbrace{\Big(\int \tilde{\vec y}^{\top}p(\tilde{\vec y} \mid \vec y_{1:n})\dd\tilde{\vec y}\Big)}_{\new{\vmu_n^{\top}}} + \vmu_n\vmu_n^{\top}\\
-&= \int \tilde{\vec y}\tilde{\vec y}^{\top}p(\tilde{\vec y} \mid \vec y_{1:n})\dd\tilde{\vec y} \new{{}- \vmu_n\vmu_n^{\top}}.
+\Var(\tilde{y} \mid y_{1:n}) &= \int \tilde{y}\tilde{y}^{\top}p(\tilde{y} \mid y_{1:n})\dd\tilde{y} - \underbrace{\Big(\int \tilde{y}\,p(\tilde{y} \mid y_{1:n})\dd\tilde{y}\Big)}_{\new{\mu_n}}\mu_n^{\top} - \mu_n\underbrace{\Big(\int \tilde{y}^{\top}p(\tilde{y} \mid y_{1:n})\dd\tilde{y}\Big)}_{\new{\mu_n^{\top}}} + \mu_n\mu_n^{\top}\\
+&= \int \tilde{y}\tilde{y}^{\top}p(\tilde{y} \mid y_{1:n})\dd\tilde{y} \new{{}- \mu_n\mu_n^{\top}}.
 \end{align*}
-Using $p(\tilde y \mid y) = \int \mathrm{d}\vmu\,p(\tilde{\vec y} \mid \vmu, \Sigma)\,p(\vmu \mid \vec y_{1:n})$,
+Using $p(\tilde y \mid y) = \int \mathrm{d}\mu\,p(\tilde{y} \mid \mu, \Sigma)\,p(\mu \mid y_{1:n})$,
 \[
-\int \tilde{\vec y}\tilde{\vec y}^{\top}p(\tilde{\vec y} \mid \vec y_{1:n})\dd\tilde{\vec y}
-= \int \mathrm{d}\vmu\,p(\vmu \mid \vec y_{1:n})\underbrace{\Big(\int \mathrm{d}\tilde{\vec y}\,\tilde{\vec y}\tilde{\vec y}^{\top}p(\tilde{\vec y} \mid \vmu, \Sigma)\Big)}_{\new{\Sigma + \vmu\vmu^{\top}}}
-= \new{\Sigma} + \underbrace{\int \new{\vmu\vmu^{\top}}p(\vmu \mid \vec y_{1:n})\dd\vmu}_{\new{\Lambda_n + \vmu_n\vmu_n^{\top}}}.
+\int \tilde{y}\tilde{y}^{\top}p(\tilde{y} \mid y_{1:n})\dd\tilde{y}
+= \int \mathrm{d}\mu\,p(\mu \mid y_{1:n})\underbrace{\Big(\int \mathrm{d}\tilde{y}\,\tilde{y}\tilde{y}^{\top}p(\tilde{y} \mid \mu, \Sigma)\Big)}_{\new{\Sigma + \mu\mu^{\top}}}
+= \new{\Sigma} + \underbrace{\int \new{\mu\mu^{\top}}p(\mu \mid y_{1:n})\dd\mu}_{\new{\Lambda_n + \mu_n\mu_n^{\top}}}.
 \]
 Therefore
 \[
-\boxed{\Var(\tilde{\vec y} \mid \vec y_{1:n}) = \Sigma + \Lambda_n.}
+\boxed{\Var(\tilde{y} \mid y_{1:n}) = \Sigma + \Lambda_n.}
 \]
 
 %=====================================================
 \section{Linear Gaussian systems}
-Let us consider that we have noisy measurements of an unknown vector $\vec z$ such that
+Let us consider that we have noisy measurements of an unknown vector $z$ such that
 \[
-\vec y = W\vec z + \vec b + \vec\varepsilon,
+y = W z + b + \varepsilon,
 \]
-where $\vec\varepsilon \sim \Normal(\vec 0, \Sigma_y)$, such that
+where the measurement $y$, the offset $b$ and the noise $\varepsilon$ are also vectors, $W$ is a matrix, and $\varepsilon \sim \Normal(0, \Sigma_y)$, such that
 \[
-\E[\vec y \mid \vec z] = W\vec z + \vec b + \underbrace{\E(\vec\varepsilon)}_{0}.
+\E[y \mid z] = W z + b + \underbrace{\E(\varepsilon)}_{0}.
 \]
 Thus,
 \[
-p(\vec y \mid \vec z) = \Normal(\vec y \mid W\vec z + \vec b, \Sigma_y).
+p(y \mid z) = \Normal(y \mid W z + b, \Sigma_y).
 \]
 For this model, we choose a prior
 \[
-p(\vec z) = \Normal(\vec z \mid \vmu_z, \Sigma_z).
+p(z) = \Normal(z \mid \mu_z, \Sigma_z).
 \]
 Thus, the posterior distribution is
 \[
-p(\vec z \mid \vec y) \propto p(\vec y \mid \vec z)\,p(\vec z).
+p(z \mid y) \propto p(y \mid z)\,p(z).
 \]
-For $n$ observations, $\vec y_i = W_i\vec z + \vec b_i + \vec\varepsilon_i$, we have
+For $n$ observations, $y_i = W_i z + b_i + \varepsilon_i$, we have
 \[
-p(\vec z \mid \vec y_{1:n}) \propto p(\vec y_{1:n} \mid \vec z)\,p(\vec z),
+p(z \mid y_{1:n}) \propto p(y_{1:n} \mid z)\,p(z),
 \qquad
-p(\vec y_{1:n} \mid \vec z) = \prod_{i=1}^{n}p(\vec y_i \mid \vec z),
+p(y_{1:n} \mid z) = \prod_{i=1}^{n}p(y_i \mid z),
 \]
 where
 \[
-p(\vec y_i \mid \vec z) \propto \exp\left[-\frac12(\vec y_i - W_i\vec z - \vec b_i)^{\top}\Sigma_y^{-1}(\vec y_i - W_i\vec z - \vec b_i)\right],
+p(y_i \mid z) \propto \exp\left[-\frac12(y_i - W_i z - b_i)^{\top}\Sigma_y^{-1}(y_i - W_i z - b_i)\right],
 \qquad
-p(\vec z) \propto \exp\left[-\frac12(\vec z - \vmu_z)^{\top}\Sigma_z^{-1}(\vec z - \vmu_z)\right].
+p(z) \propto \exp\left[-\frac12(z - \mu_z)^{\top}\Sigma_z^{-1}(z - \mu_z)\right].
 \]
-Then, in the exponent of $p(\vec z \mid \vec y_{1:n})$ (times $-2$) we have
+Then, in the exponent of $p(z \mid y_{1:n})$ (times $-2$) we have
 \begin{align*}
-\sum_{i=1}^{n}\Big(&\vec y_i^{\top}\Sigma_y^{-1}\vec y_i - \vec y_i^{\top}\Sigma_y^{-1}W_i\vec z - \vec y_i^{\top}\Sigma_y^{-1}\vec b_i
-- \vec z^{\top}W_i^{\top}\Sigma_y^{-1}\vec y_i + \vec z^{\top}W_i^{\top}\Sigma_y^{-1}W_i\vec z + \vec z^{\top}W_i^{\top}\Sigma_y^{-1}\vec b_i\\
-&- \vec b_i^{\top}\Sigma_y^{-1}\vec y_i + \vec b_i^{\top}\Sigma_y^{-1}W_i\vec z + \vec b_i^{\top}\Sigma_y^{-1}\vec b_i\Big)
-+ \vec z^{\top}\Sigma_z^{-1}\vec z - \vec z^{\top}\Sigma_z^{-1}\vmu_z - \vmu_z^{\top}\Sigma_z^{-1}\vec z + \vmu_z^{\top}\Sigma_z^{-1}\vmu_z.
+\sum_{i=1}^{n}\Big(&y_i^{\top}\Sigma_y^{-1}y_i - y_i^{\top}\Sigma_y^{-1}W_i z - y_i^{\top}\Sigma_y^{-1}b_i
+- z^{\top}W_i^{\top}\Sigma_y^{-1}y_i + z^{\top}W_i^{\top}\Sigma_y^{-1}W_i z + z^{\top}W_i^{\top}\Sigma_y^{-1}b_i\\
+&- b_i^{\top}\Sigma_y^{-1}y_i + b_i^{\top}\Sigma_y^{-1}W_i z + b_i^{\top}\Sigma_y^{-1}b_i\Big)
++ z^{\top}\Sigma_z^{-1}z - z^{\top}\Sigma_z^{-1}\mu_z - \mu_z^{\top}\Sigma_z^{-1}z + \mu_z^{\top}\Sigma_z^{-1}\mu_z.
 \end{align*}
-I only need terms with $\vec z$. Thus
+I only need terms with $z$. Thus
 \[
-\vec z^{\top}\new{\Big(\Sigma_z^{-1} + \sum_i W_i^{\top}\Sigma_y^{-1}W_i\Big)}\vec z
-+ \new{2}\vec z^{\top}\sum_{i=1}^{n}\big(W_i^{\top}\Sigma_y^{-1}\vec b_i\big) - \new{2}\vec z^{\top}\sum_{i=1}^{n}\big(W_i^{\top}\Sigma_y^{-1}\vec y_i\big) - \new{2}\vec z^{\top}\Sigma_z^{-1}\vmu_z.
+z^{\top}\new{\Big(\Sigma_z^{-1} + \sum_i W_i^{\top}\Sigma_y^{-1}W_i\Big)}z
++ \new{2}z^{\top}\sum_{i=1}^{n}\big(W_i^{\top}\Sigma_y^{-1}b_i\big) - \new{2}z^{\top}\sum_{i=1}^{n}\big(W_i^{\top}\Sigma_y^{-1}y_i\big) - \new{2}z^{\top}\Sigma_z^{-1}\mu_z.
 \]
 Defining
 \[
@@ -881,21 +880,21 @@ Defining
 \]
 then
 \[
-\vec z^{\top}\new{\Sigma_{z|y}^{-1}}\vec z - 2\vec z^{\top}\underbrace{\Big[\sum_{i=1}^{n}W_i^{\top}\Sigma_y^{-1}\new{(\vec y_i - \vec b_i)} + \Sigma_z^{-1}\vmu_z\Big]}_{\new{\vec r}}
-= \vec z^{\top}\Sigma_{z|y}^{-1}\vec z - 2\vec z^{\top}\new{\vec r}
-= \vec z^{\top}\Sigma_{z|y}^{-1}\vec z - 2\vec z^{\top}\new{\Sigma_{z|y}^{-1}\vmu_{z|y}},
+z^{\top}\new{\Sigma_{z|y}^{-1}}z - 2z^{\top}\underbrace{\Big[\sum_{i=1}^{n}W_i^{\top}\Sigma_y^{-1}\new{(y_i - b_i)} + \Sigma_z^{-1}\mu_z\Big]}_{\new{r}}
+= z^{\top}\Sigma_{z|y}^{-1}z - 2z^{\top}\new{r}
+= z^{\top}\Sigma_{z|y}^{-1}z - 2z^{\top}\new{\Sigma_{z|y}^{-1}\mu_{z|y}},
 \]
 with
 \[
-\vmu_{z|y} = \Sigma_{z|y}\Big(\sum_{i=1}^{n}W_i^{\top}\Sigma_y^{-1}(\vec y_i - \vec b_i) + \Sigma_z^{-1}\vmu_z\Big).
+\mu_{z|y} = \Sigma_{z|y}\Big(\sum_{i=1}^{n}W_i^{\top}\Sigma_y^{-1}(y_i - b_i) + \Sigma_z^{-1}\mu_z\Big).
 \]
 Completing the square,
 \begin{align*}
-&\vec z^{\top}\Sigma_{z|y}^{-1}\vec z - \vec z^{\top}\Sigma_{z|y}^{-1}\vmu_{z|y} - \vmu_{z|y}^{\top}\Sigma_{z|y}^{-1}\vec z \new{{}+ \vmu_{z|y}^{\top}\Sigma_{z|y}^{-1}\vmu_{z|y} - \vmu_{z|y}^{\top}\Sigma_{z|y}^{-1}\vmu_{z|y}}\\
-&= \new{(\vec z - \vmu_{z|y})^{\top}}\Sigma_{z|y}^{-1}\vec z - \new{(\vec z - \vmu_{z|y})^{\top}}\Sigma_{z|y}^{-1}\vmu_{z|y} - \vmu_{z|y}^{\top}\Sigma_{z|y}^{-1}\vmu_{z|y}\\
-&= (\vec z - \vmu_{z|y})^{\top}\Sigma_{z|y}^{-1}\new{(\vec z - \vmu_{z|y})} - \vmu_{z|y}^{\top}\Sigma_{z|y}^{-1}\vmu_{z|y},
+&z^{\top}\Sigma_{z|y}^{-1}z - z^{\top}\Sigma_{z|y}^{-1}\mu_{z|y} - \mu_{z|y}^{\top}\Sigma_{z|y}^{-1}z \new{{}+ \mu_{z|y}^{\top}\Sigma_{z|y}^{-1}\mu_{z|y} - \mu_{z|y}^{\top}\Sigma_{z|y}^{-1}\mu_{z|y}}\\
+&= \new{(z - \mu_{z|y})^{\top}}\Sigma_{z|y}^{-1}z - \new{(z - \mu_{z|y})^{\top}}\Sigma_{z|y}^{-1}\mu_{z|y} - \mu_{z|y}^{\top}\Sigma_{z|y}^{-1}\mu_{z|y}\\
+&= (z - \mu_{z|y})^{\top}\Sigma_{z|y}^{-1}\new{(z - \mu_{z|y})} - \mu_{z|y}^{\top}\Sigma_{z|y}^{-1}\mu_{z|y},
 \end{align*}
-so $p(\vec z \mid \vec y_{1:n}) = \Normal(\vec z \mid \vmu_{z|y}, \Sigma_{z|y})$.
+so $p(z \mid y_{1:n}) = \Normal(z \mid \mu_{z|y}, \Sigma_{z|y})$.
 
 %=====================================================
 \section{Mixture of conjugate priors}
