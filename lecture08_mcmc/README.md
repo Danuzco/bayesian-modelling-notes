@@ -1,6 +1,7 @@
 # Lecture 8 · Markov Chain Monte Carlo
 
-📄 **[Handwritten notes](lecture08_mcmc.pdf)** (20 pages)
+📄 **[Handwritten notes](lecture08_mcmc.pdf)** (20 pages)  
+📝 **[Typeset version (LaTeX)](lecture08_mcmc_typeset.pdf)** (7 pages, [source](latex/lecture08_mcmc_typeset.tex))
 
 ## Outline
 

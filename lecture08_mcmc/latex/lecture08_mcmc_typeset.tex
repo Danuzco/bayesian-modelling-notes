@@ -1,0 +1,284 @@
+\input{preamble}
+\title{Lecture 8: Markov Chain Monte Carlo}
+\author{}\date{}
+
+\begin{document}
+\maketitle
+
+\section{Motivation: sampling instead of integrating}
+For non-conjugate families in the Bayes rule
+\[
+p(\theta \mid y) = \frac{p(y \mid \theta)\,p(\theta)}{p(y)},
+\]
+the main issue is to compute
+\[
+p(y) = \int \mathrm{d}\theta'\,p(y \mid \theta')\,p(\theta').
+\]
+Also, it is hard to make predictions using
+\[
+p(\tilde y \mid y) = \int \mathrm{d}\theta\,p(\tilde y \mid \theta)\,p(\theta \mid y).
+\]
+Instead of finding the integral, we can sample $N$ $\theta$s from $p(\theta \mid y)$. This is, we can generate $\set{\theta^{(i)}}_{i=1}^{N}$, where
+\[
+\theta^{(i)} \sim p(\theta \mid y),
+\]
+and then use
+\[
+p(\tilde y \mid y) = \E_{\theta \sim p(\theta \mid y)}\left[p(\tilde y \mid \theta)\right] \approx \frac1N\sum_{i=1}^{N}p(\tilde y \mid \theta^{(i)}).
+\]
+But notice that I also need $\tilde y$. So, what is actually done is to sample an
+\[
+\tilde y^{(i)} \sim p(\tilde y \mid \theta^{(i)})
+\]
+for each $\theta^{(i)} \sim p(\theta \mid y)$, where $y$ is known. Then we have a set $\set{\tilde y^{(i)}}_{i=1}^{N}$.
+
+We never get $p(\tilde y \mid y)$ in closed form; we only get samples from it, from which any expectation can be approximated.
+
+\begin{example}[Sampling from the exponential distribution]
+The exponential PDF is
+\[
+f(x) = \lambda e^{-\lambda x}, \qquad x > 0,\ \lambda > 0.
+\]
+We want to get samples from $f(x)$. This is, $x \sim f(x)$. The CDF is
+\[
+F_X(x) = P(X \le x) = \int_0^x \new{\lambda e^{-\lambda u}}\dd u = \new{1 - e^{-\lambda x}},
+\]
+where $0 \le F_X(x) \le 1$. For sampling, we can generate
+\[
+u \sim \operatorname{Uniform}(0,1)
+\]
+and make $F_X(x) = u$. Thus $e^{-\lambda x} = 1 - u$, and then we have
+\[
+-\lambda x = \new{\log}(1 - u) \ \Rightarrow\ x = \new{-\frac{1}{\lambda}}\log(1 - u).
+\]
+\end{example}
+
+\begin{example}[Sampling from a multivariate normal]
+To sample from $\Normal(x \mid \mu, \Sigma)$ we can use
+\[
+x = Lz + \mu, \qquad z \sim \Normal(0, I),
+\]
+where $LL^{\top} = \Sigma$ is the Cholesky factorization of $\Sigma$. Notice that
+\[
+\E(x) = L\,\new{\E(z)} + \new{\E(\mu)} = \new{\mu}
+\]
+and
+\[
+\Cov(x) = \E\left((x - \mu)(x - \mu)^{\top}\right) = \E\left[\new{Lzz^{\top}L^{\top}}\right] = \new{L}\underbrace{\E(zz^{\top})}_{\new{I}}\new{L^{\top}} = \new{\Sigma},
+\]
+and therefore $\Cov(x) = LL^{\top} = \Sigma$.
+
+Sampling $z \sim \Normal(0, I)$ is done using, for example, the Box--Muller method in $O(d)$, where $d$ is the size of the vector $x$. The overall cost of sampling $x \sim \Normal(x \mid \mu, \Sigma)$ is $O(d^3)$, which includes the cost of computing the Cholesky factorization ($O(d^3)$).
+\end{example}
+
+%=====================================================
+\section{Metropolis--Hastings}
+It is a Markov chain Monte Carlo (MCMC) method used for obtaining a sequence of random samples from a probability distribution from which direct sampling is difficult. MCMC is a class of algorithms used to draw samples from a probability distribution.
+
+New samples are added to the sequence in two steps:
+\begin{enumerate}[label=(\roman*)]
+\item a new sample is proposed based on the previous one (this is the Markovian part), and
+\item the proposed sample is either added to the sequence or rejected depending on the value of the probability distribution at that point.
+\end{enumerate}
+
+\subsection{Formal derivation}
+The problem is that we need to sample from a target distribution
+\[
+\pi(x) = \frac{\tilde\pi(x)}{Z},
+\]
+where we can only evaluate $\tilde\pi(x)$ and $Z$ is unknown.
+
+To generate samples using the Metropolis--Hastings algorithm, we use a \emph{proposal distribution} $r(y \mid x)$ that we choose and from which it is easy to sample.
+
+Let $x$ be a current state, so $X_t = x$. We draw a candidate $y$ from a proposal distribution $r(y \mid x)$. If we accept it, then $X_{t+1} = y$. Otherwise, $X_{t+1} = x$.
+
+How do we decide whether to accept the candidate $y$?
+\begin{enumerate}
+\item Initialize $x \in \R^n$.
+\item Sample $y \sim r(\cdot \mid x)$.
+\item Sample $u \sim \operatorname{Uniform}(0,1)$.
+\item If $u \le \alpha(y \mid x)$, accept $y$ and set $x \leftarrow y$. Otherwise, keep $x$.
+\item Return to step 2.
+\end{enumerate}
+where
+\[
+\alpha(y \mid x) = \min\Bigg\{1,\ \underbrace{\frac{\tilde\pi(y)\,r(x \mid y)}{\tilde\pi(x)\,r(y \mid x)}}_{\rho}\Bigg\}.
+\]
+If $\rho \ge 1$, we always accept $y$. If $\rho < 1$, we accept $y$ with probability $\rho$.
+
+\subsection{Why $\alpha(y \mid x)$?}
+Suppose that at step $t$ we have $X_t \sim \pi(\cdot)$. We would like the next state to have the same distribution, so that $X_{t+1} \sim \pi(\cdot)$ as well. Can we find a transition probability $p(y \mid x)$ that accomplishes that? This is,
+\[
+P(X_{t+1} = y) = \sum_x p(y \mid x)\,\pi(x).
+\]
+We want a transition rule such that
+\[
+\pi(y) = \sum_x p(y \mid x)\,\pi(x).
+\]
+This is, given many copies of the chain, each state distributed according to $\pi(\cdot)$: after every copy takes one step, what fraction do we expect to find at $y$?
+
+One way of having stationarity is \emph{detailed balance}:
+\[
+\pi(x)\,p(y \mid x) = \pi(y)\,p(x \mid y).
+\]
+Thus
+\[
+\sum_x p(y \mid x)\,\pi(x) = \sum_x \new{\pi(y)\,p(x \mid y)} = \new{\pi(y)}\underbrace{\sum_x p(x \mid y)}_{\new{1}} = \pi(y).
+\]
+
+The probability of a candidate $Y = y$ being accepted ($A$), given $X_t = x$, is
+\[
+P(Y = y, A \mid X_t = x) = P(A \mid Y = y, X_t = x)\,P(Y = y \mid X_t = x).
+\]
+That is the same as saying
+\[
+\underbrace{P(X_{t+1} = y \mid X_t = x)}_{\new{p(y \mid x)}} = \underbrace{P(A \mid Y = y, X_t = x)}_{\new{\alpha(y \mid x)}}\,\underbrace{P(Y = y \mid X_t = x)}_{\new{r(y \mid x)}}.
+\]
+Finally, for $y \neq x$,
+\[
+p(y \mid x) = \alpha(y \mid x)\,r(y \mid x).
+\]
+(For $y = x$, rejections also add probability, but detailed balance holds trivially when $y = x$.)
+Now, I replace $p(y \mid x)$ into the detailed balance equation
+\[
+\pi(x)\,p(y \mid x) = \pi(y)\,p(x \mid y),
+\]
+\[
+\pi(x)\,\new{\alpha(y \mid x)\,r(y \mid x)} = \pi(y)\,\new{\alpha(x \mid y)\,r(x \mid y)},
+\]
+where $x \to y$ means the chain starts at $x$ and proposes $y$, and
+\[
+\alpha(x \mid y) = P(A \mid Y = x, X_t = y) \qquad (y \to x:\ \text{starts at } y \text{ and proposes } x).
+\]
+Then
+\[
+\alpha(y \mid x) = \underbrace{\frac{\pi(y)\,r(x \mid y)}{\pi(x)\,r(y \mid x)}}_{\new{\rho}}\,\alpha(x \mid y)
+\ \Rightarrow\
+\alpha(y \mid x) = \new{\rho}\,\alpha(x \mid y).
+\]
+Since $\pi(y)/\pi(x) = \tilde\pi(y)/\tilde\pi(x)$, $Z$ is not needed. MH makes the larger of the two acceptance probabilities equal to $1$: if $\rho < 1$, it takes $\alpha(x \mid y) = 1$, so $\alpha(y \mid x) = \rho$; if $\rho \ge 1$, it takes $\alpha(y \mid x) = 1$ (and then $\alpha(x \mid y) = 1/\rho$). Finally,
+\[
+\alpha(y \mid x) = \min(1, \rho).
+\]
+
+%=====================================================
+\section{Hamiltonian Monte Carlo (HMC)}
+HMC is particularly suited for continuous differentiable density distributions.
+
+HMC introduces momentum variables $q$ and draws from a joint distribution
+\[
+p(q, \theta) = p(q \mid \theta)\,p(\theta).
+\]
+For most applications,
+\[
+p(q \mid \theta) = p(q) = \Normal(0, \Sigma).
+\]
+Normally $\Sigma = I$ or it is estimated from warm-up.
+
+The negative log of $p(q, \theta)$ defines a Hamiltonian:
+\[
+H(q, \theta) = -\log\big(p(q, \theta)\big) = \new{-\log\big(p(q \mid \theta)\big) - \log\big(p(\theta)\big)},
+\]
+\[
+H(q, \theta) = \new{K(q \mid \theta)} + \new{V(\theta)},
+\]
+where $K(q \mid \theta) = -\log[p(q \mid \theta)]$ is called the \emph{kinetic energy} and $V(\theta) = -\log(p(\theta))$ is called the \emph{potential energy}.
+
+\subsection{Generating transitions}
+Starting from the current value of $\theta$, a transition to a new state is generated in two stages:
+\begin{enumerate}
+\item A value for $q$ is drawn, independently of the current value of $\theta$:
+\[
+q \sim p(q) = \Normal(q \mid 0, \Sigma).
+\]
+\item $q$ and $\theta$ are evolved according to
+\[
+\frac{\mathrm{d}\theta}{\mathrm{d}t} = \nabla_q H = \nabla_q \new{K(q)},
+\qquad
+\frac{\mathrm{d}q}{\mathrm{d}t} = -\nabla_\theta H = -\nabla_\theta \new{V(\theta)}.
+\]
+Thus
+\[
+\frac{\mathrm{d}\theta}{\mathrm{d}t} = \nabla_q K(q), \qquad \frac{\mathrm{d}q}{\mathrm{d}t} = -\nabla_\theta V(\theta).
+\]
+\end{enumerate}
+
+\subsection{Leapfrog integrator}
+This algorithm takes discrete steps of some small time interval $\varepsilon$. Leapfrog begins by drawing a fresh momentum value
+\[
+q \sim \Normal(q \mid 0, \Sigma)
+\]
+and then updates are done as
+\begin{align*}
+q &\leftarrow q - \frac{\varepsilon}{2}\nabla_\theta V(\theta),\\
+\theta &\leftarrow \theta + \varepsilon\,\nabla_q K(q),\\
+q &\leftarrow q - \frac{\varepsilon}{2}\nabla_\theta V(\theta).
+\end{align*}
+By applying $L$ leapfrog steps, a total time $L\varepsilon$ is simulated. The resulting state after $L$ repetitions is denoted $(\tilde q, \tilde\theta)$.
+
+For the Gaussian momentum, $K(q) = \frac12 q^{\top}\Sigma^{-1}q$ up to a constant, so the position step is $\theta \leftarrow \theta + \varepsilon\,\Sigma^{-1}q$: the position moves \emph{along} the momentum, with a plus sign.
+
+\subsection{Metropolis accepting step}
+The leapfrog integrator does not conserve $H$ exactly, so the proposal $(\tilde q, \tilde\theta)$ is accepted with probability
+\[
+\alpha(q, \theta, \tilde q, \tilde\theta) = \min\Big[1,\ \exp\big(\new{H(q, \theta) - H(\tilde q, \tilde\theta)}\big)\Big].
+\]
+This is the Metropolis ratio for the joint target $p(q, \theta) \propto e^{-H(q, \theta)}$:
+\[
+\frac{p(\tilde q, \tilde\theta)}{p(q, \theta)} = \frac{e^{-H(\tilde q, \tilde\theta)}}{e^{-H(q, \theta)}} = \new{e^{H(q, \theta) - H(\tilde q, \tilde\theta)}}.
+\]
+If $\tilde\theta$ is accepted, it is the next state; otherwise the chain stays at $\theta$. The momentum is discarded either way, and a fresh one is drawn at the next iteration. If the dynamics were simulated exactly, $H$ would be conserved and every proposal would be accepted.
+
+\subsection{Aside: where Hamilton's equations come from}
+In classical mechanics a system with coordinates $q$ is described by a Lagrangian $L(q, \dot q, t)$, and its path makes the action
+\[
+S = \int L(q, \dot q, t)\dd t
+\]
+stationary. This gives the \emph{Euler--Lagrange equations}
+\[
+\frac{\partial L}{\partial q} - \frac{\mathrm{d}}{\mathrm{d}t}\frac{\partial L}{\partial \dot q} = 0.
+\]
+Hamilton then defined, with momenta $p_i = \partial L/\partial \dot q_i$,
+\[
+H(q, p, t) = \sum_i \dot q_i\,p_i - L(q, \dot q, t),
+\]
+and the Euler--Lagrange equations become the first-order system
+\[
+\frac{\mathrm{d}q}{\mathrm{d}t} = \frac{\partial H}{\partial p}, \qquad \frac{\mathrm{d}p}{\mathrm{d}t} = -\frac{\partial H}{\partial q}.
+\]
+\emph{Notation:} in this aside $q$ is the position and $p$ the momentum, as in physics. In HMC above the position is $\theta$ and the momentum is $q$, so $\mathrm{d}\theta/\mathrm{d}t = \nabla_q H$ and $\mathrm{d}q/\mathrm{d}t = -\nabla_\theta H$ are the same equations.
+
+%=====================================================
+\section{Convergence: the Gelman--Rubin statistic}
+Run $M$ chains with $N$ draws each (after warm-up), from dispersed starting points. For a scalar quantity $\theta$, let
+\begin{itemize}[nosep]
+\item $\bar\theta_m$ be the average of chain $m$,
+\item $s_m^2$ be the variance of chain $m$,
+\item $\bar\theta = \dfrac1M\displaystyle\sum_{m=1}^{M}\bar\theta_m$ be the average over all chains.
+\end{itemize}
+The \emph{within-chain} variance $W$ and the \emph{between-chain} variance $B$ are
+\[
+W = \frac1M\sum_{m=1}^{M}s_m^2, \qquad
+B = \frac{N}{M-1}\sum_{m=1}^{M}\big(\bar\theta_m - \bar\theta\big)^2,
+\]
+where $B$ measures how much the chains differ from each other. They are combined into an estimate of the posterior variance,
+\[
+\hat V = \frac{N-1}{N}\,W + \frac1N\,B,
+\]
+and the \emph{potential scale reduction factor} is
+\[
+\hat R = \sqrt{\frac{\hat V}{W}}.
+\]
+If the chains have mixed, they all explore the same distribution, $B$ is comparable to $W$, and $\hat R \approx 1$: this is the sign of convergence. A value clearly above $1$ means the chains have not yet agreed, and they should be run longer.
+
+%=====================================================
+\section*{References}
+\begin{itemize}
+\item Gelman, A., Carlin, J.~B., Stern, H.~S., Dunson, D.~B., Vehtari, A., and Rubin, D.~B. (2013). \emph{Bayesian Data Analysis} (3rd ed.). CRC Press. Chapters 10--12: simulation, Metropolis--Hastings and Hamiltonian Monte Carlo; Section 11.4: assessing convergence with $\hat R$; Section 12.4: Hamiltonian Monte Carlo and the leapfrog steps.
+\item Chib, S., and Greenberg, E. (1995). Understanding the Metropolis--Hastings algorithm. \emph{The American Statistician}, 49(4), 327--335. The detailed-balance derivation of the acceptance probability.
+\item Neal, R.~M. (2011). MCMC using Hamiltonian dynamics. In S.~Brooks, A.~Gelman, G.~Jones and X.-L.~Meng (Eds.), \emph{Handbook of Markov Chain Monte Carlo}. CRC Press. Hamiltonian dynamics and the leapfrog integrator.
+\item Betancourt, M. (2017). A conceptual introduction to Hamiltonian Monte Carlo. \url{https://arxiv.org/abs/1701.02434} Intuition for HMC.
+\item Kuleshov, V., and Ermon, S. \emph{CS228 Notes: Probabilistic Graphical Models}. \url{https://ermongroup.github.io/cs228-notes/} Section on sampling methods.
+\end{itemize}
+
+\end{document}

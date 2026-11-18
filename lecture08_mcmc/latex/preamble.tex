@@ -1,0 +1,57 @@
+\documentclass[11pt,letterpaper]{article}
+\usepackage[margin=2.5cm]{geometry}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{lmodern}
+\usepackage{amsmath,amssymb,amsthm,mathtools,bm}
+\usepackage{enumitem}
+\usepackage{booktabs}
+\usepackage{tikz}
+\usetikzlibrary{arrows.meta,patterns,positioning,calc}
+\usepackage{pgfplots}
+\pgfplotsset{compat=1.16}
+\usepackage{titlesec}
+\usepackage[hidelinks]{hyperref}
+
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{0.5em}
+\titleformat{\section}{\large\bfseries}{\thesection.}{0.6em}{}
+\titleformat{\subsection}{\normalsize\bfseries}{\thesubsection.}{0.6em}{}
+
+\theoremstyle{definition}
+\newtheorem{definition}{Definition}[section]
+\newtheorem{example}{Example}[section]
+\newtheorem{exercise}{Exercise}[section]
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{remark}{Remark}[section]
+
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\N}{\mathbb{N}}
+\newcommand{\Z}{\mathbb{Z}}
+\newcommand{\U}{\mathcal{U}}
+\newcommand{\E}{\mathbb{E}}
+\newcommand{\Var}{\operatorname{Var}}
+\newcommand{\Cov}{\operatorname{Cov}}
+\newcommand{\Normal}{\mathcal{N}}
+\newcommand{\dd}{\,\mathrm{d}}
+\newcommand{\T}{^{\top}}
+\renewcommand{\P}{P}
+\newcommand{\set}[1]{\left\{#1\right\}}
+\newcommand{\given}{\mid}
+\newcommand{\note}[1]{\textit{#1}}
+
+% --- Homework exercises (tinted box) and highlighted derivation steps ---
+\usepackage{tcolorbox}
+\tcbuselibrary{skins,breakable}
+\definecolor{hwfill}{RGB}{235,243,252}
+\definecolor{hwframe}{RGB}{31,78,140}
+\definecolor{newterm}{RGB}{196,78,0}
+\newtcolorbox{homework}[1]{enhanced, breakable,
+  colback=hwfill, colframe=hwframe, coltitle=white,
+  fonttitle=\bfseries, boxrule=0.6pt, arc=2pt,
+  left=6pt, right=6pt, top=4pt, bottom=4pt,
+  before skip=10pt, after skip=10pt,
+  title={Exercise (Homework #1)}}
+\newcommand{\soln}{\par\smallskip\noindent\textbf{Solution.}\ }
+% \new{...} marks what is new in a derivation step: a substituted or simplified term.
+\newcommand{\new}[1]{{\color{newterm}#1}}

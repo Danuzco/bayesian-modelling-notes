@@ -1,0 +1,263 @@
+\input{preamble}
+\title{Lecture 7: Gaussian Processes}
+\author{}\date{}
+\newcommand{\xt}{\tilde x}
+\newcommand{\yt}{\tilde y}
+
+\begin{document}
+\maketitle
+
+\section{Linear regression}
+We have studied conjugate cases with no covariates involved. If there are covariates, we saw that, for a regression model
+\[
+Y = f(X) + \varepsilon, \qquad \varepsilon \sim \Normal(0, \sigma_\varepsilon^2),
+\]
+\[
+p(\theta \mid y, x) = \frac{p(y \mid x, \theta)\,p(\theta)}{\int \mathrm{d}\theta'\,p(y \mid x, \theta')\,p(\theta')},
+\]
+which is notation for
+\[
+p(\theta_{1:k} \mid y_{1:n}, x_{1:n}) \propto p(y_{1:n} \mid x_{1:n}, \theta_{1:k})\,p(\theta_{1:k}).
+\]
+Now, let us consider the linear regression case
+\[
+y_i = w^{\top}x_i + \varepsilon, \qquad \varepsilon \sim \Normal(0, \sigma_\varepsilon^2),
+\]
+so that $y_i \mid x_i, w \sim \Normal(w^{\top}x_i, \sigma_\varepsilon^2)$. This is
+\[
+p(y_i \mid x_i, w) = \frac{1}{\sqrt{2\pi}\,\sigma_\varepsilon}\exp\left[-\frac{1}{2\sigma_\varepsilon^2}(y_i - w^{\top}x_i)^2\right].
+\]
+If $y_1, \dots, y_n$ are iid, then
+\[
+p(y \mid x, w) = \prod_{i=1}^{n}p(y_i \mid x_i, w) = \frac{1}{(2\pi\sigma_\varepsilon^2)^{n/2}}\exp\left[-\frac{1}{2\sigma_\varepsilon^2}\sum_i(y_i - w^{\top}x_i)^2\right].
+\]
+It turns out that we can rewrite that as (with $X$ the matrix whose rows are $x_i^{\top}$)
+\[
+p(y_{1:n} \mid x_{1:n}, w) \propto \exp\left[-\frac{1}{2\sigma_\varepsilon^2}(y - Xw)^{\top}(y - Xw)\right].
+\]
+For a Gaussian prior $p(w) = \Normal(0, \sigma_p^2I)$,
+\[
+p(w) \propto \exp\left[-\frac{1}{2\sigma_p^2}w^{\top}w\right].
+\]
+Then
+\[
+p(w \mid y_{1:n}, x_{1:n}) \propto p(y_{1:n} \mid x_{1:n}, w)\,p(w).
+\]
+In the exponent (times $-2$):
+\begin{align*}
+&\left(y^{\top}y - y^{\top}Xw - w^{\top}X^{\top}y + w^{\top}X^{\top}Xw\right)\sigma_\varepsilon^{-2} + \sigma_p^{-2}w^{\top}w\\
+&= \sigma_\varepsilon^{-2}\left(y^{\top}y - \new{2y^{\top}Xw} + w^{\top}X^{\top}Xw\right) + \sigma_p^{-2}w^{\top}w\\
+&= w^{\top}\new{\left(\sigma_\varepsilon^{-2}X^{\top}X + \sigma_p^{-2}I\right)}w - 2\sigma_\varepsilon^{-2}y^{\top}Xw + \new{\text{const}}.
+\end{align*}
+Thus $p(w \mid y_{1:n}, x_{1:n}) = \Normal(w \mid \mu, \Lambda)$ with
+\[
+\Lambda^{-1} = \sigma_\varepsilon^{-2}X^{\top}X + \sigma_p^{-2}I,
+\qquad
+\mu = \sigma_\varepsilon^{-2}\Lambda X^{\top}y.
+\]
+
+\subsection{Posterior predictive distribution}
+\[
+p(\yt \mid \xt, y_{1:n}, x_{1:n}) = \int \mathrm{d}w\,p(\yt \mid w, \xt)\,p(w \mid x_{1:n}, y_{1:n}).
+\]
+\textbf{Mean:}
+\[
+\E[\yt \mid \xt, y_{1:n}, x_{1:n}] = \int \mathrm{d}w\,p(w \mid x_{1:n}, y_{1:n})\underbrace{\int \mathrm{d}\yt\,\yt\,p(\yt \mid w, \xt)}_{\new{w^{\top}\xt}}
+= \left[\int \mathrm{d}w\,\new{w^{\top}}p(w \mid x_{1:n}, y_{1:n})\right]\new{\xt}
+= \new{\mu^{\top}}\xt.
+\]
+\textbf{Variance:} since $\yt = \xt^{\top}w + \varepsilon$,
+\begin{align*}
+\Var[\yt \mid \xt, y_{1:n}, x_{1:n}] &= \E\left[(\yt - \mu^{\top}\xt)(\yt - \mu^{\top}\xt)^{\top}\right]
+= \E\left[(\new{\xt^{\top}w} - \xt^{\top}\mu + \new{\varepsilon})(\new{\xt^{\top}w} - \xt^{\top}\mu + \new{\varepsilon})^{\top}\right]\\
+&= \E\left[(\xt^{\top}\new{(w - \mu)} + \varepsilon)\big(\new{(w^{\top} - \mu^{\top})}\xt + \varepsilon^{\top}\big)\right]\\
+&= \E\left[\xt^{\top}(w - \mu)(w - \mu)^{\top}\xt + \new{\xt^{\top}(w - \mu)\varepsilon + \varepsilon(w - \mu)^{\top}\xt} + \varepsilon\varepsilon^{\top}\right]\\
+&= \xt^{\top}\underbrace{\E\left[(w - \mu)(w - \mu)^{\top}\right]}_{\new{\Lambda}}\xt + 2\xt^{\top}\underbrace{\E[w - \mu]}_{\new{0}}\E[\varepsilon] + \E[\varepsilon\varepsilon^{\top}]
+= \xt^{\top}\new{\Lambda}\xt + \new{\sigma_\varepsilon^2}.
+\end{align*}
+Thus
+\[
+p(\yt \mid \xt, y_{1:n}, x_{1:n}) = \Normal(\yt \mid \mu^{\top}\xt,\ \xt^{\top}\Lambda\xt + \sigma_\varepsilon^2).
+\]
+Since $w \mid y_{1:n}, x_{1:n} \sim \Normal(\mu, \Lambda)$,
+\[
+\underbrace{w^{\top}\xt}_{f(\xt) \,\equiv\, \tilde f} \mid \xt, y_{1:n}, x_{1:n} \sim \Normal(\mu^{\top}\xt,\ \xt^{\top}\Lambda\xt).
+\]
+
+%=====================================================
+\section{Non-linear regression}
+We are still interested in estimating a function $f : \mathcal{X} \to \R$ at arbitrary points $\xt \in \mathcal{X}$ given training data $\set{y_i, x_i}_{i=1}^{n}$ such that
+\[
+y_i = f(x_i) + \varepsilon_i, \qquad \varepsilon_i \sim \Normal(0, \sigma_n^2).
+\]
+
+%=====================================================
+\section{Gaussian processes (GP)}
+A GP is characterized by a mean function $\mu : \mathcal{X} \to \R$ and a covariance function (or kernel function) $k : \mathcal{X}\times\mathcal{X} \to \R$; we write $f \sim \mathcal{GP}(\mu, k)$.
+
+Given a design matrix $X \in \R^{n\times d}$:
+\begin{enumerate}
+\item For a row $x_i = X[i,:] \in \R^d$, $\mu(x_i) \in \R$ is the mean function; stacking all rows, $\mu_X = \mu(X) \in \R^n$.
+\item $K_{XX}[i,j] = k(x_i, x_j) \in \R$, and $K_{XX}[:,j] = k(X, x_j)$.
+\end{enumerate}
+Typically $\mu_X = (0, \dots, 0)^{\top}$.
+
+\subsection{Prior}
+For a regression model $y_i = f(x_i) + \varepsilon$, with $\varepsilon \sim \Normal(0, \sigma_n^2)$, and where $f \sim \mathcal{GP}(\mu, k)$, we have a prior
+\[
+f_X = \begin{pmatrix}f(x_1)\\ \vdots\\ f(x_n)\end{pmatrix} \sim \Normal\left(f_X \,\middle|\, \begin{pmatrix}\mu(x_1)\\ \vdots\\ \mu(x_n)\end{pmatrix},\ K_{XX}\right),
+\]
+or $f_X \mid X \sim \Normal(f_X \mid \mu_X, K_{XX})$, for a given $\mu(\cdot)$ and $k(\cdot,\cdot)$:
+\[
+p(f_X \mid X) = \Normal(f_X \mid \mu_X, K_{XX}).
+\]
+We can think of $f_X$ as the prior knowledge about $f$ at the location points $X$.
+
+\subsection{Likelihood}
+From the model $y(x_i) = f(x_i) + \varepsilon$, $\varepsilon \sim \Normal(0, \sigma_n^2)$. Thus
+\[
+p(y \mid X, f_X) = \Normal(y \mid f_X, \sigma_n^2 I).
+\]
+
+\subsection{Posterior}
+\[
+p(f_X \mid X, y) \propto p(y \mid X, f_X)\,p(f_X \mid X), \qquad p(f_X \mid X, y) = \Normal(f_X \mid m_X, \Sigma).
+\]
+Writing $Q(\cdot)$ for the quadratic form in the exponent (so that $p \propto e^{-Q/2}$):
+\[
+Q(f_X) = (y - f_X)^{\top}(y - f_X)\,\sigma_n^{-2} + (f_X - \mu_X)^{\top}K_{XX}^{-1}(f_X - \mu_X).
+\]
+Expanding,
+\[
+Q(f_X) = \new{\left(y^{\top}y - 2f_X^{\top}y + f_X^{\top}f_X\right)}\sigma_n^{-2} + \new{f_X^{\top}K_{XX}^{-1}f_X - 2f_X^{\top}K_{XX}^{-1}\mu_X} + \cdots
+\]
+and collecting the terms in $f_X$,
+\[
+Q(f_X) = f_X^{\top}\new{\left(K_{XX}^{-1} + \sigma_n^{-2}I\right)}f_X - 2f_X^{\top}\new{\left(\sigma_n^{-2}y + K_{XX}^{-1}\mu_X\right)} + \cdots
+\]
+For the Gaussian $\Normal(f_X \mid m_X, \Sigma)$,
+\[
+Q_{\Normal}(f_X) = (f_X - m_X)^{\top}\Sigma^{-1}(f_X - m_X) = f_X^{\top}\Sigma^{-1}f_X - 2f_X^{\top}\Sigma^{-1}m_X + \cdots
+\]
+Matching terms:
+\[
+\Sigma^{-1} = K_{XX}^{-1} + \sigma_n^{-2}I, \qquad \Sigma^{-1}m_X = \sigma_n^{-2}y + K_{XX}^{-1}\mu_X.
+\]
+(This is the multivariate normal model with known variance of Lecture 5, with one observation, prior mean $\mu_X$, prior covariance $K_{XX}$ and noise covariance $\sigma_n^2 I$.)
+
+\paragraph{Covariance $\Sigma$.}
+Factoring out $\sigma_n^{-2}$ and $K_{XX}^{-1}$,
+\[
+\Sigma^{-1} = K_{XX}^{-1} + \sigma_n^{-2}I = \new{\sigma_n^{-2}}\left(K_{XX} + \sigma_n^2 I\right)\new{K_{XX}^{-1}},
+\]
+so
+\[
+\Sigma = \left(K_{XX}^{-1} + \sigma_n^{-2}I\right)^{-1} = \new{\sigma_n^2}\left(K_{XX} + \sigma_n^2 I\right)^{\new{-1}}\new{K_{XX}}.
+\]
+Using
+\[
+(A + B)^{-1} = A^{-1} - A^{-1}\left(B^{-1} + A^{-1}\right)^{-1}A^{-1}
+\]
+with $A = K_{XX}^{-1}$ and $B = \sigma_n^{-2}I$,
+\[
+\boxed{\Sigma = K_{XX} - K_{XX}\left(\sigma_n^2 I + K_{XX}\right)^{-1}K_{XX}}.
+\]
+
+\paragraph{Mean $m_X$.}
+Thus, from $\Sigma^{-1}m_X = \sigma_n^{-2}y + K_{XX}^{-1}\mu_X$,
+\[
+m_X = \sigma_n^{-2}\Sigma\,y + \Sigma K_{XX}^{-1}\mu_X.
+\]
+First term: from $\Sigma = \sigma_n^2(K_{XX} + \sigma_n^2 I)^{-1}K_{XX}$,
+\[
+\sigma_n^{-2}\Sigma\,y = \new{\left(K_{XX} + \sigma_n^2 I\right)^{-1}K_{XX}}\,y = \new{K_{XX}\left(K_{XX} + \sigma_n^2 I\right)^{-1}}y,
+\]
+where $K_{XX}$ and $(K_{XX} + \sigma_n^2 I)^{-1}$ commute.
+
+Second term: multiplying $\Sigma = K_{XX} - K_{XX}(\sigma_n^2 I + K_{XX})^{-1}K_{XX}$ by $K_{XX}^{-1}$ on the right,
+\[
+\Sigma K_{XX}^{-1} = \new{I} - K_{XX}\left(\sigma_n^2 I + K_{XX}\right)^{-1}.
+\]
+Therefore
+\[
+m_X = \new{K_{XX}\left(K_{XX} + \sigma_n^2 I\right)^{-1}y} + \new{\mu_X - K_{XX}\left(\sigma_n^2 I + K_{XX}\right)^{-1}\mu_X},
+\]
+that is,
+\[
+\boxed{m_X = \mu_X + K_{XX}\left(K_{XX} + \sigma_n^2 I\right)^{-1}\new{(y - \mu_X)}}.
+\]
+
+%=====================================================
+\section{Prediction at a new input $\xt$}
+\[
+p(f(\xt), f_X \mid X, \xt, y) = p(f(\xt) \mid f_X, X, \xt, y)\,\underbrace{p(f_X \mid X, \xt, y)}_{p(f_X \mid X, y)},
+\]
+therefore
+\[
+p(f(\xt) \mid X, \xt, y) = \int \mathrm{d}f_X\,p(f(\xt) \mid f_X, X, \xt, y)\,p(f_X \mid X, y).
+\]
+
+\subsection{GP conditional $p(f(\xt) \mid f_X, X, \xt, y)$}
+Given $f_X$, the data $y$ depend on $f$ only through $f_X$, so $y$ adds nothing about $f(\xt)$:
+\[
+p(f(\xt) \mid f_X, X, \xt, y) = p(f(\xt) \mid f_X, X, \xt).
+\]
+By the GP prior, $f_X$ and $f(\xt)$ are jointly Gaussian, where, as for $K_{XX}[:,j] = k(X, x_j)$, the column $k(X, \xt) \in \R^n$ has entries $k(x_i, \xt)$, and $k(\xt, X) = k(X, \xt)^{\top}$, $k(\xt, \xt) \in \R$:
+\[
+\begin{pmatrix}f_X\\ f(\xt)\end{pmatrix} \sim \Normal\left(\begin{pmatrix}\mu_X\\ \mu(\xt)\end{pmatrix}, \begin{pmatrix}K_{XX} & k(X, \xt)\\ k(\xt, X) & k(\xt, \xt)\end{pmatrix}\right).
+\]
+Identity for a jointly Gaussian vector: if
+\[
+\begin{pmatrix}a\\ b\end{pmatrix} \sim \Normal\left(\begin{pmatrix}\mu_a\\ \mu_b\end{pmatrix}, \begin{pmatrix}C_{aa} & C_{ab}\\ C_{ba} & C_{bb}\end{pmatrix}\right),
+\]
+then
+\[
+b \mid a \sim \Normal\left(\mu_b + C_{ba}C_{aa}^{-1}(a - \mu_a),\ C_{bb} - C_{ba}C_{aa}^{-1}C_{ab}\right).
+\]
+With $a = f_X$ and $b = f(\xt)$:
+\[
+p(f(\xt) \mid f_X, X, \xt) = \Normal\Big(f(\xt) \,\Big|\, \mu(\xt) + k(\xt, X)K_{XX}^{-1}(f_X - \mu_X),\ k(\xt, \xt) - k(\xt, X)K_{XX}^{-1}k(X, \xt)\Big).
+\]
+
+\subsection{Integrating over $f_X$}
+The conditional mean is linear in $f_X$, and $f_X \mid X, y \sim \Normal(m_X, \Sigma)$, so $f(\xt) \mid X, \xt, y$ is Gaussian with
+\begin{align*}
+\mu'(\xt) &= \mu(\xt) + k(\xt, X)K_{XX}^{-1}(m_X - \mu_X),\\
+k'(\xt, \xt) &= k(\xt, \xt) - k(\xt, X)K_{XX}^{-1}k(X, \xt) + k(\xt, X)K_{XX}^{-1}\,\Sigma\,K_{XX}^{-1}k(X, \xt).
+\end{align*}
+Using $m_X - \mu_X = K_{XX}(K_{XX} + \sigma_n^2 I)^{-1}(y - \mu_X)$ and $K_{XX}^{-1}\Sigma K_{XX}^{-1} = K_{XX}^{-1} - (K_{XX} + \sigma_n^2 I)^{-1}$ (from the boxed $\Sigma$),
+\begin{align*}
+\mu'(\xt) &= \mu(\xt) + k(\xt, X)\new{\left(K_{XX} + \sigma_n^2 I\right)^{-1}(y - \mu_X)},\\
+k'(\xt, \xt) &= k(\xt, \xt) - k(\xt, X)\new{\left(K_{XX} + \sigma_n^2 I\right)^{-1}}k(X, \xt).
+\end{align*}
+Thus
+\[
+f(\xt) \mid X, \xt, y \sim \Normal\left(\mu'(\xt), k'(\xt, \xt)\right).
+\]
+And, because of $\yt = f(\xt) + \varepsilon$ (so $\E[\yt] = \E[f(\xt)] + \E[\varepsilon]$), the posterior predictive is
+\[
+\yt \mid \xt, X, y \sim \Normal\left(\mu'(\xt),\ k'(\xt, \xt) \new{{}+ \sigma_n^2}\right).
+\]
+
+%=====================================================
+\section{Kernels}
+If I choose a \emph{linear kernel}
+\[
+k(x, x') = \sigma_p^2\,x^{\top}x',
+\]
+then $K_{XX} = \sigma_p^2XX^{\top}$, and I recover the linear model.
+
+Other kernels: the \emph{Gaussian kernel}
+\[
+k(x, x') = \exp\left[-\frac{(x - x')^2}{2\ell^2}\right].
+\]
+
+%=====================================================
+\section*{References}
+\begin{itemize}
+\item Rasmussen, C.~E., and Williams, C.~K.~I. (2006). \emph{Gaussian Processes for Machine Learning}. MIT Press. \url{https://gaussianprocess.org/gpml/} Chapter 2: Bayesian linear regression (weight-space view) and GP regression (function-space view); Appendix A: Gaussian identities.
+\item Bishop, C.~M. (2006). \emph{Pattern Recognition and Machine Learning}. Springer. Section 3.3: Bayesian linear regression; Section 6.4: Gaussian processes.
+\item Murphy, K.~P. (2012). \emph{Machine Learning: A Probabilistic Perspective}. MIT Press. Chapter 15: Gaussian processes.
+\end{itemize}
+
+\end{document}

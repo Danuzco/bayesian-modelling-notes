@@ -1,6 +1,7 @@
 # Lecture 7 · Gaussian Processes
 
-📄 **[Handwritten notes](lecture07_gaussian_processes.pdf)** (17 pages)
+📄 **[Handwritten notes](lecture07_gaussian_processes.pdf)** (17 pages)  
+📝 **[Typeset version (LaTeX)](lecture07_gaussian_processes_typeset.pdf)** (6 pages, [source](latex/lecture07_gaussian_processes_typeset.tex))
 
 ## Outline
 
