@@ -1,7 +1,7 @@
 # Lecture 4 · Classical Inference
 
 📄 **[Handwritten notes](lecture04_classical_inference.pdf)** (14 pages)  
-📝 **[Typeset version (LaTeX)](lecture04_classical_inference_typeset.pdf)** (4 pages, [source](latex/lecture04_classical_inference_typeset.tex))
+📝 **[Typeset version (LaTeX)](lecture04_classical_inference_typeset.pdf)** (5 pages, [source](latex/lecture04_classical_inference_typeset.tex))
 
 ## Outline
 

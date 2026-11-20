@@ -127,7 +127,16 @@ p(Z \le z_\alpha) = \new{1 - \frac{\alpha}{2}}.
 (This value is often written $z_{\alpha/2}$; e.g.\ $z_\alpha = 1.96$ for $\alpha = 0.05$.)
 
 \begin{example}
-See Pg.~36, \emph{Hypothesis testing 2}.
+The shopping times of customers at a local mall are normally distributed, with known population standard deviation $\sigma = 20$ minutes. A random sample of $n = 64$ shoppers had a mean shopping time of $\bar x = 75$ minutes. Find the $95\%$ confidence interval for the population mean $\mu$.
+
+With $\alpha = 0.05$, $p(Z \le z_\alpha) = 1 - \alpha/2 = 0.975$ gives $z_\alpha = 1.96$, and
+\[
+z_\alpha\frac{\sigma}{\sqrt n} = 1.96\times\frac{20}{\new{\sqrt{64}}} = 1.96\times\new{2.5} = \new{4.9}.
+\]
+The interval is
+\[
+\left[\bar x - z_\alpha\frac{\sigma}{\sqrt n},\ \bar x + z_\alpha\frac{\sigma}{\sqrt n}\right] = [75 - 4.9,\ 75 + 4.9] = \new{[70.1,\ 79.9]} \text{ minutes}.
+\]
 \end{example}
 
 \begin{theorem}
@@ -183,7 +192,18 @@ How to find the rejection region? We set
 p(\text{type I error}) = \alpha.
 \]
 
-\begin{example}[Cigarettes, Pg.~51]
+A general procedure for a hypothesis test:
+\begin{enumerate}[nosep]
+\item State the hypotheses: the null $H_0$ and the alternative $H_1$.
+\item Choose the significance level $\alpha$, the largest acceptable probability of a type I error.
+\item Choose the test statistic and find its distribution under $H_0$.
+\item Find the rejection region: the critical value(s) for the chosen $\alpha$.
+\item Compute the test statistic from the data and decide: reject $H_0$ if it falls in the rejection region.
+\end{enumerate}
+
+\begin{example}[Cigarettes]
+A cigarette manufacturer claims that the mean nicotine content of its brand B cigarettes is at most $1.5$ mg. Inspectors suspect that the mean is higher, and take a random sample of $30$ cigarettes. Assuming that the nicotine content is normally distributed with known standard deviation $\sigma = 0.2$ mg, define a suitable test and find the critical value and the rejection region at the $5\%$ significance level.\footnote{Adapted from Devore, \emph{Probability and Statistics for Engineering and the Sciences} (8th ed.), Section 8.1 and Example 8.5, which use a sample of $32$ cigarettes.}
+
 $n = 30$, $\alpha = 0.05$, $X \sim \Normal(\mu, \sigma^2)$,
 \[
 H_0: \mu \le 1.5\ \text{mg}, \qquad H_1: \mu > 1.5\ \text{mg}.
@@ -199,13 +219,18 @@ Rejection region:
 \[
 \boxed{\bar X > \mu + 1.64\frac{\sigma}{\sqrt n}}
 \]
-with $\mu = 1.5$ mg.
+with $\mu = 1.5$ mg. Numerically,
+\[
+x_c = 1.5 + 1.64\times\frac{0.2}{\new{\sqrt{30}}} \approx 1.5 + \new{0.060} = \new{1.56}\ \text{mg},
+\]
+so we reject $H_0$ when the sample mean nicotine content exceeds about $1.56$ mg.
 \end{example}
 
 %=====================================================
 \section*{References}
 \begin{itemize}
 \item Wasserman, L. (2004). \emph{All of Statistics: A Concise Course in Statistical Inference}. Springer. Chapter 6: confidence intervals; Chapter 9: maximum likelihood; Chapter 10: hypothesis testing.
+\item Devore, J.~L. \emph{Probability and Statistics for Engineering and the Sciences} (8th ed.). Cengage Learning. Chapter 8, the source of the nicotine (cigarettes) example (Example 8.5).
 \item Pishro-Nik, H. (2014). \emph{Introduction to Probability, Statistics, and Random Processes}. Kappa Research. \url{https://www.probabilitycourse.com/} Chapter 8: point estimation, maximum likelihood, confidence intervals and hypothesis testing.
 \end{itemize}
 
